@@ -20,11 +20,14 @@ Meta 1 · ago–set/26
   aplicada, resolvendo a pendência do README. Pasta confirmada fora do OneDrive.
   `CLAUDE.md` e `.claude/` mantidos fora do versionamento a pedido.
 
-### [ ] E02 — Fichar as fontes da pesquisa
+### [~] E02 — Fichar as fontes da pesquisa
 - **Objetivo:** consolidar as referências já levantadas em fichamentos utilizáveis.
 - **Entregável:** um arquivo por fonte em `docs/pesquisa/fichamentos/`, com
   problema identificado, método, resultado e implicação para o projeto.
 - **Conclusão quando:** todas as referências do projeto estiverem fichadas.
+- **Em andamento:** 17 fontes identificadas no documento do projeto e indexadas em
+  `docs/pesquisa/fichamentos/README.md`. Modelo definido. 3 fichadas (LGPD,
+  Alvares 2020, Ifes 2025), 14 pendentes.
 
 ### [ ] E03 — Analisar o instrumento vigente (linha de base)
 - **Objetivo:** caracterizar as limitações do questionário institucional atual.
