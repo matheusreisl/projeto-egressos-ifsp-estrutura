@@ -9,12 +9,16 @@ Legenda de status: `[ ]` pendente · `[~]` em andamento · `[x]` concluída · `
 ## Fase 1 — Revisão da literatura, linha de base e engajamento
 Meta 1 · ago–set/26
 
-### [ ] E01 — Preparar e publicar o repositório
+### [x] E01 — Preparar e publicar o repositório
 - **Objetivo:** deixar o repositório operacional e versionado.
 - **Entregável:** repositório Git inicializado, `.gitignore` aplicado, primeiro
   commit, repositório público criado no GitHub e sincronizado.
 - **Conclusão quando:** o repositório estiver acessível no GitHub com a estrutura completa.
 - **Atenção:** manter a pasta fora do OneDrive para evitar corrupção do `.git`.
+- **Concluída em:** 20/09/2026 · repositório em https://github.com/matheusreisl/projeto-egressos-ifsp-estrutura
+- **Registro:** commit inicial `9583ec9`, branch `main`, 16 arquivos. Licença MIT
+  aplicada, resolvendo a pendência do README. Pasta confirmada fora do OneDrive.
+  `CLAUDE.md` e `.claude/` mantidos fora do versionamento a pedido.
 
 ### [ ] E02 — Fichar as fontes da pesquisa
 - **Objetivo:** consolidar as referências já levantadas em fichamentos utilizáveis.
@@ -228,4 +232,4 @@ Uma linha por sessão, mais recente ao final.
 
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
-|      |                    |                      |            |
+| 20/09/2026 | E01 | Concluída. Repositório público publicado e sincronizado. | Python não instalado na máquina (necessário em E16 e E28). `.gitattributes` não criado. Titularidade do copyright a confirmar (hoje em nome do autor). |
