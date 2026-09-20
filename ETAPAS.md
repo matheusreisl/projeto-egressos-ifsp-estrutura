@@ -26,8 +26,8 @@ Meta 1 · ago–set/26
   problema identificado, método, resultado e implicação para o projeto.
 - **Conclusão quando:** todas as referências do projeto estiverem fichadas.
 - **Em andamento:** 17 fontes identificadas no documento do projeto e indexadas em
-  `docs/pesquisa/fichamentos/README.md`. Modelo definido. 3 fichadas (LGPD,
-  Alvares 2020, Ifes 2025), 14 pendentes.
+  `docs/pesquisa/fichamentos/README.md`. Modelo definido. 8 fichadas, 9 pendentes.
+  Três correções de referência detectadas e registradas no índice.
 
 ### [ ] E03 — Analisar o instrumento vigente (linha de base)
 - **Objetivo:** caracterizar as limitações do questionário institucional atual.
