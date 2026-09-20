@@ -32,13 +32,27 @@ Meta 1 · ago–set/26
   fichadas por leitura parcial (Ferreira 2026, pelo resumo; Davis 1989, por
   extração incompleta) e estão marcadas para releitura.
 
-### [ ] E03 — Analisar o instrumento vigente (linha de base)
+### [x] E03 — Analisar o instrumento vigente (linha de base)
 - **Objetivo:** caracterizar as limitações do questionário institucional atual.
 - **Entregável:** `docs/pesquisa/linha-de-base.md` cobrindo modo de acesso,
   identificação do respondente, padronização dos campos, mecanismos de cobrança
   e registro de consentimento.
 - **Conclusão quando:** cada limitação estiver associada à dificuldade correspondente na literatura.
 - **Atenção:** análise documental apenas. Não responder, não coletar, não contatar ninguém.
+- **Concluída em:** 20/09/2026 · `docs/pesquisa/linha-de-base.md`.
+- **Registro:** instrumento caracterizado por análise documental, sem que fosse
+  percorrido — avançar entre páginas do LimeSurvey exige POST e criaria registros
+  fictícios na base real. A estrutura foi reconstruída pelos Relatórios 1 e 2 da
+  PAE, que publicam enunciados, domínios e contagens.
+- **Achados:** o instrumento vigente já roda em LimeSurvey, em modo aberto, com os
+  recursos de rastreabilidade não acionados; 30 questões em 7 blocos, com
+  bifurcação condicional na questão 15 confirmada pelos dados; 2.519 registros
+  desde 2015, sem denominador que permita calcular cobertura; nenhum registro de
+  consentimento nas camadas verificadas. A exigência normativa está no Indicador
+  3.7 do Instrumento de Avaliação Institucional Externa do INEP, e não na Lei do
+  SINAES, que não menciona egresso.
+- **Pendência:** a Portaria Normativa nº 128/2025, que é o Regulamento do Programa,
+  não pôde ser lida — PDF digitalizado sem camada de texto.
 
 ### [ ] E04 — Montar o quadro comparativo de estratégias de engajamento
 - **Objetivo:** sistematizar o que outras instituições fizeram e com que efeito.
@@ -238,4 +252,4 @@ Uma linha por sessão, mais recente ao final.
 
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
-| 20/09/2026 | E01, E02 | E01 e E02 concluídas. Repositório publicado; 17 fontes fichadas. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
+| 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Obter a Portaria Normativa 128/2025 em formato pesquisável (PDF sem OCR). Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
