@@ -31,9 +31,11 @@ Meta 1 · ago–set/26
   e rastreabilidade para as etapas que cada fonte alimenta. Duas fontes foram
   fichadas por leitura parcial (Ferreira 2026, pelo resumo; Davis 1989, por
   extração incompleta) e estão marcadas para releitura.
-- **Achado crítico:** 10 das 17 referências do documento do projeto divergem da
-  fonte no endereço citado; em 6 delas a autoria indicada não corresponde a quem
-  assina o trabalho. Correções registradas no índice dos fichamentos.
+- **Achado crítico:** 10 das 17 referências do documento do projeto divergiam da
+  fonte no endereço citado; em 6 delas a autoria indicada não correspondia a quem
+  assina o trabalho. Além disso, 4 passagens do corpo atribuíam às fontes
+  afirmações que elas não fazem. Todas foram corrigidas no documento em 20/09/2026,
+  com registro no índice dos fichamentos.
 
 ### [ ] E03 — Analisar o instrumento vigente (linha de base)
 - **Objetivo:** caracterizar as limitações do questionário institucional atual.
@@ -241,4 +243,4 @@ Uma linha por sessão, mais recente ao final.
 
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
-| 20/09/2026 | E01, E02 | E01 e E02 concluídas. Repositório publicado; 17 fontes fichadas. | Corrigir 10 referências do documento do projeto (6 com autoria trocada). Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
+| 20/09/2026 | E01, E02 | E01 e E02 concluídas. Repositório publicado; 17 fontes fichadas. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
