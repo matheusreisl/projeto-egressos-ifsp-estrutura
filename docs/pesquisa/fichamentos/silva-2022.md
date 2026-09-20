@@ -7,11 +7,6 @@ integrativa. Research, Society and Development, v. 11, n. 4, 2022.
 **Acesso:** https://rsdjournal.org/rsd/article/view/26281 · consultado em 20/09/2026
 **Alimenta:** E04, E31
 
-> **Imprecisão de referência.** O documento do projeto registra "SILVA, A. et al.".
-> A primeira autora é **Eunice Cristina da Silva** (UNIFEI / IFSULDEMINAS) — inicial
-> E, não A. Falta também o subtítulo "uma revisão integrativa", que é o que
-> identifica o tipo de estudo.
-
 ## Problema identificado
 
 Egressos são fonte de contribuição para a qualidade dos cursos, e uma das

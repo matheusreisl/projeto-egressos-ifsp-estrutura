@@ -9,11 +9,6 @@ Ouro Preto, 2026.
 **Acesso:** https://monografias.ufop.br/handle/35400000/9120 · consultado em 20/09/2026
 **Alimenta:** E03, E04, E31 — e confronta a decisão de não fazer raspagem
 
-> **Correção de referência.** O documento do projeto registra "COSTA, R. [...] Ouro
-> Preto: UFOP, 2020" e omite o subtítulo. A autoria é de **Vanessa Maria Starlino
-> Rolim Ferreira**, o ano é **2026**, e o subtítulo — "uma análise a partir da
-> plataforma **LinkedIn**" — é justamente o que torna esta fonte relevante.
-
 ## Problema identificado
 
 A autora parte de uma crítica direta ao método que este projeto adota: os métodos

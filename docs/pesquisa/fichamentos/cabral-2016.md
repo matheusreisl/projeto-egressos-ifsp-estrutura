@@ -8,14 +8,6 @@ Florianópolis, v. 9, n. 3, p. 157-173, 2016.
 **Acesso:** https://periodicos.ufsc.br/index.php/gual/article/view/45525 · consultado em 20/09/2026
 **Alimenta:** E04, E24, E29
 
-> **Nota sobre a referência.** Esta é a obra que o corpo do documento do projeto
-> descreve. O endereço que constava na lista de referências apontava para outro
-> trabalho — o TCC de Carvalho (2025), sobre a interface do sistema da UFU —, e foi
-> corrigido. Os autores são da **UFSC**, não da UFU, e o estudo não foi conduzido
-> para embasar sistema algum: analisa portais de terceiros. A passagem do corpo foi
-> ajustada conforme. O fichamento do TCC de Carvalho permanece em
-> [`carvalho-2025.md`](carvalho-2025.md), como fonte adicional.
-
 ## Problema identificado
 
 As IES reconhecem a importância de manter relacionamento com egressos, e uma das

@@ -9,8 +9,7 @@ com a mesma estrutura.
 
 Nomenclatura: `sobrenome-ano.md`, ou `orgao-tipo-ano.md` para normativas, de modo
 que a ordenação alfabética da pasta acompanhe a lista de referências. Os arquivos
-levam o nome da **autoria conferida na fonte**, que em vários casos difere da que
-consta no documento do projeto — ver a seção de correções.
+levam o nome da autoria conferida na fonte.
 
 ## Estado — 17 de 17 fichadas
 
@@ -42,6 +41,28 @@ consta no documento do projeto — ver a seção de correções.
 Localizada porque o endereço da referência de Cabral apontava para ela. Não consta
 das referências do projeto; fica fichada por já ter sido lida e por servir de termo
 de comparação do custo da via de desenvolvimento próprio.
+
+## Pendências levantadas
+
+**Fontes que precisam de nova leitura**
+
+- **FERREIRA (2026)** foi fichada pelo resumo e pelos metadados do repositório: o
+  PDF não permitiu extração de texto por nenhum meio disponível nesta máquina. Ler
+  integralmente antes de citar.
+- **DAVIS (1989)** foi fichado por extração parcial — tabelas, discussão e apêndice
+  foram lidos; a seção de método, não.
+
+**Material relevante ausente das 17 referências**
+
+- **Instrumentos de avaliação do INEP** — é neles que está a exigência de
+  acompanhamento de egressos, que a Lei do SINAES não contém.
+- **IFSP, Portaria Normativa nº 128/2025** — Regulamento do Programa de
+  Acompanhamento de Egressos, que a RN 13/2022 indica como o documento que dispõe
+  sobre coleta, tratamento e divulgação de dados.
+- **IFSP, Relatórios 1 e 2 da Pesquisa de Acompanhamento de Egressos** —
+  disponíveis no portal; podem conter volume e período de coleta.
+- **Mello et al. (2023)** — avaliação do SAVE com egressos, complementar ao artigo
+  de 2024, que cobre apenas gestores.
 
 ## Grupos
 

@@ -6,12 +6,11 @@
 **Acesso:** https://portal.ifto.edu.br/acesso-a-informacao/privacidade-e-protecao-de-dados/documentos-lgpd-ifto/PPDP.pdf · consultado em 20/09/2026
 **Alimenta:** E10, E11, E22, E23, E25, E31
 
-> **Correção de referência.** O documento do projeto data esta fonte de 2021. O PDF
-> disponível no endereço citado está assinado eletronicamente em **27/12/2023**,
-> pela Gestora de Segurança da Informação, pelo Diretor e pela Encarregada pelo
-> Tratamento de Dados Pessoais. Como o art. 66 prevê revisão a cada dois anos, é
-> plausível que exista versão anterior de 2021 e que esta seja sua revisão — mas a
-> versão acessível hoje é a de 2023. A referência precisa ser corrigida.
+> **Datação.** O PDF disponível no endereço acima está assinado eletronicamente
+> em 27/12/2023, pela Gestora de Segurança da Informação, pelo Diretor e pela
+> Encarregada pelo Tratamento de Dados Pessoais. Como o art. 66 prevê revisão a
+> cada dois anos, é possível que existam versões anteriores; a acessível hoje é a
+> de 2023.
 
 ## Problema identificado
 

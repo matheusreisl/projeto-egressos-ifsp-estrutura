@@ -7,13 +7,6 @@ p. 470-478, 2017.
 **Acesso:** https://www.redalyc.org/journal/3215/321554297015/html/ · consultado em 20/09/2026
 **Alimenta:** E03, E04, E05, E14, E22
 
-> **Correção de referência.** O documento do projeto registra "LOUSADA, A. C. Z.;
-> MARTINS, D. [...] Redalyc, 2019". O artigo no endereço citado é de **Maria Carlota
-> de Rezende Coelho e Janine Pereira da Silva** (EMESCAM), publicado em **2017** na
-> revista **Textos & Contextos** (PUCRS); Redalyc é o repositório, não o periódico.
-> Existe obra real de **Lousada e Martins, de 2005**, citada por Silva et al. (2022)
-> — mas não é esta. É preciso decidir qual das duas se quer referenciar.
-
 ## Problema identificado
 
 Programas de pós-graduação precisam acompanhar egressos para fins de avaliação, mas

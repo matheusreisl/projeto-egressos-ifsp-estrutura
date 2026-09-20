@@ -8,13 +8,6 @@ p. 80-95, 2025.
 **Acesso:** https://revistas.ifes.edu.br/index.php/ept/article/view/3134 · consultado em 20/09/2026
 **Alimenta:** E04, E11, E17, E18, E23, E30, E31
 
-> **Correção de referência.** O documento do projeto registra "COSTA, E. S.; DIAS,
-> T. M. R. [...] Revista Científica em Educação Profissional e Tecnológica, Vitória,
-> 2023". A autoria correta é **Oscar Praga de Souza, Gabriel Couto Assis e Emerson
-> de Souza Costa**, do **CEFET-MG** — não há autor Dias, e Costa é o terceiro, não o
-> primeiro. O periódico é **Educação Profissional e Tecnológica em Revista**, v. 8,
-> n. Especial; aceito em 26/05/2024 e publicado em **06/03/2025**.
-
 ## Problema identificado
 
 O acompanhamento de egressos da EPT é reconhecido como necessário, mas os gestores

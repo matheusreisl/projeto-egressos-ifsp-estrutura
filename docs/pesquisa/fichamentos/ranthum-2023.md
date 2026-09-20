@@ -7,12 +7,6 @@ sensu. Educere et Educare, Umuarama, v. 23, n. 1, 2023.
 **Acesso:** https://revistas.unipar.br/index.php/educere/article/download/10380/4890/33213 · consultado em 20/09/2026
 **Alimenta:** E04, E11, E28, E31
 
-> **Correção de referência.** O documento do projeto registra "SILVEIRA, R. et al.
-> [...] 2019". A autoria é de **Geraldo Ranthum e Guataçara dos Santos Junior**;
-> não há autor Silveira. O artigo foi recebido em 29/05/2023 e aceito em 30/06/2023,
-> com DOI indicando **v. 23, n. 1, 2023** — não 2019. O título omite no projeto o
-> recorte "da pós-graduação stricto sensu", que delimita seu alcance.
-
 ## Problema identificado
 
 IES precisam verificar se os egressos atendem às demandas do mercado, e há lacuna

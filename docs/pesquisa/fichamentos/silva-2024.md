@@ -9,13 +9,6 @@ p. 118-127.
 **Acesso:** https://sol.sbc.org.br/index.php/eres/article/view/31845 · consultado em 20/09/2026
 **Alimenta:** E04, E12, E18, E25, E31
 
-> **Correção de referência.** O documento do projeto atribui esta fonte a "BASSO, F.
-> et al." e a subtitula "a partir da percepção de coordenadores de curso". Nenhuma
-> das duas informações confere: não há autor de sobrenome Basso no artigo, cujos
-> autores são vinculados à **Universidade Federal do Pampa (Unipampa)**, e o
-> subtítulo correto é "a partir da **perspectiva dos gestores**". A referência
-> precisa ser corrigida antes de qualquer entrega.
-
 ## Problema identificado
 
 Pesquisas com egressos exigem esforço recorrente de ex-alunos e gestores. Os

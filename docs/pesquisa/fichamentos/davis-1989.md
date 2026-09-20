@@ -6,8 +6,6 @@ acceptance of information technology. MIS Quarterly, v. 13, n. 3, p. 319-340, 19
 **Acesso:** MIS Quarterly, University of Minnesota · https://www.jstor.org/stable/249008 · consultado em 20/09/2026
 **Alimenta:** E25, E31
 
-*Referência conferida e correta no documento do projeto.*
-
 ## Problema identificado
 
 Por que as pessoas aceitam ou rejeitam sistemas de informação. Davis propõe que a

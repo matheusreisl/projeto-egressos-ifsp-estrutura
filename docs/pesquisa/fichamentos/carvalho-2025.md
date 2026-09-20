@@ -8,13 +8,9 @@ Universidade Federal de Uberlândia, Uberlândia, 2025.
 **Acesso:** https://repositorio.ufu.br/bitstream/123456789/45437/1/ArquiteturaFrontendInterface.pdf · consultado em 20/09/2026
 **Alimenta:** E04, E29, E31
 
-> **Correção de referência.** O documento do projeto registra "CABRAL, T.; SILVA,
-> L.; PACHECO, R. [...] 2016". O trabalho no endereço citado é de **Luiz André da
-> Silva Carvalho**, autor único, orientado por Maria Adriana Vidigal de Lima, e foi
-> **aprovado em 11 de abril de 2025**. Observação relevante: a obra de **Cabral,
-> Silva e Pacheco (2016) existe** e é citada na literatura da área — inclusive por
-> Ranthum e Santos Junior (2023) —, mas não é a que está neste link. É preciso
-> decidir qual das duas se quer referenciar.
+> **Fonte adicional.** Este trabalho não consta das referências do projeto. Foi
+> localizado durante o fichamento e fica registrado por já ter sido lido e por
+> servir de termo de comparação do custo da via de desenvolvimento próprio.
 
 ## Problema identificado
 
