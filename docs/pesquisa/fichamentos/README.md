@@ -34,12 +34,16 @@ consta no documento do projeto — ver a seção de correções.
 | UnB (2019) — egressos RAIS, Educação Física | estudo de egressos | [`unb-2019.md`](unb-2019.md) |
 | USP — Programa Alumni USP | programa de referência | [`usp-alumni.md`](usp-alumni.md) |
 
-## Correções de referência a aplicar no documento do projeto
+## Correções de referência — aplicadas em 20/09/2026
 
 Cada fonte foi conferida contra o documento original obtido no endereço citado pelo
-projeto. **Dez das dezessete referências apresentam divergência; em seis delas a
-autoria indicada não corresponde a quem assina o trabalho.** Todas precisam ser
-corrigidas antes de qualquer entrega.
+projeto. **Dez das dezessete referências apresentavam divergência; em seis delas a
+autoria indicada não correspondia a quem assina o trabalho.**
+
+**Situação:** as dez foram corrigidas no documento do projeto, tanto na lista de
+referências quanto nas citações do corpo, e a lista foi reordenada alfabeticamente.
+Resta pendente a entrada Cabral/Carvalho, que depende de decisão — ver adiante.
+O quadro abaixo fica como registro do que foi alterado.
 
 ### Autoria e ano incorretos
 
