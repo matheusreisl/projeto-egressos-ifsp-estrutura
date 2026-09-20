@@ -1,0 +1,34 @@
+# Ambiente e credenciais
+.env
+.env.*
+*.key
+*.pem
+credenciais*
+senha*
+
+# Contexto e configuracao do Claude Code (permanece local)
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+
+# Dados gerados (versiona-se o script, nao a saida)
+dados/sinteticos/*
+!dados/sinteticos/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+
+# Temporarios de escritorio
+~$*
