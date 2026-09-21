@@ -60,11 +60,11 @@ de comparação do custo da via de desenvolvimento próprio.
 - ~~IFSP, Relatórios 1 e 2 da Pesquisa de Acompanhamento de Egressos~~ — **lidos e
   usados na E03**. Trazem a estrutura completa do instrumento vigente, os domínios
   de resposta e as contagens por período.
-- **IFSP, Portaria Normativa nº 128/2025** — Regulamento do Programa de
-  Acompanhamento de Egressos, que a RN 13/2022 indica como o documento que dispõe
-  sobre coleta, tratamento e divulgação de dados. **Ainda pendente:** o PDF
-  publicado é digitalizado, sem camada de texto, e não há OCR no ambiente do
-  projeto. Obter versão pesquisável ou submeter a OCR.
+- ~~IFSP, Portaria Normativa nº 128/2025~~ — **recuperada e usada na E03**. O PDF
+  não era digitalizado: tinha camada de texto em fluxos comprimidos, extraída por
+  descompressão. Capítulos I a VIII legíveis. **Resta recuperar** os capítulos
+  finais, os apêndices e os anexos, onde devem estar as fórmulas dos dez índices
+  institucionais — relevante para a E12.
 - **Mello et al. (2023)** — avaliação do SAVE com egressos, complementar ao artigo
   de 2024, que cobre apenas gestores.
 

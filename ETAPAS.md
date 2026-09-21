@@ -51,8 +51,13 @@ Meta 1 · ago–set/26
   consentimento nas camadas verificadas. A exigência normativa está no Indicador
   3.7 do Instrumento de Avaliação Institucional Externa do INEP, e não na Lei do
   SINAES, que não menciona egresso.
-- **Pendência:** a Portaria Normativa nº 128/2025, que é o Regulamento do Programa,
-  não pôde ser lida — PDF digitalizado sem camada de texto.
+- **Achado normativo:** a Portaria Normativa nº 128/2025 (Regulamento) foi
+  recuperada e determina, no art. 16, link individual por egresso, convite por
+  e-mail com fallback para mensagens instantâneas, disparo automatizado e repetido
+  e periodicidade anual. Nada disso está implementado. A lacuna é de suporte
+  técnico, não de norma — o mecanismo do projeto viabiliza o que já é exigido.
+- **Pendência:** recuperar os capítulos finais, apêndices e anexos do Regulamento,
+  onde devem estar as fórmulas dos dez índices institucionais (E12).
 
 ### [ ] E04 — Montar o quadro comparativo de estratégias de engajamento
 - **Objetivo:** sistematizar o que outras instituições fizeram e com que efeito.
@@ -252,4 +257,4 @@ Uma linha por sessão, mais recente ao final.
 
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
-| 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Obter a Portaria Normativa 128/2025 em formato pesquisável (PDF sem OCR). Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
+| 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Recuperar os capítulos finais e anexos da Portaria 128/2025 (fórmulas dos índices institucionais, para a E12). Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |

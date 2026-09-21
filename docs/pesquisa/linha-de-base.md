@@ -22,6 +22,7 @@ submetido ao instrumento, conforme a delimitação do projeto. As fontes foram:
 | Relatório 2 da PAE — 01/01/2019 a 31/12/2023 | os mesmos dados no período seguinte, e as metas do PDI 2019-2024 |
 | Página institucional de egressos | modo de divulgação, normativos vigentes, endereço do instrumento |
 | Resolução Normativa nº 13/2022 (PAEg) | governança, instrumentos da política, objetivos |
+| Portaria Normativa nº 128/2025 (Regulamento do Programa) | o desenho normativo da coleta: convite, periodicidade, blocos, população-alvo |
 | Tela inicial do instrumento | plataforma, modo de acesso, ausência de consentimento, tipos de campo |
 | Instrumento de Avaliação Institucional Externa do INEP (2017) | o Indicador 3.7, que é a régua oficial |
 
@@ -55,6 +56,15 @@ de ferramenta, mas configuração diferente da ferramenta já mantida.
 | VI | Motivos da não inserção laboral | 17–18 |
 | VII | Avaliação da PAE | 29–30 |
 
+A estrutura é confirmada normativamente: o art. 17, §1º do Regulamento declara que
+"o questionário está estruturado em **sete blocos de perguntas no LimeSurvey**,
+dispostas de forma **lógica-condicional**", e o §2º nomeia os sete blocos, na mesma
+ordem em que aparecem nos relatórios.
+
+**População-alvo.** O art. 18 do Regulamento a define como todos os egressos dos
+cursos técnicos (integrado, subsequente e concomitante), de graduação e de
+pós-graduação lato e stricto sensu.
+
 **Navegação condicional confirmada.** O Bloco III é rotulado "Direcional" nos
 relatórios, e a numeração fora de sequência — o Bloco V reúne as questões 19 a 28 e
 o Bloco VI as questões 17 e 18 — revela a bifurcação. Os dados confirmam:
@@ -80,6 +90,13 @@ registros**: 715 no período do PDI 2014-2018 (28,38%) e 1.503 no período segui
 **Constatação.** Acesso aberto por link público único, sem token e sem
 autenticação. A tela inicial não apresenta campo de código de acesso, e a URL não
 carrega parâmetro de identificação.
+
+**Isso contraria a própria norma.** O Regulamento do Programa, aprovado pela
+Portaria Normativa nº 128/2025, determina no art. 16 que o questionário seja
+"acessível por meio de um **link disponibilizado para cada egresso**". O que está
+em operação é o oposto: um único link, igual para todos, publicado em página
+aberta. A divergência entre o que a norma determina e o que a instância entrega é
+o achado central desta linha de base, e reaparece nas seções 6 e 8.
 
 **Consequências.**
 
@@ -169,27 +186,50 @@ onde não havia.
 
 ## 6. Mecanismos de cobrança
 
-**Constatação.** Não existem. Não há convite individual, não há lembrete, não há
-disparo automatizado, não há acompanhamento de não respondentes. A busca nos dois
-relatórios por "convite", "lembrete", "e-mail" e "periodicidade" não retorna
-nenhuma ocorrência.
+Esta é a seção em que norma e prática mais se distanciam, e convém separá-las.
 
-**O que existe no lugar.** Divulgação por difusão: o link publicado na página
-institucional de egressos e, segundo o Relatório 1, uma "Campanha de Egressos"
-prevista para o final de outubro de 2018, articulada com a Comunicação Social.
-Campanha é ação pontual de divulgação, não cobrança sistemática — atinge quem
-estiver exposto ao canal no momento, e atinge de novo quem já respondeu.
+### 6.1 O que o Regulamento determina
 
-**Por que a cobrança é impossível neste desenho.** Cobrar exige saber de quem
-cobrar. Sem identificação do participante (seção 4), não há lista de não
-respondentes, e portanto não há a quem dirigir lembrete. A ausência de cobrança não
-é omissão administrativa: é consequência necessária do modo de acesso adotado.
+A Portaria Normativa nº 128/2025 é explícita e detalhada. O Capítulo VI descreve um
+mecanismo de cobrança completo:
 
-**O que a instituição planeja.** O Relatório 2 registra, entre as metas do PDI
-2019-2024, "atualizar pesquisa de tipo Survey a cada dois anos", implantar o
-acompanhamento no SUAP, criar aplicativo e criar perfil em plataformas
-profissionais. Periodicidade de atualização do instrumento, contudo, é coisa
-distinta de periodicidade de cobrança do respondente.
+| Dispositivo | Determinação |
+|---|---|
+| Art. 14 | pesquisas periódicas, **anuais** |
+| Art. 16, caput | questionário acessível por **link disponibilizado para cada egresso** |
+| Art. 16, §1º | **convite por e-mail**; não sendo possível, por **aplicativos de mensagens instantâneas** |
+| Art. 16, §2º | aplicação **automatizada**, com disparos **repetidos** por sistema de mala direta |
+| Art. 19 | acompanhamento por turma ao término do semestre de conclusão, e **anualmente** depois |
+| Art. 22 | divulgação aos pré-egressos **no momento da colação de grau** e nova campanha **dois anos após a formatura, com envio de mensagens de lembrete** |
+
+Ou seja: convite individual, canal alternativo para contato inválido, disparo
+automatizado e repetido, lembretes e periodicidade definida. Praticamente o
+conjunto de requisitos que este projeto se propõe a implementar já está
+normatizado.
+
+### 6.2 O que está em operação
+
+Nada disso. O instrumento é um link único publicado em página aberta, e a busca
+nos dois relatórios por "convite", "lembrete", "e-mail" e "periodicidade" não
+retorna nenhuma ocorrência. O que os relatórios registram é divulgação por
+difusão e, no Relatório 1, uma "Campanha de Egressos" prevista para outubro de
+2018, articulada com a Comunicação Social — ação pontual, que atinge quem estiver
+exposto ao canal e realcança quem já respondeu.
+
+### 6.3 Por que a implementação não acompanha a norma
+
+A cadeia é técnica, não administrativa. Cobrar exige saber de quem cobrar; saber
+de quem cobrar exige identificação individual do convidado; identificação
+individual exige tabela de participantes e acesso por token. Sem acionar esse
+recurso — que a plataforma já oferece —, o art. 16 é inexequível: não há como
+"disponibilizar um link para cada egresso" nem como disparar lembrete "aos que não
+responderam", porque não existe a lista.
+
+**Consequência para o projeto.** A lacuna não é de norma, é de suporte técnico.
+O mecanismo proposto não acrescenta exigências à instituição: implementa o que o
+Regulamento vigente já determina e que hoje não tem como ser cumprido. Isso
+desloca o trabalho de "proposta de melhoria" para "viabilização de norma vigente",
+que é uma posição bem mais forte no relatório final e no guia de replicação.
 
 ## 7. Registro de consentimento
 
@@ -201,14 +241,21 @@ examinadas.
 | Instrumento | a tela inicial abre diretamente na primeira questão; não há termo, aceite nem informação sobre tratamento de dados |
 | Relatórios 1 e 2 | nenhuma ocorrência de "consentimento", "LGPD", "dados pessoais", "sigilo", "anonimização" ou "anônimo" |
 | Resolução Normativa nº 13/2022 | nenhuma menção a proteção de dados, embora preveja coleta por questionário eletrônico, banco de dados de egressos e divulgação "a toda comunidade interna e externa" |
+| Portaria Normativa nº 128/2025 (Regulamento) | nenhuma menção a LGPD, consentimento, dados pessoais, sigilo, anonimização ou privacidade |
 
-**Ressalva necessária.** A RN 13/2022 delega ao Regulamento do Programa dispor
-sobre "coleta, tratamento e divulgação de dados sobre os egressos" (art. 14,
-parágrafo único, II). Esse Regulamento foi aprovado pela Portaria Normativa nº
-128/2025 e **não pôde ser lido**: o PDF publicado é digitalizado, sem camada de
-texto, e não há OCR disponível no ambiente deste projeto. Não se pode, portanto,
-afirmar que a matéria esteja ausente de toda a normativa — apenas que não aparece
-nas camadas verificadas. Ver a seção 9.
+**A verificação está completa, e o resultado é consistente.** A RN 13/2022 delega
+ao Regulamento dispor sobre "coleta, tratamento e divulgação de dados sobre os
+egressos" (art. 14, parágrafo único, II). O Regulamento, por sua vez, dedica a
+essa matéria o Capítulo V inteiro — e nele trata apenas de **que dados coletar**
+(art. 14: situação profissional, satisfação com a formação, necessidades de
+formação continuada) e **para que usá-los** (art. 15: melhorar cursos, adaptar
+currículo, planejar educação continuada, divulgar dados). Não há base legal
+declarada, não há consentimento, não há prazo de retenção, não há anonimização.
+
+A delegação, portanto, foi cumprida em extensão, não em conformidade: o
+Regulamento diz o que fazer com os dados sem dizer sob que fundamento pode
+fazê-lo. Este é o único dos cinco eixos em que a lacuna é integral — não há
+nenhuma camada, normativa ou técnica, que a cubra.
 
 **O que a LGPD exigiria.** Aplicado a egressos reais, o mecanismo precisaria de
 aceite registrado e recuperável, porque o ônus da prova é do controlador (art. 8º,
@@ -251,11 +298,14 @@ evidência que o conceito 3 descreve.
 
 ## 9. Limitações desta análise
 
-- **O Regulamento do Programa não foi lido.** A Portaria Normativa nº 128/2025 está
-  publicada como PDF digitalizado sem camada de texto. É a camada normativa que a
-  RN 13/2022 indica como responsável pelas regras de coleta e tratamento de dados,
-  e é onde a questão do consentimento poderia estar resolvida. **Pendência: obter
-  versão com texto pesquisável ou submeter o arquivo a OCR.**
+- **A extração do Regulamento foi parcial.** O texto da Portaria Normativa nº
+  128/2025 foi recuperado por descompressão dos fluxos do PDF, e os Capítulos I a
+  VIII saíram legíveis. Os capítulos finais, os apêndices e os anexos — que incluem
+  o Plano de Acompanhamento de Egressos (Apêndice I) — não foram integralmente
+  recuperados. Em particular, os dez índices institucionais definidos na lista de
+  siglas (IMT, IEMPAF, IVET, IVEG, IVQET, IVQEG, ICFT, ICFG, ICFACT, ICFACG)
+  aparecem nomeados, mas suas fórmulas não foram localizadas no texto extraído.
+  **Pendência: recuperar esses capítulos, relevantes para a E12.**
 - **A estrutura foi reconstruída por fonte secundária.** Os relatórios são
   documentos oficiais da própria DAEST e publicam enunciados e domínios, mas não
   substituem a inspeção da configuração do questionário. Aspectos como
@@ -271,25 +321,40 @@ evidência que o conceito 3 descreve.
 
 | # | Limitação observada | Efeito | Correspondência na literatura |
 |---|---|---|---|
-| 1 | Acesso por link aberto, sem token | admite resposta múltipla e de não egressos; respondente autosselecionado | [IFES (2025)](fichamentos/ifes-2025.md) — mesma limitação com Google Forms, e o relatório afirma representatividade sem poder calculá-la |
+| 1 | Acesso por link aberto, sem token — **contra o art. 16 do próprio Regulamento**, que exige link por egresso | admite resposta múltipla e de não egressos; respondente autosselecionado | [IFES (2025)](fichamentos/ifes-2025.md) — mesma limitação com Google Forms, e o relatório afirma representatividade sem poder calculá-la |
 | 2 | Sem identificação do participante | não há denominador, logo não há taxa de resposta nem perfil de não resposta | [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — única fonte do conjunto com taxa real (35,4%), justamente por partir de lista fechada de 79 egressos extraída do sistema acadêmico |
 | 3 | Nome do curso em texto livre | impede agregação por curso sem tratamento manual, em instituição com 39 campi | [PRAGA DE SOUZA et al. (2025)](fichamentos/praga-de-souza-2025.md) — gestores relatam que perguntas redundantes e dados já existentes em base devem ser evitados |
 | 4 | Dados institucionais perguntados ao egresso | alonga o instrumento e introduz erro onde a instituição já tem o dado | [RANTHUM e SANTOS JUNIOR (2023)](fichamentos/ranthum-2023.md) — a ferramenta extrai dos sistemas acadêmicos o que já se sabe e pergunta só o resto |
-| 5 | Sem convite, lembrete ou cobrança | insistência só por difusão ampla, que realcança quem já respondeu | [IFES (2025)](fichamentos/ifes-2025.md) — mobilização por difusão e janela de cinco meses e meio como substituto da cobrança dirigida |
-| 6 | Sem tratamento de contato inválido | contato desatualizado é perda definitiva | [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — busca ativa por telefone e redes para atualizar o e-mail; [PRAGA DE SOUZA et al. (2025)](fichamentos/praga-de-souza-2025.md) — desatualização cadastral como obstáculo de primeira ordem |
-| 7 | Sem registro de consentimento | aceite não é persistido nem recuperável | [BRASIL — LGPD](fichamentos/brasil-lei-13709-2018.md), arts. 8º e 9º; [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — precedente de TCLE eletrônico com desvio condicional |
-| 8 | Sem finalidade declarada nem base legal | o egresso não sabe para que fornece o dado | [IFTO (2023)](fichamentos/ifto-ppdp-2023.md) — declara o acompanhamento de egressos como finalidade expressa de tratamento, no art. 10, §3º, III |
+| 5 | Sem convite, lembrete ou cobrança — **embora o art. 16, §§1º e 2º os determine** | insistência só por difusão ampla, que realcança quem já respondeu | [IFES (2025)](fichamentos/ifes-2025.md) — mobilização por difusão e janela de cinco meses e meio como substituto da cobrança dirigida |
+| 6 | Sem tratamento de contato inválido — **embora o art. 16, §1º preveja fallback por mensagens instantâneas** | contato desatualizado é perda definitiva | [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — busca ativa por telefone e redes para atualizar o e-mail; [PRAGA DE SOUZA et al. (2025)](fichamentos/praga-de-souza-2025.md) — desatualização cadastral como obstáculo de primeira ordem |
+| 7 | Sem registro de consentimento, em nenhuma camada normativa ou técnica | aceite não é persistido nem recuperável | [BRASIL — LGPD](fichamentos/brasil-lei-13709-2018.md), arts. 8º e 9º; [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — precedente de TCLE eletrônico com desvio condicional |
+| 8 | Sem finalidade declarada nem base legal | o Regulamento diz o que fazer com os dados sem dizer sob que fundamento | [IFTO (2023)](fichamentos/ifto-ppdp-2023.md) — declara o acompanhamento de egressos como finalidade expressa de tratamento, no art. 10, §3º, III |
+
+**Padrão das oito limitações.** Cinco das oito (1, 3, 4, 5, 6) são falhas de
+implementação de coisas já determinadas ou já disponíveis: as de número 1, 5 e 6
+contrariam dispositivos expressos do Regulamento; as de número 3 e 4 são
+configurações da própria plataforma que não foram acionadas. Apenas as de número 7
+e 8 são lacunas normativas verdadeiras, sem cobertura em nenhuma camada. Esse
+padrão define o caráter do artefato a ser produzido: majoritariamente
+viabilização do que está posto, e não proposição de política nova.
 
 ## 11. O que este diagnóstico determina para as etapas seguintes
 
-- **E05** — os parâmetros de contato precisam vir da literatura, porque a normativa
-  institucional não fixa nenhum: nem número de lembretes, nem intervalo, nem
-  tratamento de recusa.
+- **E05** — a normativa institucional fixa parte dos parâmetros e deve ser
+  respeitada: periodicidade anual (arts. 14 e 19), primeiro contato no semestre de
+  conclusão, nova campanha dois anos após a formatura (art. 22), e-mail como canal
+  primário com mensagens instantâneas como alternativa (art. 16, §1º). O que a
+  norma **não** fixa e terá de vir da literatura: número de lembretes por ciclo,
+  intervalo entre eles, limite de tentativas e tratamento da recusa.
 - **E11** — o leiaute de entrada deve trazer o que a instituição já possui (campus,
   curso, ano de conclusão, modalidade), para pré-preenchimento, e mais de uma via
   de contato.
 - **E12** — os sete blocos vigentes são a referência estrutural de partida,
-  observado que o conteúdo temático das questões vem de projeto correlato.
+  observado que o conteúdo temático das questões vem de projeto correlato. O
+  critério de conclusão da etapa — nenhum bloco sem indicador correspondente —
+  tem agora referência institucional: o Regulamento define dez índices próprios
+  (IMT, IEMPAF, IVET, IVEG, IVQET, IVQEG, ICFT, ICFG, ICFACT, ICFACG), cujas
+  fórmulas precisam ser recuperadas do documento.
 - **E13** — o campo de curso é o caso-teste do fechamento de domínio.
 - **E14** — a bifurcação da questão 15 entre "inserido" e "não inserido" é o caminho
   condicional a reproduzir, e está quantitativamente confirmada.
