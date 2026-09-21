@@ -44,13 +44,31 @@ de comparação do custo da via de desenvolvimento próprio.
 
 ## Pendências levantadas
 
-**Fontes que precisam de nova leitura**
+Toda pendência desta seção tem etapa responsável declarada. Pendência sem etapa
+não é recolhida por ninguém — foi o que se aprendeu na E04, e o `ETAPAS.md` traz
+o registro correspondente em cada etapa citada aqui.
+
+**Fontes que precisam de nova leitura** — recolhidas pela **E07**
+
+Ambas dependem de ferramenta de extração de texto e OCR, que o ambiente ainda não
+tem. Instalar no provisionamento e reler na sequência.
 
 - **FERREIRA (2026)** foi fichada pelo resumo e pelos metadados do repositório: o
   PDF não permitiu extração de texto por nenhum meio disponível nesta máquina. Ler
-  integralmente antes de citar.
+  integralmente antes de citar. É a mais urgente das duas: já está citada na linha
+  de base, no quadro de engajamento e na fundamentação do documento do projeto.
 - **DAVIS (1989)** foi fichado por extração parcial — tabelas, discussão e apêndice
   foram lidos; a seção de método, não.
+
+**Conferências de referência antes da entrega** — recolhidas pela **E31**
+
+- **RANTHUM e SANTOS JUNIOR (2023)** — o fichamento não registra a instituição de
+  aplicação da ferramenta; o documento do projeto a atribui à Universidade
+  Paranaense.
+- **PRAGA DE SOUZA et al. (2025)** — divergência de autoria entre o PDF (dois
+  autores) e a página do periódico (três). Adotou-se a citação da página.
+- **IFSP — RN nº 13/2022** — numeração de artigos corrompida pelo OCR. Conferir no
+  PDF original todo dispositivo citado.
 
 **Material relevante ausente das 17 referências**
 
@@ -64,7 +82,10 @@ de comparação do custo da via de desenvolvimento próprio.
   E03**. O PDF não era digitalizado: tinha camada de texto em fluxos comprimidos.
   Os dezenove indicadores do Anexo I estão reproduzidos na linha de base.
 - **Mello et al. (2023)** — avaliação do SAVE com egressos, complementar ao artigo
-  de 2024, que cobre apenas gestores.
+  de 2024, que cobre apenas gestores. **Recolhida pela E31.** É a única fonte que
+  traria o lado do respondente a um conjunto hoje formado só por gestores e
+  coordenadores. Localizar e incorporar ao quadro de engajamento ou, não sendo
+  possível, declarar a ausência como limitação do quadro.
 
 ## Grupos
 

@@ -61,12 +61,39 @@ Meta 1 · ago–set/26
   consentimento, retenção nem anonimização. O Anexo I define dezenove indicadores
   institucionais, reproduzidos no Anexo A da linha de base — insumo direto da E12.
 
-### [ ] E04 — Montar o quadro comparativo de estratégias de engajamento
+### [x] E04 — Montar o quadro comparativo de estratégias de engajamento
 - **Objetivo:** sistematizar o que outras instituições fizeram e com que efeito.
 - **Entregável:** `docs/pesquisa/quadro-engajamento.md` com instituição,
   estratégia, efeito observado, limitação e implicação técnica.
 - **Conclusão quando:** cobrir busca ativa, aceite eletrônico, mala direta,
   mobilização por turmas e contrapartidas ao egresso.
+- **Concluída em:** 20/09/2026 · `docs/pesquisa/quadro-engajamento.md`.
+- **Registro:** onze estratégias sistematizadas — as cinco do critério (busca ativa,
+  aceite eletrônico, mala direta, mobilização por turmas, contrapartidas) e mais seis
+  que emergiram dos fichamentos (convite individual sobre lista fechada, redução do
+  esforço de resposta, divulgação institucional, janela longa de coleta, periodicidade
+  definida, portal centralizado). Nenhuma fonte nova foi levantada: o quadro
+  reorganiza, sob o recorte do engajamento, o que a E02 e a E03 já haviam lido.
+- **Achado principal — o estado da evidência.** Nenhuma fonte isola o efeito de uma
+  estratégia sobre a participação. Das onze linhas, **uma** tem efeito medido (os
+  35,4% de Coelho e Silva, e mesmo esse confunde convite inicial com busca ativa),
+  cinco são relatadas sem separação e cinco não foram avaliadas. O quadro declara o
+  estado da evidência em cada linha e não é comparação de desempenho.
+- **Consequência direta para a E05:** o quadro **não fornece** número de lembretes,
+  intervalo entre disparos nem limite de tentativas — nenhuma fonte os informa. Os
+  três terão de ser fixados como decisão de projeto justificada, com registro de que
+  não derivam de efeito medido. O que vem pronto da norma é a periodicidade anual, o
+  e-mail como canal primário e o fallback por mensagens instantâneas.
+- **Achado normativo:** sete das onze estratégias já têm dispositivo expresso na
+  norma do IFSP (Regulamento, arts. 14, 16, 19, 22 e 25; PAEg, art. 8º) e nenhuma
+  está implementada. Reforça, por outro ângulo, a conclusão da E03: a lacuna é de
+  suporte técnico, não de norma.
+- **Risco registrado para E24 e E30:** difundir um endereço único em grupo de turma
+  ou em campanha aberta anula a rastreabilidade. Mobilização por turmas e convite
+  individual não podem compartilhar a mesma URL.
+- **Distinção nova, que as fontes não fazem:** busca ativa *reparadora* (corrige o
+  cadastro) e contato por *canal alternativo* (entrega o convite por outra via)
+  exigem coisas diferentes do mecanismo. Insumo de E05, E11 e E21.
 
 ### [ ] E05 — Derivar os parâmetros de contato
 - **Objetivo:** transformar o quadro anterior em parâmetros justificados.
@@ -92,6 +119,15 @@ Meta 2 · ago–set/26
 - **Objetivo:** ter o ambiente base funcionando.
 - **Entregável:** artefatos de provisionamento em `infra/`.
 - **Conclusão quando:** o ambiente subir do zero seguindo apenas o que está versionado.
+- **Recolhe as pendências de releitura de fonte.** Ferreira (2026) e Davis (1989)
+  foram fichados por leitura parcial porque esta máquina não extraiu o texto dos
+  PDFs — a mesma carência de ferramenta que deixou o Python pendente. Ao provisionar
+  o ambiente, instalar o que resolve extração de texto e OCR, e então reler as duas
+  fontes e atualizar os fichamentos. Ferreira é a que pesa: já está citada na linha
+  de base, no quadro de engajamento e na fundamentação do documento do projeto.
+- **Também recolhe o `.gitattributes`**, ainda não criado. Passa a importar aqui,
+  quando os primeiros artefatos de shell entram no repositório e a normalização de
+  fim de linha deixa de ser cosmética.
 
 ### [ ] E08 — Instalar o LimeSurvey e validar o acesso
 - **Objetivo:** instância operacional com painel administrativo acessível.
@@ -159,6 +195,15 @@ Metas 4 e 5 · set–nov/26
 - **Objetivo:** converter o questionário para acesso controlado.
 - **Entregável:** base importada; registro do procedimento.
 - **Conclusão quando:** todos os registros forem criados sem duplicidade.
+- **Gera ADR.** É aqui que a base persistente de participantes passa a existir, e
+  essa é uma decisão de arquitetura com fundamento em princípio legal, não uma
+  escolha de implementação. O RAEG (Praga de Souza et al., 2025) optou pelo
+  contrário — **não** manter base fixa de participantes, em nome da minimização de
+  dados. Este projeto opta pela base persistente porque ela é a condição da
+  rastreabilidade, e endereça o risco por consentimento (E22), anonimização e
+  trilha de auditoria (E23). São escolhas legítimas e opostas diante do mesmo
+  princípio da necessidade, e há literatura no caminho oposto: registrar em ADR,
+  conforme recomendado no fichamento do RAEG.
 
 ### [ ] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
@@ -249,7 +294,24 @@ Metas 9 e 10 · out–dez/26
 - **Objetivo:** fechar a produção científica.
 - **Entregável:** relatório final e rascunho de artigo/resumo expandido.
 - **Conclusão quando:** incluir a recomendação de apreciação ética prévia a
-  qualquer aplicação futura junto a egressos reais.
+  qualquer aplicação futura junto a egressos reais **e** nenhuma pendência de fonte
+  permanecer em aberto.
+- **Recolhe as conferências de referência.** Cada uma está anotada no fichamento
+  correspondente, contra PDF já localizado:
+  - **RANTHUM e SANTOS JUNIOR (2023)** — o fichamento não registra a instituição de
+    aplicação da ferramenta; o documento do projeto a atribui à Universidade
+    Paranaense. Conferir.
+  - **PRAGA DE SOUZA et al. (2025)** — divergência de autoria entre o PDF (dois
+    autores) e a página do periódico (três). Adotou-se a citação da página.
+  - **IFSP — RN nº 13/2022** — a numeração de artigos veio corrompida do OCR
+    ("Art. IP", "Art. Y"). Conferir no PDF original todo dispositivo citado.
+- **Mello et al. (2023)** — avaliação do SAVE pela perspectiva do egresso, ausente
+  das 17 referências. É a única fonte que traria o lado do respondente a um conjunto
+  hoje formado só por gestores e coordenadores. Localizar e incorporar ao quadro de
+  engajamento ou, não sendo possível, declarar a ausência como limitação do quadro.
+- **Titularidade do copyright** a confirmar antes da entrega: a licença MIT nomeia
+  um titular, e o repositório é público. Definir se o titular é o estudante, a
+  orientação ou o IFSP, e ajustar o `LICENSE` se for o caso.
 
 ---
 
@@ -260,3 +322,4 @@ Uma linha por sessão, mais recente ao final.
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
 | 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
+| 20/09/2026 | E04 | E04 concluída. Quadro de engajamento com onze estratégias, estado da evidência declarado por linha e cruzamento com a norma do IFSP. Pendências de fonte passaram a ter etapa responsável. | Nenhuma pendência sem dono. Releituras de fonte (Ferreira 2026, Davis 1989) e `.gitattributes` → E07, junto com a ferramenta de extração e OCR. Conferências de referência (Ranthum, Praga de Souza, OCR da RN 13/2022), Mello et al. (2023) e titularidade do copyright → E31. Python não instalado segue marcado para E16 e E28. |
