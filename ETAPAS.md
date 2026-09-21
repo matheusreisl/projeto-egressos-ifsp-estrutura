@@ -143,13 +143,46 @@ Meta 1 · ago–set/26
 ## Fase 2 — Implantação da instância própria
 Meta 2 · ago–set/26
 
-### [ ] E06 — Decidir o ambiente de execução (ADR-0002)
+### [x] E06 — Decidir o ambiente de execução (ADR-0002)
 - **Objetivo:** escolher entre Docker no WSL2, VM local ou nuvem em camada gratuita.
 - **Entregável:** `docs/decisoes/0002-ambiente-execucao.md` preenchido, com
   critérios, alternativas avaliadas, decisão e consequências.
 - **Conclusão quando:** a decisão estiver registrada e justificada.
 - **Critérios sugeridos:** custo zero, facilidade de reprodução por terceiros,
   suporte a tarefa agendada, viabilidade de envio de e-mail, portabilidade.
+- **Concluída em:** 21/09/2026 · `docs/decisoes/0002-ambiente-execucao.md`.
+- **Decisão:** **conteinerização declarativa em máquina local** — Docker Engine e
+  Docker Compose, composição inteira (LimeSurvey, banco, serviço de correio e
+  rotina agendada) declarada em arquivo versionado em `infra/`, em rede fechada.
+  O WSL2 é o hospedeiro **desta** máquina e foi explicitamente registrado como
+  substrato trocável, não como parte da decisão: a mesma composição sobe em Linux
+  nativo, macOS ou servidor institucional.
+- **Registro:** cinco alternativas avaliadas contra sete critérios. Estado da
+  máquina verificado antes de decidir (WSL 2.7.10 presente **sem distribuição**,
+  Docker ausente, virtualização ativa) — nada foi afirmado sem conferência.
+- **Dois critérios acrescentados aos cinco sugeridos.** **K6 — contenção do
+  disparo:** a restrição "nunca disparar para endereços reais" vinha sendo tratada
+  como regra de conduta, e a escolha de ambiente é o único momento em que pode
+  virar propriedade do ambiente. Em rede fechada com correio próprio, a mensagem
+  não tem rota de saída; um endereço equivocado produz devolução interna, não
+  mensagem real a um desconhecido. **Foi este critério que decidiu a etapa.**
+  **K7 — operação integral por linha de comando:** pré-condição da reprodução por
+  terceiros, porque o guia da E30 é feito de comandos, não de capturas de tela.
+- **Domínio dos ensaios fixado:** TLD reservado `.test` (RFC 2606/6761), que não
+  resolve na internet pública. Dá conteúdo concreto à expressão "domínio
+  controlado pelo projeto", usada desde a E05 sem ambiente que a materializasse.
+- **Docker Desktop descartado por licença, não por técnica.** O Engine é Apache 2.0
+  sem limiar; o Desktop exige assinatura acima de 250 funcionários ou US$ 10 mi de
+  receita. Um Instituto Federal não cabe no limiar, e a instituição replicante não
+  pode ser presumida cabendo. Resultado técnico idêntico, sem nota de rodapé no guia.
+- **Custo assumido e declarado:** a rotina agendada só executa com a máquina ligada.
+  Aceitável porque a Fase 6 é simulação com compressão temporal declarada (E26).
+  Vira limitação a enunciar na E31 — não se poderá afirmar que a rotina se sustenta
+  por um ciclo anual em relógio real.
+- **Risco novo registrado:** não há imagem de contêiner publicada pelo projeto
+  LimeSurvey; as de uso corrente são comunitárias. Decisão explícita na E07 —
+  imagem comunitária de referência ou imagem própria a partir do código oficial —,
+  com fixação por digest em qualquer dos casos.
 
 ### [ ] E07 — Provisionar o ambiente escolhido
 - **Objetivo:** ter o ambiente base funcionando.
@@ -164,11 +197,24 @@ Meta 2 · ago–set/26
 - **Também recolhe o `.gitattributes`**, ainda não criado. Passa a importar aqui,
   quando os primeiros artefatos de shell entram no repositório e a normalização de
   fim de linha deixa de ser cosmética.
+- **Lista fechada pela E06** (ADR-0002): instalar a distribuição Linux no WSL2 com
+  `systemd` habilitado; instalar o **Docker Engine** na distribuição, não o Docker
+  Desktop; escrever a composição em `infra/` com `.env.exemplo` sem valores reais;
+  **fixar todas as imagens por digest**. A rede da composição é fechada, sem rota
+  de saída para a internet.
+- **Decisão que esta etapa precisa tomar explicitamente:** imagem comunitária de
+  referência do LimeSurvey ou imagem própria construída a partir do código oficial.
+  Não há imagem publicada pelo projeto LimeSurvey. Registrar a escolha e o digest.
 
 ### [ ] E08 — Instalar o LimeSurvey e validar o acesso
 - **Objetivo:** instância operacional com painel administrativo acessível.
 - **Entregável:** instância instalada; registro da versão e das configurações aplicadas.
 - **Conclusão quando:** for possível criar um questionário de teste e acessá-lo.
+- **Conferência que a E06 encaminhou para cá.** É a primeira etapa com instância
+  viva, e portanto a primeira em que as **capacidades C1 a C10** da seção 13 de
+  `parametros-contato.md` deixam de ser especulação. Conferir uma a uma contra a
+  instância e registrar o resultado — a E05 declarou expressamente que afirmar o
+  que o LimeSurvey faz nativamente, antes disso, seria asserção sem conferência.
 
 ### [ ] E09 — Configurar e verificar o envio de mensagens
 - **Objetivo:** garantir que a instância envia e-mail, pré-requisito da automação.
@@ -180,6 +226,12 @@ Meta 2 · ago–set/26
   ler devoluções, e essa configuração inviabiliza o parâmetro P8 (verificação de
   entrega) e o requisito "contato inválido" da matriz do projeto. **Verificar as
   duas direções.**
+- **Armadilha nomeada pela E06.** O serviço de correio é do próprio compose, com
+  domínio sob `.test`. Atenção: capturadores de SMTP de uso corrente em
+  desenvolvimento **aceitam tudo e nunca devolvem erro** — servem para inspecionar
+  o envio e não atendem P8. Ver a mensagem chegar ao capturador **não** satisfaz o
+  critério desta etapa. É preciso um serviço que devolva erro permanente para caixa
+  inexistente do domínio controlado, e verificar isso explicitamente.
 
 ### [ ] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
@@ -330,6 +382,9 @@ Meta 8 · nov–dez/26
 - **Entregável:** `docs/especificacao/matriz-verificacao.md` com requisito,
   procedimento, resultado esperado e campo para resultado obtido.
 - **Conclusão quando:** os 12 requisitos do projeto estiverem contemplados.
+- **Acrescentado pela E06:** a **contenção do disparo** passou a ser propriedade do
+  ambiente, e não regra de conduta — logo é verificável e deve entrar na matriz
+  como característica do ambiente, não como procedimento de operação.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -363,6 +418,12 @@ Metas 9 e 10 · out–dez/26
 - **Objetivo:** entregar o artefato replicável por outras instituições.
 - **Entregável:** `entregas/guia-replicacao.md` completo.
 - **Conclusão quando:** cobrir instalação, configuração, estrutura, automação e conformidade.
+- **Organização que a E06 determinou.** Separar o que o guia **ensina** — a
+  composição, idêntica em qualquer lugar — do que ele apenas **oferece como
+  opção** — como obter um hospedeiro Docker em cada sistema operacional. E
+  registrar o que muda numa implantação real: hospedeiro que permanece ligado,
+  correio institucional e rede não isolada. Sem essa separação, o guia parece
+  prescrever um equipamento pessoal, quando o artefato é a composição.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -394,6 +455,10 @@ Metas 9 e 10 · out–dez/26
   mensagens instantâneas) não é atendido por automação, conforme ADR-0003. O
   projeto entrega a condição técnica — endereço individual transportável —, não o
   disparo. Enunciar assim, sem arredondamento.
+- **Limitação vinda da E06:** o ambiente é local e a rotina agendada só executa com
+  a máquina ligada. Não se poderá afirmar que a rotina se sustenta ao longo de um
+  ciclo anual em **relógio real** — atesta-se o comportamento sob compressão
+  temporal declarada. Enunciar assim, junto das demais limitações.
 - **Titularidade do copyright** a confirmar antes da entrega: a licença MIT nomeia
   um titular, e o repositório é público. Definir se o titular é o estudante, a
   orientação ou o IFSP, e ajustar o `LICENSE` se for o caso.
@@ -409,3 +474,4 @@ Uma linha por sessão, mais recente ao final.
 | 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
 | 20/09/2026 | E04 | E04 concluída. Quadro de engajamento com onze estratégias, estado da evidência declarado por linha e cruzamento com a norma do IFSP. Pendências de fonte passaram a ter etapa responsável. | Nenhuma pendência sem dono. Releituras de fonte (Ferreira 2026, Davis 1989) e `.gitattributes` → E07, junto com a ferramenta de extração e OCR. Conferências de referência (Ranthum, Praga de Souza, OCR da RN 13/2022), Mello et al. (2023) e titularidade do copyright → E31. Python não instalado segue marcado para E16 e E28. |
 | 20/09/2026 | E05 | **Fase 1 encerrada.** E05 concluída: nove parâmetros de contato especificados, cada um com origem declarada (`norma`/`quadro`/`projeto`). Descoberto que o documento do projeto já propunha os sete parâmetros — a etapa manteve os valores e corrigiu a atribuição de origem. Recusa desdobrada em duas; ciclo anual ancorado na turma, absorvendo os arts. 14, 19 e 22 numa só regra. ADR-0003 registrada. | Nenhuma pendência nova sem dono. A E05 **ampliou critérios** de quatro etapas seguintes: E09 (verificar devolução de erro, não só envio), E11 (mais de uma via de contato e semestre de conclusão), E22 (duas manifestações de recusa na tela) e E23 (efeitos distintos por estado). E21 recebeu ponto de verificação sobre o modelo de cadência da rotina nativa. Correção de fundamentação do documento do projeto → E31. Demais pendências inalteradas. |
+| 21/09/2026 | E06 | **Fase 2 iniciada.** E06 concluída: ambiente decidido como conteinerização declarativa em máquina local (Docker Engine + Compose), com o WSL2 registrado como substrato trocável. ADR-0002 preenchida com sete critérios, cinco alternativas e consequências. Estado da máquina foi verificado antes de decidir. | Nenhuma pendência nova sem dono. A E06 **acrescentou dois critérios** (contenção do disparo e operação por linha de comando) e **ampliou** E07 (lista de provisionamento fechada; escolher e fixar a imagem por digest), E08 (conferir C1–C10 contra a instância viva), E09 (capturador de SMTP não atende P8 — exigir serviço que devolva erro), E25 (contenção do disparo como característica verificável), E30 (separar o que o guia ensina do que oferece) e E31 (limitação da compressão temporal). Docker Desktop descartado por licença, não por técnica. Demais pendências inalteradas. |
