@@ -60,11 +60,9 @@ de comparação do custo da via de desenvolvimento próprio.
 - ~~IFSP, Relatórios 1 e 2 da Pesquisa de Acompanhamento de Egressos~~ — **lidos e
   usados na E03**. Trazem a estrutura completa do instrumento vigente, os domínios
   de resposta e as contagens por período.
-- ~~IFSP, Portaria Normativa nº 128/2025~~ — **recuperada e usada na E03**. O PDF
-  não era digitalizado: tinha camada de texto em fluxos comprimidos, extraída por
-  descompressão. Capítulos I a VIII legíveis. **Resta recuperar** os capítulos
-  finais, os apêndices e os anexos, onde devem estar as fórmulas dos dez índices
-  institucionais — relevante para a E12.
+- ~~IFSP, Portaria Normativa nº 128/2025~~ — **recuperada por inteiro e usada na
+  E03**. O PDF não era digitalizado: tinha camada de texto em fluxos comprimidos.
+  Os dezenove indicadores do Anexo I estão reproduzidos na linha de base.
 - **Mello et al. (2023)** — avaliação do SAVE com egressos, complementar ao artigo
   de 2024, que cobre apenas gestores.
 

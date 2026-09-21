@@ -241,21 +241,33 @@ examinadas.
 | Instrumento | a tela inicial abre diretamente na primeira questão; não há termo, aceite nem informação sobre tratamento de dados |
 | Relatórios 1 e 2 | nenhuma ocorrência de "consentimento", "LGPD", "dados pessoais", "sigilo", "anonimização" ou "anônimo" |
 | Resolução Normativa nº 13/2022 | nenhuma menção a proteção de dados, embora preveja coleta por questionário eletrônico, banco de dados de egressos e divulgação "a toda comunidade interna e externa" |
-| Portaria Normativa nº 128/2025 (Regulamento) | nenhuma menção a LGPD, consentimento, dados pessoais, sigilo, anonimização ou privacidade |
+| Portaria Normativa nº 128/2025 (Regulamento) | **há previsão normativa** — o art. 25 declara conformidade com a LGPD e com o Marco Civil da Internet |
 
-**A verificação está completa, e o resultado é consistente.** A RN 13/2022 delega
-ao Regulamento dispor sobre "coleta, tratamento e divulgação de dados sobre os
-egressos" (art. 14, parágrafo único, II). O Regulamento, por sua vez, dedica a
-essa matéria o Capítulo V inteiro — e nele trata apenas de **que dados coletar**
-(art. 14: situação profissional, satisfação com a formação, necessidades de
-formação continuada) e **para que usá-los** (art. 15: melhorar cursos, adaptar
-currículo, planejar educação continuada, divulgar dados). Não há base legal
-declarada, não há consentimento, não há prazo de retenção, não há anonimização.
+**O que o Regulamento diz.** O art. 25 estabelece que "todos os processos de
+coleta e processamento de dados estarão em conformidade com a Lei Geral de
+Proteção de Dados (LGPD - Lei nº 13.709/2018) e com o Marco Civil da Internet
+(Lei nº 12.965/2014), garantindo a privacidade e segurança das informações". Há
+ainda uma remissão no Anexo I, na descrição do Indicador 1, que condiciona a
+divulgação de listagens nominais a "respeitando a lei de proteção de dados".
 
-A delegação, portanto, foi cumprida em extensão, não em conformidade: o
-Regulamento diz o que fazer com os dados sem dizer sob que fundamento pode
-fazê-lo. Este é o único dos cinco eixos em que a lacuna é integral — não há
-nenhuma camada, normativa ou técnica, que a cubra.
+**O que isso resolve e o que não resolve.** Resolve a questão da vontade
+normativa: a instituição declara submissão à LGPD, e não se pode afirmar que a
+matéria esteja ausente da norma. Não resolve nada da operação. O art. 25 é
+cláusula de remissão genérica — declara conformidade sem estabelecer **como**:
+
+- não indica a base legal do art. 7º sob a qual o tratamento se dá;
+- não institui coleta de consentimento nem forma de registrá-lo;
+- não fixa prazo de retenção nem procedimento de eliminação;
+- não trata de anonimização, apesar de o art. 15, item 4, prever "divulgar dados
+  sobre os egressos da instituição";
+- não define o registro das operações de tratamento exigido pelo art. 37 da LGPD.
+
+**Conclusão do eixo.** O padrão aqui é o mesmo dos demais: a norma determina o
+destino certo e não há suporte técnico que o alcance. Declarar conformidade com a
+LGPD não produz conformidade — produz uma obrigação a cumprir. O instrumento em
+operação não coleta consentimento, não informa finalidade e não registra
+tratamento, de modo que o art. 25 é hoje uma promessa sem implementação. É
+precisamente essa distância que as etapas E22 e E23 fecham.
 
 **O que a LGPD exigiria.** Aplicado a egressos reais, o mecanismo precisaria de
 aceite registrado e recuperável, porque o ônus da prova é do controlador (art. 8º,
@@ -298,14 +310,11 @@ evidência que o conceito 3 descreve.
 
 ## 9. Limitações desta análise
 
-- **A extração do Regulamento foi parcial.** O texto da Portaria Normativa nº
-  128/2025 foi recuperado por descompressão dos fluxos do PDF, e os Capítulos I a
-  VIII saíram legíveis. Os capítulos finais, os apêndices e os anexos — que incluem
-  o Plano de Acompanhamento de Egressos (Apêndice I) — não foram integralmente
-  recuperados. Em particular, os dez índices institucionais definidos na lista de
-  siglas (IMT, IEMPAF, IVET, IVEG, IVQET, IVQEG, ICFT, ICFG, ICFACT, ICFACG)
-  aparecem nomeados, mas suas fórmulas não foram localizadas no texto extraído.
-  **Pendência: recuperar esses capítulos, relevantes para a E12.**
+- **O Regulamento foi recuperado por inteiro**, por descompressão dos fluxos do
+  PDF, incluindo os anexos. As únicas perdas são as expressões matemáticas dos
+  indicadores, publicadas como imagem — supridas pelas descrições textuais
+  reproduzidas no Anexo A — e o Apêndice I, o Plano de Acompanhamento de Egressos,
+  que não foi examinado por estar fora do recorte desta etapa.
 - **A estrutura foi reconstruída por fonte secundária.** Os relatórios são
   documentos oficiais da própria DAEST e publicam enunciados e domínios, mas não
   substituem a inspeção da configuração do questionário. Aspectos como
@@ -327,16 +336,27 @@ evidência que o conceito 3 descreve.
 | 4 | Dados institucionais perguntados ao egresso | alonga o instrumento e introduz erro onde a instituição já tem o dado | [RANTHUM e SANTOS JUNIOR (2023)](fichamentos/ranthum-2023.md) — a ferramenta extrai dos sistemas acadêmicos o que já se sabe e pergunta só o resto |
 | 5 | Sem convite, lembrete ou cobrança — **embora o art. 16, §§1º e 2º os determine** | insistência só por difusão ampla, que realcança quem já respondeu | [IFES (2025)](fichamentos/ifes-2025.md) — mobilização por difusão e janela de cinco meses e meio como substituto da cobrança dirigida |
 | 6 | Sem tratamento de contato inválido — **embora o art. 16, §1º preveja fallback por mensagens instantâneas** | contato desatualizado é perda definitiva | [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — busca ativa por telefone e redes para atualizar o e-mail; [PRAGA DE SOUZA et al. (2025)](fichamentos/praga-de-souza-2025.md) — desatualização cadastral como obstáculo de primeira ordem |
-| 7 | Sem registro de consentimento, em nenhuma camada normativa ou técnica | aceite não é persistido nem recuperável | [BRASIL — LGPD](fichamentos/brasil-lei-13709-2018.md), arts. 8º e 9º; [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — precedente de TCLE eletrônico com desvio condicional |
-| 8 | Sem finalidade declarada nem base legal | o Regulamento diz o que fazer com os dados sem dizer sob que fundamento | [IFTO (2023)](fichamentos/ifto-ppdp-2023.md) — declara o acompanhamento de egressos como finalidade expressa de tratamento, no art. 10, §3º, III |
+| 7 | Sem registro de consentimento — **embora o art. 25 declare conformidade com a LGPD** | aceite não é persistido nem recuperável | [BRASIL — LGPD](fichamentos/brasil-lei-13709-2018.md), arts. 8º e 9º; [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — precedente de TCLE eletrônico com desvio condicional |
+| 8 | Conformidade declarada em cláusula genérica, sem base legal, retenção ou anonimização definidas | o egresso não sabe sob que fundamento fornece o dado nem por quanto tempo será guardado | [IFTO (2023)](fichamentos/ifto-ppdp-2023.md) — como uma política de IF desce ao operacional: finalidade expressa (art. 10, §3º, III), registro das operações (art. 8º, §4º), não identificação por padrão (art. 8º, §16) |
 
-**Padrão das oito limitações.** Cinco das oito (1, 3, 4, 5, 6) são falhas de
-implementação de coisas já determinadas ou já disponíveis: as de número 1, 5 e 6
-contrariam dispositivos expressos do Regulamento; as de número 3 e 4 são
-configurações da própria plataforma que não foram acionadas. Apenas as de número 7
-e 8 são lacunas normativas verdadeiras, sem cobertura em nenhuma camada. Esse
-padrão define o caráter do artefato a ser produzido: majoritariamente
-viabilização do que está posto, e não proposição de política nova.
+**Padrão das oito limitações — e o que ele determina sobre o artefato.** Nenhuma
+das oito decorre de omissão da norma. Em seis delas (1, 5, 6, 7, 8) há
+dispositivo expresso no Regulamento determinando o contrário do que está em
+operação; nas outras duas (3, 4) o recurso já existe na plataforma e não foi
+acionado.
+
+A conclusão é mais forte do que a de um diagnóstico de lacunas: **o IFSP já
+normatizou, em 2025, quase tudo o que este projeto se propõe a construir.** O que
+falta é suporte técnico para cumprir o que está posto. Isso desloca o trabalho de
+"proposta de melhoria" para "viabilização de norma vigente", e dá ao guia de
+replicação (E30) um destinatário concreto: a instituição não precisa decidir se
+quer; precisa de como fazer.
+
+A exceção a registrar é de grau, não de natureza: no eixo da conformidade, a norma
+declara o destino (art. 25) sem especificar o percurso, enquanto no eixo da
+cobrança o art. 16 especifica o percurso em detalhe. Por isso as etapas E22 e E23
+têm de tomar decisões de projeto — base legal, conteúdo do termo, prazo de
+retenção — que a E20 e a E21 não precisam tomar.
 
 ## 11. O que este diagnóstico determina para as etapas seguintes
 
@@ -352,9 +372,8 @@ viabilização do que está posto, e não proposição de política nova.
 - **E12** — os sete blocos vigentes são a referência estrutural de partida,
   observado que o conteúdo temático das questões vem de projeto correlato. O
   critério de conclusão da etapa — nenhum bloco sem indicador correspondente —
-  tem agora referência institucional: o Regulamento define dez índices próprios
-  (IMT, IEMPAF, IVET, IVEG, IVQET, IVQEG, ICFT, ICFG, ICFACT, ICFACG), cujas
-  fórmulas precisam ser recuperadas do documento.
+  tem agora referência institucional pronta: os dezenove indicadores do Anexo I do
+  Regulamento, reproduzidos no Anexo A deste documento.
 - **E13** — o campo de curso é o caso-teste do fechamento de domínio.
 - **E14** — a bifurcação da questão 15 entre "inserido" e "não inserido" é o caminho
   condicional a reproduzir, e está quantitativamente confirmada.
@@ -362,3 +381,51 @@ viabilização do que está posto, e não proposição de política nova.
   acrescentado por zelo.
 - **E25** — o Indicador 3.7 do INEP oferece critério externo e oficial para redigir
   os requisitos de verificação.
+
+## Anexo A — Os dezenove indicadores institucionais
+
+O Anexo I do Regulamento define dezenove indicadores, com descrição e propósito.
+São a referência oficial para o critério de conclusão da E12 — nenhum bloco sem
+indicador correspondente — e para o painel da E29, caso executado.
+
+| # | Indicador | Como é definido |
+|---|---|---|
+| Ind1 | Acompanhamento de gestão operacional | listagens nominal e quantitativa de atividades realizadas para egressos, por ano, tipo e campus, "respeitando a lei de proteção de dados" |
+| Ind2 | Número de egressos | total e por ano, campus, nível e curso, no sistema e entre os respondentes |
+| Ind3 | **IMT** — Inserção no Mundo do Trabalho | egressos com atividade remunerada ÷ total de respondentes |
+| Ind4 | **IEMPAF** — Empregabilidade na Área de Formação | egressos em atividade diretamente relacionada à formação ÷ egressos com atividade remunerada |
+| Ind5 | **IVET** — Verticalização, técnicos | egressos técnicos cursando nível superior **no IFSP** ÷ total de egressos técnicos |
+| Ind6 | **IVEG** — Verticalização, graduação | egressos de graduação cursando pós **no IFSP** ÷ total de egressos de graduação |
+| Ind7 | **IVQET** — Verticalização Qualificada, técnicos | egressos técnicos em superior no IFSP ÷ egressos técnicos em superior **em qualquer instituição** |
+| Ind8 | **IVQEG** — Verticalização Qualificada, graduação | análogo ao Ind7, para pós-graduação |
+| Ind9 | **ICFT** — Continuidade da Formação, técnicos | egressos técnicos em superior em qualquer instituição ÷ total de egressos técnicos |
+| Ind10 | **ICFG** — Continuidade da Formação, graduação | análogo ao Ind9, para pós-graduação |
+| Ind11 | **ICFACT** — Continuidade em Área Correlata, técnicos | continuaram **na mesma área** ÷ total que continuou |
+| Ind12 | **ICFACG** — Continuidade em Área Correlata, graduação | análogo ao Ind11 |
+| Ind13 | Nível de remuneração | média, maior, menor e valor mais frequente, por faixas de rendimento |
+| Ind14 | Satisfação financeira | média em escala de 1 a 10 |
+| Ind15 | Satisfação financeira, atuantes na área de formação | média em escala de 1 a 10 |
+| Ind16 | Satisfação financeira, atuantes fora da área | média em escala de 1 a 10 |
+| Ind17 | Satisfação com a atividade profissional | média em escala de 1 a 10 |
+| Ind18 | Associação entre atividade exercida e curso | afinidade em escala de 1 a 10 |
+| Ind19 | Satisfação com a formação recebida no IFSP | média em escala de 1 a 10 |
+
+**Sobre as fórmulas.** O Regulamento apresenta a expressão matemática de cada
+índice como imagem, que a extração de texto não recupera. A perda é imaterial: a
+descrição textual que precede cada fórmula é inequívoca quanto ao numerador e ao
+denominador, e a coluna acima a reproduz. Caso a E12 exija a notação exata, basta
+consultar as páginas 20 a 27 do PDF.
+
+**Três observações úteis para a E12.**
+
+1. **A distinção entre verticalização e continuidade é a chave do conjunto.** Os
+   pares Ind5/Ind9 e Ind6/Ind10 medem a mesma trajetória com denominadores
+   diferentes: o primeiro pergunta se o egresso continuou **no IFSP**, o segundo
+   se continuou **em qualquer instituição**. Coletar isso exige distinguir, no
+   instrumento, a instituição em que o egresso prosseguiu — campo que precisa
+   existir com domínio adequado.
+2. **Sete dos dezenove indicadores usam escala de 1 a 10** (Ind14 a Ind19, mais o
+   Ind18 de afinidade). Isso fixa um tipo de campo padronizado para vários blocos.
+3. **Ind4 e Ind18 dependem de julgamento sobre "área de formação"** — se a
+   atividade é ou não relacionada ao curso. Convém decidir na E13 se isso é
+   autodeclaração do egresso ou classificação posterior, porque muda o campo.

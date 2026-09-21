@@ -56,8 +56,10 @@ Meta 1 · ago–set/26
   e-mail com fallback para mensagens instantâneas, disparo automatizado e repetido
   e periodicidade anual. Nada disso está implementado. A lacuna é de suporte
   técnico, não de norma — o mecanismo do projeto viabiliza o que já é exigido.
-- **Pendência:** recuperar os capítulos finais, apêndices e anexos do Regulamento,
-  onde devem estar as fórmulas dos dez índices institucionais (E12).
+- **Regulamento recuperado por inteiro**, inclusive os anexos. O art. 25 declara
+  conformidade com a LGPD, em cláusula genérica que não desce a base legal,
+  consentimento, retenção nem anonimização. O Anexo I define dezenove indicadores
+  institucionais, reproduzidos no Anexo A da linha de base — insumo direto da E12.
 
 ### [ ] E04 — Montar o quadro comparativo de estratégias de engajamento
 - **Objetivo:** sistematizar o que outras instituições fizeram e com que efeito.
@@ -257,4 +259,4 @@ Uma linha por sessão, mais recente ao final.
 
 | Data | Etapas trabalhadas | Situação ao encerrar | Pendências |
 |------|--------------------|----------------------|------------|
-| 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Recuperar os capítulos finais e anexos da Portaria 128/2025 (fórmulas dos índices institucionais, para a E12). Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
+| 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
