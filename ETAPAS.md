@@ -95,12 +95,48 @@ Meta 1 · ago–set/26
   cadastro) e contato por *canal alternativo* (entrega o convite por outra via)
   exigem coisas diferentes do mecanismo. Insumo de E05, E11 e E21.
 
-### [ ] E05 — Derivar os parâmetros de contato
+### [x] E05 — Derivar os parâmetros de contato
 - **Objetivo:** transformar o quadro anterior em parâmetros justificados.
 - **Entregável:** `docs/especificacao/parametros-contato.md` com número de
   lembretes, intervalos, limite de tentativas, tratamento da recusa, remetente
   e verificação de entrega — cada um com sua justificativa.
 - **Conclusão quando:** todo parâmetro tiver fundamento rastreável ao quadro.
+- **Concluída em:** 20/09/2026 · `docs/especificacao/parametros-contato.md`.
+- **Registro:** nove parâmetros especificados — os seis do critério, mais convite
+  inicial, janela do ciclo e canal alternativo, que a E04 apontara como
+  necessários e que o documento do projeto não enuncia. Cada um recebeu rótulo de
+  origem (`norma` / `quadro` / `projeto`), na mesma lógica da escala de evidência
+  da E04.
+- **Ressalva ao critério de conclusão.** "Fundamento rastreável ao quadro" foi
+  atendido, mas três parâmetros — cadência, limite de tentativas e remetente —
+  rastreiam ao quadro **pela ausência**: a seção 8 da E04 declara que nenhuma
+  fonte os informa e os remete à E05 como decisão de projeto. Oito dos nove têm
+  algum componente de decisão de projeto; só o convite individual é integralmente
+  determinado por fora.
+- **Descoberta que mudou o desenho da etapa:** o documento do projeto **já
+  propunha** os sete parâmetros, com valores fechados. A etapa não os inventou —
+  manteve os valores e corrigiu a atribuição de origem, porque o documento afirma
+  que derivam da literatura e a E04 demonstrou que três não derivam.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - **Cadência** D+4/D+7/D+14 mantida, agora com faixa admissível declarada
+    (primeiro lembrete entre D+3 e D+7, intervalo mínimo de 3 dias entre disparos
+    consecutivos, último não depois de D+21). Fora da faixa exige ADR.
+  - **Recusa** desdobrada em duas, resolvendo a pergunta que a E04 deixou aberta:
+    *recusa de consentimento* encerra o ciclo corrente e o egresso volta no ciclo
+    seguinte; *recusa de contato* é permanente até revogação expressa, com via de
+    reversão tão simples quanto a manifestação.
+  - **Janela do ciclo** de 60 dias corridos. O que fixou o número foi o ciclo de
+    reparo de contato — detecção do erro, correção, reconvite e cadência própria
+    precisam caber inteiros na janela —, e não a folga após o último lembrete.
+- **Achado normativo:** os gatilhos dos arts. 14, 19 e 22 do Regulamento são **um
+  só ciclo**. Ancorando-o no semestre de conclusão da turma, a "campanha de dois
+  anos após a formatura" é o terceiro ciclo anual dessa mesma sequência — não
+  acrescenta disparo. Uma regra em vez de três rotinas sobrepostas.
+- **Gerou ADR-0003** — canal alternativo de convite (art. 16, §1º) sem automação.
+- **Pendência encaminhada para a E31:** corrigir, na próxima versão do documento
+  do projeto, a afirmação de que os parâmetros de contato "derivam das
+  experiências sistematizadas na revisão da literatura". Os valores ficam; a
+  atribuição de origem muda. Sem alteração de escopo, valor ou cronograma.
 
 ---
 
@@ -137,7 +173,13 @@ Meta 2 · ago–set/26
 ### [ ] E09 — Configurar e verificar o envio de mensagens
 - **Objetivo:** garantir que a instância envia e-mail, pré-requisito da automação.
 - **Entregável:** configuração de SMTP documentada, sem credenciais versionadas.
-- **Conclusão quando:** um envio de teste chegar a endereço sob domínio controlado.
+- **Conclusão quando:** um envio de teste chegar a endereço sob domínio controlado
+  **e** uma devolução de erro for lida e registrada pela instância.
+- **Critério ampliado pela E05.** O critério anterior — só a chegada do envio de
+  teste — é satisfeito por uma configuração que envia corretamente e não permite
+  ler devoluções, e essa configuração inviabiliza o parâmetro P8 (verificação de
+  entrega) e o requisito "contato inválido" da matriz do projeto. **Verificar as
+  duas direções.**
 
 ### [ ] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
@@ -155,6 +197,10 @@ Meta 3 · set–out/26
 - **Entregável:** `docs/especificacao/leiaute-entrada.md` com campo, descrição,
   tipo, obrigatoriedade e regra de validação.
 - **Conclusão quando:** o conjunto for mínimo e suficiente (princípio da necessidade).
+- **Campos que a E05 tornou obrigatórios.** **Mais de uma via de contato**, sem o
+  que a fila de correção do parâmetro P8 não tem para onde recorrer e o reparo de
+  contato inválido fica decorativo. E o **semestre de conclusão**, que é a âncora
+  do ciclo anual em P5 — sem ele não há como aplicar a regra dos arts. 14/19/22.
 
 ### [ ] E12 — Especificar os blocos estruturais do instrumento
 - **Objetivo:** definir os contêineres que acolherão as questões.
@@ -229,16 +275,44 @@ Metas 6 e 7 · out–nov/26
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
 - **Entregável:** rotina agendada ativa; procedimento em `infra/`.
 - **Conclusão quando:** o disparo executar no horário e atingir só os não respondentes.
+- **Ponto de verificação vindo da E05.** Rotinas nativas de lembrete tendem a
+  expressar cadência como *intervalo mínimo desde o último disparo* mais *número
+  máximo de lembretes*, modelo que só coincide com o D+*n* desde o convite quando
+  os intervalos são uniformes — e D+4/D+7/D+14 não são. Verificar qual modelo a
+  rotina disponível expressa e, sendo o primeiro, decidir entre traduzir a cadência
+  para intervalos uniformes (dentro da faixa admissível) ou agendar fora da rotina
+  nativa. Registrado como verificação, não como diagnóstico: não havia instância.
+- **Dois requisitos de implementação.** A cadência conta-se **por participante**, a
+  partir do envio efetivo do convite a cada um, e não de uma data única de abertura
+  do ciclo — quem entra por reparo de contato receberia lembrete antes do convite.
+  E o horário de disparo é **fixo e único, em dia útil**, sem o que o critério
+  "executar no horário" não é verificável.
+- **"Não respondente" não é estado da base.** É o conjunto de `convidado`,
+  `em preenchimento` e `expirado`, conforme a máquina de estados da seção 12 de
+  `parametros-contato.md`. Não implementar marcação redundante.
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
 - **Entregável:** tela inicial de consentimento com registro de aceite, data e versão do termo.
 - **Conclusão quando:** o aceite for persistido e recuperável.
+- **Requisito acrescentado pela E05.** A tela precisa oferecer **duas manifestações
+  separadas**, não uma: *não concordo com o termo neste ciclo* (encerra o ciclo
+  corrente; o egresso é convidado no ciclo seguinte) e *não quero mais ser
+  contatado* (permanente até revogação). Uma única opção de recusa erra em qualquer
+  das direções — ou exclui para sempre quem apenas hesitou, ou ignora quem pediu
+  para sair. Justificativa em `parametros-contato.md`, seção 8.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
 - **Entregável:** parametrização aplicada e documentada, incluindo tratamento da recusa.
-- **Conclusão quando:** a recusa interromper novos disparos.
+- **Conclusão quando:** a recusa **de contato** interromper novos disparos em todos
+  os ciclos, e a recusa **de consentimento** interromper apenas o ciclo corrente.
+- **Precisão vinda da E05.** São dois estados com efeitos distintos, e um terceiro
+  que não é recusa: `contato inválido` interrompe o disparo do ciclo corrente e
+  abre fila de correção, mas **não** bloqueia ciclos futuros — tratá-lo como recusa
+  converteria falha de cadastro em manifestação de vontade que ninguém expressou e
+  degradaria a base a cada ciclo. Registrar data, hora, ciclo, versão do termo e
+  via de manifestação; e prever revogação tão simples quanto a manifestação.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -309,6 +383,17 @@ Metas 9 e 10 · out–dez/26
   das 17 referências. É a única fonte que traria o lado do respondente a um conjunto
   hoje formado só por gestores e coordenadores. Localizar e incorporar ao quadro de
   engajamento ou, não sendo possível, declarar a ausência como limitação do quadro.
+- **Correção de fundamentação no documento do projeto**, vinda da E05. O documento
+  afirma que os parâmetros de contato são "derivados das experiências sistematizadas
+  na revisão da literatura" e, na Fase 5, "definidos a partir do quadro comparativo".
+  A E04 demonstrou que número de lembretes, intervalo e limite de tentativas não
+  derivam de efeito medido — nenhuma fonte os informa. Os valores ficam; a
+  atribuição de origem muda para decisão de projeto declarada. Sem alteração de
+  escopo, valor ou cronograma. Redação sugerida em `parametros-contato.md`, seção 14.
+- **Conformidade parcial a declarar:** o art. 16, §1º do Regulamento (convite por
+  mensagens instantâneas) não é atendido por automação, conforme ADR-0003. O
+  projeto entrega a condição técnica — endereço individual transportável —, não o
+  disparo. Enunciar assim, sem arredondamento.
 - **Titularidade do copyright** a confirmar antes da entrega: a licença MIT nomeia
   um titular, e o repositório é público. Definir se o titular é o estudante, a
   orientação ou o IFSP, e ajustar o `LICENSE` se for o caso.
@@ -323,3 +408,4 @@ Uma linha por sessão, mais recente ao final.
 |------|--------------------|----------------------|------------|
 | 20/09/2026 | E01, E02, E03 | E01 a E03 concluídas. Repositório publicado; 17 fontes fichadas; linha de base do instrumento vigente. | Reler Ferreira 2026 e Davis 1989 na íntegra. Python não instalado (E16, E28). `.gitattributes` não criado. Titularidade do copyright a confirmar. |
 | 20/09/2026 | E04 | E04 concluída. Quadro de engajamento com onze estratégias, estado da evidência declarado por linha e cruzamento com a norma do IFSP. Pendências de fonte passaram a ter etapa responsável. | Nenhuma pendência sem dono. Releituras de fonte (Ferreira 2026, Davis 1989) e `.gitattributes` → E07, junto com a ferramenta de extração e OCR. Conferências de referência (Ranthum, Praga de Souza, OCR da RN 13/2022), Mello et al. (2023) e titularidade do copyright → E31. Python não instalado segue marcado para E16 e E28. |
+| 20/09/2026 | E05 | **Fase 1 encerrada.** E05 concluída: nove parâmetros de contato especificados, cada um com origem declarada (`norma`/`quadro`/`projeto`). Descoberto que o documento do projeto já propunha os sete parâmetros — a etapa manteve os valores e corrigiu a atribuição de origem. Recusa desdobrada em duas; ciclo anual ancorado na turma, absorvendo os arts. 14, 19 e 22 numa só regra. ADR-0003 registrada. | Nenhuma pendência nova sem dono. A E05 **ampliou critérios** de quatro etapas seguintes: E09 (verificar devolução de erro, não só envio), E11 (mais de uma via de contato e semestre de conclusão), E22 (duas manifestações de recusa na tela) e E23 (efeitos distintos por estado). E21 recebeu ponto de verificação sobre o modelo de cadência da rotina nativa. Correção de fundamentação do documento do projeto → E31. Demais pendências inalteradas. |
