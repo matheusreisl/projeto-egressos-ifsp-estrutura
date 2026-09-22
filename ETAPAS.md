@@ -193,6 +193,14 @@ Meta 2 · ago–set/26
   Docker Engine 29.8.1, Compose v5.5.1. Composição com LimeSurvey 7.2.0+260921 e
   MariaDB 11.4.13. `verifica-ambiente.sh` — também artefato versionado —
   executa **21 conferências, todas passando**.
+- **Critério de conclusão verificado por execução, não por afirmação.** Volumes e
+  imagem construída foram **destruídos** (`docker compose down -v` mais remoção da
+  imagem) e o ambiente **reconstruído do nada em 24 s**, com as 21 conferências
+  passando outra vez. *Ressalva honesta:* essa segunda subida reaproveitou o cache
+  de camadas do Docker. O caminho completo — descarga do pacote, conferência da
+  soma e compilação das extensões — foi exercitado na **primeira** construção, que
+  era fria por não existir cache algum. As duas execuções somadas cobrem o
+  percurso; nenhuma delas sozinha o cobriria.
 - **Artefatos criados:** `compose.yml`, `.env.exemplo`, `limesurvey/Dockerfile`,
   `hospedeiro/provisiona-docker.sh`, `hospedeiro/provisiona-ferramentas.sh`,
   `verifica-ambiente.sh` e o `README.md` com o procedimento — que é a semente do
