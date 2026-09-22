@@ -15,7 +15,11 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `compose.yml` | a composição: serviços, redes, volumes |
 | `.env.exemplo` | modelo de configuração, sem valores reais |
 | `limesurvey/Dockerfile` | a imagem própria — **é** o procedimento de instalação |
+| `limesurvey/entrypoint.sh` | gera o `config.php` e instala o LimeSurvey sem interação |
 | `hospedeiro/provisiona-docker.sh` | instala o Docker Engine num hospedeiro Debian ou Ubuntu |
+| `hospedeiro/provisiona-ferramentas.sh` | ferramentas de apoio à pesquisa (não são do mecanismo) |
+| `verifica-ambiente.sh` | confere as propriedades do ambiente |
+| `confere-capacidades.py` | confere as capacidades C1 a C10 contra a instância |
 
 O `.env` real **não é versionado**. O repositório é público.
 
@@ -81,13 +85,37 @@ docker compose ps
 ```
 
 O painel responde em `http://127.0.0.1:8080` — ou na porta que estiver em
-`PORTA_HTTP`. A instalação propriamente dita do LimeSurvey é a etapa **E08**.
+`PORTA_HTTP`, com o usuário e a senha definidos no `.env`.
+
+**A instalação do LimeSurvey é desatendida.** Não há instalador web a percorrer:
+a inicialização do contêiner gera o `application/config/config.php` a partir do
+`.env` e executa o instalador de console quando o banco está vazio. As duas
+operações são idempotentes, de modo que `docker compose down -v` seguido de
+`up -d` devolve uma instância pronta, sem passo manual no meio.
+
+A senha do administrador **não** fica gravada no `config.php`: é usada só durante
+a instalação, por arquivo temporário removido em seguida. Trocá-la no `.env`
+depois da instalação não muda a senha — use o painel ou o comando
+`resetpassword` do console do LimeSurvey.
 
 Para conferir que o ambiente ficou como a documentação afirma:
 
 ```bash
 ./verifica-ambiente.sh
 ```
+
+E para conferir que a instância tem as capacidades de que a especificação
+depende:
+
+```bash
+python3 confere-capacidades.py
+```
+
+Esse segundo script cria um questionário de teste descartável, insere dois
+participantes sintéticos sob domínio `.test`, inspeciona esquema e comportamento
+e remove tudo ao final. Não envia mensagem alguma. O resultado esperado é **7
+capacidades atendidas e 3 parciais**, com o detalhamento em
+[`capacidades-plataforma.md`](../docs/especificacao/capacidades-plataforma.md).
 
 ### Acesso ao painel
 

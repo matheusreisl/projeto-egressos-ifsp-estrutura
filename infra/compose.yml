@@ -63,6 +63,19 @@ services:
     depends_on:
       banco:
         condition: service_healthy
+    environment:
+      # Consumidas pela inicializacao do conteiner, que gera o config.php e
+      # executa a instalacao desatendida. Ver limesurvey/entrypoint.sh.
+      BANCO_HOST: banco
+      BANCO_PORTA: "3306"
+      BANCO_NOME: ${BANCO_NOME:?defina BANCO_NOME no .env}
+      BANCO_USUARIO: ${BANCO_USUARIO:?defina BANCO_USUARIO no .env}
+      BANCO_SENHA: ${BANCO_SENHA:?defina BANCO_SENHA no .env}
+      ADMIN_USUARIO: ${ADMIN_USUARIO:?defina ADMIN_USUARIO no .env}
+      ADMIN_SENHA: ${ADMIN_SENHA:?defina ADMIN_SENHA no .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@egressos.test}
+      LIMESURVEY_DEBUG: ${LIMESURVEY_DEBUG:-0}
+      LIMESURVEY_RPC: ${LIMESURVEY_RPC:-json}
     volumes:
       # A configuracao que o instalador grava precisa sobreviver a recriacao
       # do conteiner; os envios, idem.

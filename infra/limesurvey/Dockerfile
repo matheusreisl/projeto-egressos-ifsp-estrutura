@@ -150,6 +150,23 @@ RUN set -eux; \
         /var/www/html/application/config; \
     chown -R www-data:www-data /var/www/html
 
+# ---------------------------------------------------------------------------
+# 6. Inicializacao
+# ---------------------------------------------------------------------------
+#
+# A instalacao do LimeSurvey e desatendida e idempotente: o script gera o
+# config.php a partir do ambiente e executa o instalador de console quando o
+# banco ainda esta vazio. Ver comentarios no proprio script.
+#
+# Consequencia pretendida: `docker compose down -v && docker compose up -d`
+# devolve uma instancia pronta, sem passo manual no meio.
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD ["apache2-foreground"]
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=5 \
     CMD curl -fsS http://localhost/index.php -o /dev/null || exit 1
 

@@ -262,7 +262,7 @@ Meta 2 · ago–set/26
   referência do LimeSurvey ou imagem própria construída a partir do código oficial.
   Não há imagem publicada pelo projeto LimeSurvey. Registrar a escolha e o digest.
 
-### [ ] E08 — Instalar o LimeSurvey e validar o acesso
+### [x] E08 — Instalar o LimeSurvey e validar o acesso
 - **Objetivo:** instância operacional com painel administrativo acessível.
 - **Entregável:** instância instalada; registro da versão e das configurações aplicadas.
 - **Conclusão quando:** for possível criar um questionário de teste e acessá-lo.
@@ -278,6 +278,44 @@ Meta 2 · ago–set/26
   `latest-master`, nome que sugere compilação de desenvolvimento embora seja a via
   que a página oficial apresenta como versão corrente. Confirmar contra a instância
   instalada ao registrar a versão.
+- **Concluída em:** 22/09/2026 · `docs/especificacao/capacidades-plataforma.md` ·
+  `infra/confere-capacidades.py`.
+- **Instalada e registrada:** LimeSurvey **7.2.0 build 260921**, DBVersion 716,
+  sobre PHP 8.3.33 e MariaDB 11.4.13. Configuração aplicada e registrada:
+  `urlFormat=path`, `RPCInterface=json`, `debug=0`, prefixo `lime_`, `utf8mb4`,
+  fuso `America/Sao_Paulo`.
+- **A instalação virou desatendida e idempotente.** A inicialização do contêiner
+  gera o `config.php` a partir do `.env` e roda o instalador de console quando o
+  banco está vazio — verificado por `down -v` seguido de `up -d`, que devolve
+  instância pronta sem passo manual. Atende o critério K7 da ADR-0002 e dá à E10
+  um procedimento executável em vez de capturas de tela. A senha do administrador
+  **não** é gravada no `config.php`.
+- **Capacidades C1 a C10 conferidas contra a instância viva: 7 atendem, 3 parciais,
+  nenhuma ausente.** Verificação por execução — questionário de teste criado,
+  participantes sintéticos sob domínio `.test`, esquema e comportamento
+  inspecionados, cenário removido sem resíduo. O verificador ficou versionado.
+- **Quanto ao `latest-master`:** o pacote declara `versionnumber` 7.2.0 e
+  `buildnumber` 260921, e a instância reporta os mesmos valores. **Não se pôde
+  verificar** se o caminho distingue linha estável de desenvolvimento — isso não
+  é inferível do artefato. Consequência prática nula, porque a versão está fixada
+  por soma de verificação.
+- **Achado que corrige toda consulta direta ao banco:** no LimeSurvey 7 a tabela
+  de respostas é **`lime_responses_<sid>`**, e não `lime_survey_<sid>`, que é o
+  nome usado pela documentação e pelos tutoriais antigos. Custou-me um diagnóstico
+  errado antes de encontrar.
+- **Achado que precisa a máquina de estados da E05:** abrir o endereço individual
+  **não cria linha de resposta**. "Iniciado", na plataforma, é ter submetido ao
+  menos uma página. O estado `em preenchimento` da seção 12 de
+  `parametros-contato.md` precisa ser lido assim. Coerente com a decisão de não
+  rastrear abertura (E05, seção 10.3), mas não óbvio.
+- **Achado que evita um bloqueio que não bloqueia:** marcar `blacklisted='Y'` no
+  token **não** move o contador de recusa. O que move é `emailstatus='OptOut'`.
+  São mecanismos distintos.
+- **Duas correções a diagnósticos meus, registradas para não se perderem:**
+  cheguei a concluir que o `.lss` de exemplo importava já ativo, deixando o
+  questionário em estado inconsistente. **Era falso** nas duas pontas — o pacote
+  importa inativo, e o que parecia tabela ausente era eu procurando pelo nome
+  antigo.
 
 ### [ ] E09 — Configurar e verificar o envio de mensagens
 - **Objetivo:** garantir que a instância envia e-mail, pré-requisito da automação.
@@ -304,6 +342,12 @@ Meta 2 · ago–set/26
 - **Lugar exato na topologia, já preparado:** o serviço de correio entra **somente**
   na rede `interna` do `compose.yml`. É o que garante que mensagem nenhuma saia da
   máquina, qualquer que seja o endereço de destino. Não colocá-lo na rede `externa`.
+- **Armadilha achada na E08.** **Não usar `token_invalid` como indicador de contato
+  inválido sem antes descobrir o que ele conta.** Definir `emailstatus='invalid'`
+  no token **não** moveu esse contador — provavelmente ele se refere a validade
+  temporal ou usos restantes, e não a estado de entrega. O que a fila de correção
+  da P8 tem de sólido é `emailstatus` e a tabela `lime_failed_emails`, cujo
+  esquema já foi conferido e serve.
 
 ### [ ] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
@@ -348,6 +392,10 @@ Meta 3 · set–out/26
 - **Objetivo:** materializar a especificação na instância.
 - **Entregável:** questionário estruturado; exportação da estrutura versionada em `infra/`.
 - **Conclusão quando:** todos os caminhos forem percorríveis manualmente.
+- **Nome de tabela, conferido na E08:** a tabela de respostas é
+  **`lime_responses_<sid>`**, e não `lime_survey_<sid>`. O nome antigo é o que
+  aparece na documentação e nos tutoriais, e leva a consulta a falhar sem motivo
+  aparente. Vale para esta etapa e para E26, E27 e E28.
 
 ---
 
@@ -446,6 +494,19 @@ Metas 6 e 7 · out–nov/26
   converteria falha de cadastro em manifestação de vontade que ninguém expressou e
   degradaria a base a cada ciclo. Registrar data, hora, ciclo, versão do termo e
   via de manifestação; e prever revogação tão simples quanto a manifestação.
+- **Dois achados da E08, ambos de implementação.**
+  1. **A recusa exige `emailstatus='OptOut'`, e não `blacklisted`.** Marcar
+     `blacklisted='Y'` no token não move o contador de recusa — produz um bloqueio
+     que não bloqueia. E a persistência **entre ciclos** só existe pela base
+     central `lime_participants`, porque a marcação no token morre com a tabela do
+     questionário.
+  2. **A trilha de auditoria exige ativar um plugin pela interface.** O `AuditLog`
+     acompanha a plataforma mas vem inativo, e nenhuma tabela de auditoria existe
+     antes da ativação. O comando de console não oferece ação para isso, e marcar
+     `active=1` no banco não basta: o gancho que cria a tabela não roda por essa
+     via. **Decidir aqui** entre achar caminho programático ou declarar exceção
+     documentada ao critério K7, com a operação de tela descrita. Não resolver por
+     omissão — auditoria é requisito de conformidade.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -472,6 +533,12 @@ Meta 8 · nov–dez/26
 - **Entregável:** execução dos cenários de preenchimento parcial com retomada,
   ausência de resposta, contato inválido e recusa.
 - **Conclusão quando:** todos os cenários tiverem resultado registrado.
+- **Herdado da E08, que não pôde fazer.** A E08 demonstrou que o modelo de dados
+  **representa** o preenchimento parcial — `submitdate` nulo com `startdate`
+  preenchido é lido como resposta incompleta —, mas inseriu a linha direto no
+  banco, porque o método `add_response` da API grava `submitdate` mesmo quando não
+  se pede, isto é, cria sempre resposta concluída. **Exercitar o percurso real do
+  respondente é desta etapa**, e é o que fecha a verificação de C3.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -557,3 +624,4 @@ Uma linha por sessão, mais recente ao final.
 | 20/09/2026 | E05 | **Fase 1 encerrada.** E05 concluída: nove parâmetros de contato especificados, cada um com origem declarada (`norma`/`quadro`/`projeto`). Descoberto que o documento do projeto já propunha os sete parâmetros — a etapa manteve os valores e corrigiu a atribuição de origem. Recusa desdobrada em duas; ciclo anual ancorado na turma, absorvendo os arts. 14, 19 e 22 numa só regra. ADR-0003 registrada. | Nenhuma pendência nova sem dono. A E05 **ampliou critérios** de quatro etapas seguintes: E09 (verificar devolução de erro, não só envio), E11 (mais de uma via de contato e semestre de conclusão), E22 (duas manifestações de recusa na tela) e E23 (efeitos distintos por estado). E21 recebeu ponto de verificação sobre o modelo de cadência da rotina nativa. Correção de fundamentação do documento do projeto → E31. Demais pendências inalteradas. |
 | 21/09/2026 | E06 | **Fase 2 iniciada.** E06 concluída: ambiente decidido como conteinerização declarativa em máquina local (Docker Engine + Compose), com o WSL2 registrado como substrato trocável. ADR-0002 preenchida com sete critérios, cinco alternativas e consequências. Estado da máquina foi verificado antes de decidir. | Nenhuma pendência nova sem dono. A E06 **acrescentou dois critérios** (contenção do disparo e operação por linha de comando) e **ampliou** E07 (lista de provisionamento fechada; escolher e fixar a imagem por digest), E08 (conferir C1–C10 contra a instância viva), E09 (capturador de SMTP não atende P8 — exigir serviço que devolva erro), E25 (contenção do disparo como característica verificável), E30 (separar o que o guia ensina do que oferece) e E31 (limitação da compressão temporal). Docker Desktop descartado por licença, não por técnica. Demais pendências inalteradas. |
 | 21/09/2026 | E07 | E07 concluída. Ambiente de pé e conferido: Ubuntu 24.04 sobre WSL2 com systemd, Docker Engine 29.8.1, LimeSurvey 7.2.0 em imagem própria e MariaDB 11.4. `verifica-ambiente.sh` roda 21 conferências, todas passando. ADR-0004 registrada — imagem própria e leitura de devoluções por rotina. As duas releituras de fonte foram encerradas, com correção material em cada uma. | Nenhuma pendência nova sem dono. **Encerradas:** releituras de Ferreira e Davis, `.gitattributes`, Python (que destrava E16 e E28). **Ampliadas:** E09 ganha a rotina própria de devoluções e o correio só na rede interna; E08 ganha a conferência do caminho `latest-master`; E21 ganha o problema do WSL encerrar a distro ociosa e derrubar os contêineres — falha silenciosa que precisa de mecanismo. Conferências de referência e titularidade do copyright seguem na E31. |
+| 22/09/2026 | E08 | E08 concluída. LimeSurvey 7.2.0 build 260921 instalado, com a instalação convertida em desatendida e idempotente — `down -v` seguido de `up -d` devolve instância pronta. Capacidades C1 a C10 conferidas contra a instância viva: 7 atendem, 3 parciais, nenhuma ausente. Registro em `docs/especificacao/capacidades-plataforma.md`; verificador versionado em `infra/confere-capacidades.py`. | Nenhuma pendência nova sem dono. **Ampliadas:** E09 (não usar `token_invalid` como indicador de contato inválido sem saber o que ele conta); E15, E26, E27 e E28 (a tabela de respostas é `lime_responses_<sid>`, não `lime_survey_<sid>`); E22 e E23 (recusa exige `emailstatus=OptOut` mais a base central, e a auditoria exige ativar plugin por interface — decidir entre caminho programático ou exceção documentada ao K7); E26 (exercitar o preenchimento parcial pelo percurso real, que esta etapa não pôde). E21 segue com o problema da distro ociosa e com o modelo de cadência por verificar. |
