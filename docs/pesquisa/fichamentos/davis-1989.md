@@ -4,6 +4,8 @@
 acceptance of information technology. MIS Quarterly, v. 13, n. 3, p. 319-340, 1989.
 **Tipo:** artigo científico (modelo teórico)
 **Acesso:** MIS Quarterly, University of Minnesota · https://www.jstor.org/stable/249008 · consultado em 20/09/2026
+**Leitura:** **texto integral**, em 21/09/2026 (E07). A ficha anterior, feita por
+extração parcial, foi corrigida — ver "Histórico de leitura" ao final.
 **Alimenta:** E25, E31
 
 ## Problema identificado
@@ -16,20 +18,53 @@ esforço) — e se propõe a desenvolver e validar escalas para medi-las.
 
 ## Método
 
-Desenvolvimento psicométrico e validação em dois estudos, mais reanálise de um
-terceiro:
+Desenvolvimento psicométrico e validação em dois estudos próprios, mais reanálise
+de um terceiro.
 
-| Estudo | Sistemas | n |
+**Pré-teste.** 15 usuários experientes da Sloan School of Management, MIT — cinco
+secretárias, cinco estudantes de pós-graduação e cinco membros do corpo técnico.
+Em entrevistas presenciais, executaram duas tarefas de cartões, priorização e
+categorização, feitas separadamente para cada construto, a partir de 13 itens por
+construto.
+
+**Estudo 1 — de campo.** Aplicado no Toronto Development Laboratory da IBM Canadá.
+Questionário enviado a **120 usuários**; **112 responderam**, taxa de resposta de
+**93%**. Destes, **109 eram usuários do correio eletrônico PROFS** e **75, do
+editor XEDIT**. Experiência média de seis meses com os sistemas avaliados. Escala
+de sete pontos, entre "Strongly Agree" e "Strongly Disagree".
+
+**Estudo 2 — de laboratório.** **40 participantes voluntários**, estudantes de MBA
+noturno da Boston University, **pagos em US$ 25**. Cada um avaliou dois sistemas
+gráficos, Chart-Master e Pendraw. O desenho imita deliberadamente situações de
+teste de protótipo ou seleção de sistema: demonstração prática de **menos de uma
+hora**, seguida de avaliação **prospectiva** — quanto o participante *esperaria*
+que o sistema fosse útil e fácil. Davis enuncia o propósito: aferir se as escalas
+servem como indicador antecipado de aceitação.
+
+**Terceiro conjunto.** Davis et al. (1989), duas ondas, n = 107. É artigo
+companheiro, **não descrito neste texto**: dele aproveitam-se aqui apenas os
+coeficientes reproduzidos nas tabelas.
+
+### Precisão sobre os "n" — correção da ficha anterior
+
+A ficha anterior registrava n = 184 para o Estudo 1 e n = 80 para o Estudo 2. Os
+números estão no artigo, nas linhas **"Pooled"** das tabelas 8 e 9, mas **não são
+contagens de pessoas**: somam *avaliações de sistema*, e cada participante avaliou
+mais de um sistema.
+
+| Estudo | Pessoas | Avaliações ("pooled" de Davis) |
 |---|---|---|
-| Estudo 1 | XEDIT (75) e correio eletrônico (109) | 184 |
-| Estudo 2 | Chart-Master (40) e Pendraw (40) | 80 |
-| Davis et al. (1989), duas ondas | — | 107 |
+| Estudo 1 | **112** respondentes | 184 (109 correio + 75 XEDIT) |
+| Estudo 2 | **40** participantes | 80 (40 + 40) |
 
-As escalas finais têm seis itens cada, em formato de sete pontos entre "extremely
-likely" e "extremely unlikely". Os itens de utilidade cobrem produtividade,
-eficácia, facilitação do trabalho e utilidade geral; os de facilidade cobrem
-aprendizado, controle, clareza da interação, flexibilidade, aquisição de
-habilidade e facilidade geral.
+A distinção não é preciosismo: muda em quase 40% a base humana do Estudo 1 e pela
+metade a do Estudo 2, e é sobre pessoas que se julga o alcance de um estudo
+psicométrico.
+
+As escalas finais têm seis itens cada, em formato de sete pontos. Os itens de
+utilidade cobrem produtividade, eficácia, facilitação do trabalho e utilidade
+geral; os de facilidade cobrem aprendizado, controle, clareza da interação,
+flexibilidade, aquisição de habilidade e facilidade geral.
 
 ## Resultado
 
@@ -60,6 +95,15 @@ diante de um protótipo, o que é distinto de funcionamento do sistema e mais
 distinto ainda de efeito sobre a resposta de egressos. O fichamento do SAVE já
 registra a ressalva; esta fonte é o que a fundamenta.
 
+A leitura integral acrescenta um dado que aperta a ressalva. O uso do TAM para
+avaliar protótipo — exatamente o caso do SAVE — é o que o **Estudo 2** validou, e
+esse estudo se apoia em **40 estudantes de MBA pagos, com menos de uma hora de
+contato com o sistema, emitindo julgamento prospectivo**. O próprio Davis
+apresenta o resultado como encorajador para uso do instrumento como indicador
+antecipado, não como demonstração de aceitação efetiva. Ou seja: a aplicação do
+TAM a protótipos é legítima e foi pensada pelo autor, e ao mesmo tempo é o ponto
+em que a base empírica do modelo é mais fina. As duas coisas ao mesmo tempo.
+
 **3. Oferece um argumento aproveitável para o desenho do instrumento.** Se a
 utilidade percebida domina a adoção e a facilidade opera através dela, então, no
 contexto de um questionário de egressos, reduzir esforço de preenchimento — o
@@ -79,14 +123,33 @@ apresentada assim.
 - **Uso autodeclarado, não observado.** A variável dependente em ambos os estudos é
   o uso relatado pelo próprio respondente, com os vieses conhecidos disso. O
   próprio Davis registra a limitação.
-- **Amostras pequenas e não probabilísticas** nos estudos 2 (n=40 por sistema).
+- **Amostras menores do que a ficha anterior sugeria, e não probabilísticas.** São
+  **112 pessoas** no Estudo 1 e **40** no Estudo 2 — não 184 e 80, que somam
+  avaliações. O Estudo 2 é de conveniência, com voluntários remunerados de um único
+  programa de MBA.
+- **O Estudo 2 mede expectativa, não uso.** Menos de uma hora de contato e
+  julgamento prospectivo. Aplicado a este projeto, seria o equivalente a perguntar
+  a alguém se acha que responderia ao questionário, e não observar se respondeu.
 - **Não trata de resposta a pesquisa, que é o comportamento de interesse aqui.** O
   modelo explica adoção de sistema; a decisão de responder a um questionário
   envolve fatores que ele não cobre — confiança na instituição, percepção de
   finalidade, reciprocidade, saliência do convite.
-- **Fichado a partir de extração parcial do PDF.** A conversão recuperou o
-  cabeçalho bibliográfico, as tabelas 8 e 9, parte da discussão e o apêndice com as
-  escalas. A seção de método e os estudos de validação não foram lidos na íntegra.
-  O achado central e os coeficientes reportados vêm das tabelas e do texto da
-  discussão, que foram lidos diretamente; os detalhes de amostragem e procedimento
-  não foram verificados.
+- **O terceiro conjunto de dados não é descrito neste artigo.** Os coeficientes de
+  Davis et al. (1989), n = 107, aparecem nas tabelas 8 e 9, mas a amostra, o
+  sistema avaliado e o procedimento estão no artigo companheiro. Nada se afirma
+  aqui sobre eles.
+
+## Histórico de leitura
+
+| Data | Etapa | Base da leitura |
+|---|---|---|
+| 20/09/2026 | E02 | extração parcial do PDF — cabeçalho, tabelas 8 e 9, parte da discussão e o apêndice com as escalas; método e estudos de validação não lidos |
+| 21/09/2026 | E07 | **texto integral**, extraído com `pdftotext` após o provisionamento do ambiente |
+
+**O que a releitura mudou.** O achado central e os coeficientes já estavam
+corretos, porque vinham de tabelas lidas diretamente. O que se corrigiu foi a
+**base humana dos estudos** — 112 e 40 pessoas, e não 184 e 80 — e o que se
+acrescentou foi a **natureza prospectiva do Estudo 2**, que é o que sustenta a
+ressalva sobre avaliações de protótipo por TAM.
+
+A pendência de releitura registrada na E02 e recolhida pela E07 está **encerrada**.

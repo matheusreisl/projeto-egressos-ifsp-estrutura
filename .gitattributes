@@ -1,0 +1,49 @@
+# Normalizacao de fim de linha.
+#
+# O repositorio e editado no Windows e executado em conteineres Linux. Sem esta
+# normalizacao, um script com fim de linha CRLF chega ao conteiner com "\r" no
+# fim da linha do shebang e falha com "bad interpreter" — erro que nao aparece
+# no editor e custa caro para diagnosticar.
+
+# Padrao: o Git decide o que e texto e grava LF no repositorio.
+* text=auto
+
+# Arquivos que precisam de LF tambem na copia de trabalho, porque sao lidos
+# dentro do conteiner ou pelo shell do Linux.
+*.sh        text eol=lf
+*.bash      text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.py        text eol=lf
+*.sql       text eol=lf
+*.conf      text eol=lf
+*.cnf       text eol=lf
+*.env       text eol=lf
+.env.exemplo text eol=lf
+Dockerfile  text eol=lf
+Dockerfile.* text eol=lf
+*.dockerfile text eol=lf
+Makefile    text eol=lf
+.gitattributes text eol=lf
+.gitignore  text eol=lf
+
+# Arquivos de linha de comando do Windows, que exigem CRLF.
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+*.ps1       text eol=crlf
+
+# Binarios: nunca normalizar, nunca tratar como texto em diff.
+*.docx      binary
+*.xlsx      binary
+*.pptx      binary
+*.pdf       binary
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.zip       binary
+*.gz        binary
+*.tar       binary
+*.lss       binary
+*.lsa       binary

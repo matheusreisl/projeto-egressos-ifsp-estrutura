@@ -359,7 +359,7 @@ decisão registrada.
 | Via | Fonte | O que obtém | Por que foi descartada |
 |---|---|---|---|
 | **Registro administrativo (RAIS)** | [Alvares et al. (2020)](fichamentos/alvares-2020.md), UNIRIO; [UnB (2019)](fichamentos/unb-2019.md) | vínculo formal de emprego e remuneração — 76% de "empregabilidade" sobre 281 egressos na UNIRIO | depende de **convênio** com o ministério, em ambos os casos; tramitação não controlável em projeto de cinco meses. Opera sobre pessoas identificadas, sem consentimento |
-| **Raspagem de perfis (LinkedIn)** | [Ferreira (2026)](fichamentos/ferreira-2026.md), UFOP | setor, cargo, competências e localização, de perfis públicos | fragilidade técnica e risco legal — termos de uso da plataforma e tratamento de dados de terceiros sem consentimento |
+| **Raspagem de perfis (LinkedIn)** | [Ferreira (2026)](fichamentos/ferreira-2026.md), UFOP | setor, cargo, competências e localização — 103 perfis em 127 formados (≈81%) | fragilidade técnica e risco legal. A leitura integral da fonte mostrou que a coleta ocorre **sob sessão autenticada**, e não sobre páginas abertas: o algoritmo submete usuário e senha antes de percorrer os perfis. Acesso automatizado autenticado é vedado pelos termos de uso, e a fonte não enfrenta base legal nem apreciação ética |
 | **Extração de currículos (Lattes)** | [Ranthum e Santos Junior (2023)](fichamentos/ranthum-2023.md) | produção acadêmica e trajetória | pressupõe currículo atualizado, hábito consolidado na pós stricto sensu e não entre egressos de cursos técnicos e de tecnologia |
 
 **O que o contraste ensina ao quadro.** Duas coisas.
@@ -387,9 +387,23 @@ decisão registrada.
    estratégias E5, E8 e E10, e reforça que a escolha pelo registro administrativo
    foi de viabilidade, não de descrença no contato.
 
-*Ressalva.* O fichamento de Ferreira (2026) foi feito a partir do resumo e dos
-metadados do repositório, porque o PDF não permitiu extração de texto. A leitura
-integral continua pendente e é condição para citar a fonte no relatório final.
+*Ressalva resolvida — 21/09/2026 (E07).* O fichamento de Ferreira (2026) havia sido
+feito pelo resumo, porque o PDF não permitia extração de texto nesta máquina. A
+fonte foi **relida na íntegra** depois do provisionamento do ambiente, e a releitura
+mudou duas coisas neste quadro.
+
+**Primeira, a favor do projeto.** A via da raspagem não é executável sobre páginas
+abertas: na única demonstração disponível na literatura consultada, ela exige
+**autenticação na plataforma**. Isso alinha o descarte da raspagem ao mesmo critério
+com que a [ADR-0003](../decisoes/0003-canal-alternativo-nao-automatizado.md) recusou
+a automação não oficial de mensageria — coerência que antes não podia ser afirmada.
+
+**Segunda, uma advertência de leitura.** A cobertura de ≈81% é alta e pode ser
+oposta a este projeto, mas incide sobre **127 formados de um único curso de
+Estatística e Ciência de Dados, desde 2008** — coorte pequena, recente e de área em
+que a presença digital é instrumento de trabalho. A própria autora reconhece que
+quem atua em tecnologia usa mais a rede. Não há base para transpor o percentual a um
+instituto multicampi com cursos técnicos e de tecnologia.
 
 ## 6. Correspondência com a norma vigente no IFSP
 

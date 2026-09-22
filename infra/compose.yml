@@ -1,0 +1,99 @@
+# Composicao do ambiente da instancia LimeSurvey — projeto de acompanhamento
+# de egressos do IFSP.
+#
+# Ambiente decidido na ADR-0002: conteinerizacao declarativa em maquina local.
+# Imagem propria do LimeSurvey decidida na ADR-0004.
+#
+# Subir:      docker compose up -d
+# Derrubar:   docker compose down
+# Do zero:    docker compose down -v   (APAGA os volumes)
+#
+# Antes do primeiro uso, copie .env.exemplo para .env e defina os valores.
+# O .env nao e versionado.
+
+name: egressos
+
+services:
+
+  # -------------------------------------------------------------------------
+  # Banco de dados
+  # -------------------------------------------------------------------------
+  # Somente na rede interna: nao publica porta e nao alcanca a internet.
+  # MariaDB 11.4 e a linha de suporte estendido; o LimeSurvey 7 exige
+  # MariaDB 10.3.38 ou superior.
+  banco:
+    image: mariadb:11.4@sha256:70cc072b29b4a89ae07abb2d4da2c64678a7f2dfe092751bb51c87d67dc1338b
+    container_name: egressos-banco
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${BANCO_NOME:?defina BANCO_NOME no .env}
+      MARIADB_USER: ${BANCO_USUARIO:?defina BANCO_USUARIO no .env}
+      MARIADB_PASSWORD: ${BANCO_SENHA:?defina BANCO_SENHA no .env}
+      MARIADB_ROOT_PASSWORD: ${BANCO_SENHA_ROOT:?defina BANCO_SENHA_ROOT no .env}
+    command:
+      # O LimeSurvey espera utf8mb4. Fixar aqui evita divergencia de
+      # agrupamento entre a criacao do banco e as tabelas da aplicacao.
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - dados-banco:/var/lib/mysql
+    networks:
+      - interna
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  # -------------------------------------------------------------------------
+  # LimeSurvey
+  # -------------------------------------------------------------------------
+  # Unico servico em duas redes. Esta na interna para falar com o banco e,
+  # a partir da E09, com o servico de correio; esta na externa apenas porque
+  # publicar porta para o hospedeiro exige rede nao interna — verificado, nao
+  # presumido (ver infra/README.md, secao "Contencao").
+  limesurvey:
+    build:
+      context: ./limesurvey
+      dockerfile: Dockerfile
+    image: egressos/limesurvey:7.2.0
+    container_name: egressos-limesurvey
+    restart: unless-stopped
+    depends_on:
+      banco:
+        condition: service_healthy
+    volumes:
+      # A configuracao que o instalador grava precisa sobreviver a recriacao
+      # do conteiner; os envios, idem.
+      - config-limesurvey:/var/www/html/application/config
+      - uploads-limesurvey:/var/www/html/upload
+    ports:
+      # O padrao vincula a 127.0.0.1 de proposito: em hospedeiro Linux nativo,
+      # o painel nao fica exposto na rede em que a maquina estiver.
+      # No WSL2 em modo NAT esse padrao nao funciona e precisa ser trocado —
+      # ver infra/README.md, secao "Acesso ao painel".
+      - "${ENDERECO_BIND:-127.0.0.1}:${PORTA_HTTP:-8080}:80"
+    networks:
+      - interna
+      - externa
+
+networks:
+
+  # Rede dos servicos. 'internal' significa, literalmente, sem rota para fora:
+  # quem esta so aqui nao alcanca a internet nem resolve nome externo.
+  # E o que sustenta o criterio K6 da ADR-0002 — a contencao do disparo deixa
+  # de ser regra de conduta e passa a ser propriedade do ambiente.
+  #
+  # O servico de correio da E09 entra AQUI, e somente aqui.
+  interna:
+    internal: true
+
+  # Existe por um unico motivo: porta publicada nao funciona em rede interna.
+  # Somente o LimeSurvey se conecta a ela.
+  externa: {}
+
+volumes:
+  dados-banco:
+  config-limesurvey:
+  uploads-limesurvey:

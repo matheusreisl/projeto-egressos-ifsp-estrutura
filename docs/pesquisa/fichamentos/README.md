@@ -48,17 +48,25 @@ Toda pendência desta seção tem etapa responsável declarada. Pendência sem e
 não é recolhida por ninguém — foi o que se aprendeu na E04, e o `ETAPAS.md` traz
 o registro correspondente em cada etapa citada aqui.
 
-**Fontes que precisam de nova leitura** — recolhidas pela **E07**
+**Fontes que precisavam de nova leitura** — ~~recolhidas pela **E07**~~ ·
+**ENCERRADO em 21/09/2026**
 
-Ambas dependem de ferramenta de extração de texto e OCR, que o ambiente ainda não
-tem. Instalar no provisionamento e reler na sequência.
+As duas foram relidas na íntegra depois que a E07 provisionou a ferramenta de
+extração de texto. Ambas as fichas trazem seção "Histórico de leitura" com o que
+mudou.
 
-- **FERREIRA (2026)** foi fichada pelo resumo e pelos metadados do repositório: o
-  PDF não permitiu extração de texto por nenhum meio disponível nesta máquina. Ler
-  integralmente antes de citar. É a mais urgente das duas: já está citada na linha
-  de base, no quadro de engajamento e na fundamentação do documento do projeto.
-- **DAVIS (1989)** foi fichado por extração parcial — tabelas, discussão e apêndice
-  foram lidos; a seção de método, não.
+- **FERREIRA (2026)** — relida. **Duas correções materiais.** O método não é coleta
+  de perfis públicos: o algoritmo **autentica-se no LinkedIn** antes de percorrer
+  os perfis, o que é raspagem sob sessão autenticada e reforça o descarte da
+  raspagem por este projeto, em vez de enfraquecê-lo. E a cobertura, antes não
+  verificada, é de **103 perfis em 127 formados (≈81%)** — número alto, mas sobre
+  coorte pequena, recente e de área de tecnologia, sem base para transposição a um
+  instituto multicampi. Corrigidos também o grau e o número de folhas da referência.
+- **DAVIS (1989)** — relido. **Uma correção material:** os "n" de 184 e 80 são
+  somas de *avaliações*, não de pessoas — são **112** e **40** participantes. O
+  achado central e os coeficientes já estavam corretos. Acrescentou-se a natureza
+  **prospectiva** do Estudo 2, que é o que delimita o alcance de avaliações de
+  protótipo por TAM, como a do SAVE.
 
 **Conferências de referência antes da entrega** — recolhidas pela **E31**
 

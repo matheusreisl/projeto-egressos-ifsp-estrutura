@@ -1,6 +1,9 @@
 # Ambiente e credenciais
 .env
 .env.*
+# ...menos o modelo sem valores reais, que precisa ser versionado para que o
+# ambiente suba a partir do que esta no repositorio (criterio da E07).
+!.env.exemplo
 *.key
 *.pem
 credenciais*

@@ -184,16 +184,64 @@ Meta 2 · ago–set/26
   imagem comunitária de referência ou imagem própria a partir do código oficial —,
   com fixação por digest em qualquer dos casos.
 
-### [ ] E07 — Provisionar o ambiente escolhido
+### [x] E07 — Provisionar o ambiente escolhido
 - **Objetivo:** ter o ambiente base funcionando.
 - **Entregável:** artefatos de provisionamento em `infra/`.
 - **Conclusão quando:** o ambiente subir do zero seguindo apenas o que está versionado.
-- **Recolhe as pendências de releitura de fonte.** Ferreira (2026) e Davis (1989)
-  foram fichados por leitura parcial porque esta máquina não extraiu o texto dos
-  PDFs — a mesma carência de ferramenta que deixou o Python pendente. Ao provisionar
-  o ambiente, instalar o que resolve extração de texto e OCR, e então reler as duas
-  fontes e atualizar os fichamentos. Ferreira é a que pesa: já está citada na linha
-  de base, no quadro de engajamento e na fundamentação do documento do projeto.
+- **Concluída em:** 21/09/2026 · `infra/` · **ADR-0004**.
+- **Ambiente de pé e conferido.** Ubuntu 24.04.5 LTS sobre WSL2 com `systemd`,
+  Docker Engine 29.8.1, Compose v5.5.1. Composição com LimeSurvey 7.2.0+260921 e
+  MariaDB 11.4.13. `verifica-ambiente.sh` — também artefato versionado —
+  executa **21 conferências, todas passando**.
+- **Artefatos criados:** `compose.yml`, `.env.exemplo`, `limesurvey/Dockerfile`,
+  `hospedeiro/provisiona-docker.sh`, `hospedeiro/provisiona-ferramentas.sh`,
+  `verifica-ambiente.sh` e o `README.md` com o procedimento — que é a semente do
+  guia da E10. O `.gitignore` ganhou exceção para `.env.exemplo`, que a regra
+  `.env.*` estava engolindo.
+- **Imagem própria, decidida com o orientando e registrada na ADR-0004.** Não há
+  imagem publicada pelo projeto LimeSurvey. O Dockerfile fixa a imagem base por
+  digest e o pacote por versão **e soma SHA-256**, conferida antes de descompactar
+  — verificado em construção real (`/tmp/limesurvey.zip: OK`).
+- **Achado que redirecionou a etapa e gerou a segunda metade da ADR-0004.** A
+  extensão `imap` do PHP, que o manual do LimeSurvey declara necessária ao
+  rastreamento de devoluções — o P8 —, **não compila mais na base atual**: a
+  biblioteca UW-IMAP foi removida do Debian 13 e a extensão saiu do núcleo do PHP
+  na 8.4. Decidido, com o orientando: base atual sem `imap`, e a leitura de
+  devoluções passa a ser **rotina própria**. O argumento é que as regras do P8 são
+  do projeto e o recurso nativo não as implementa — a lógica teria de ser escrita
+  de qualquer modo.
+- **Contenção do K6 verificada por experimento, não por leitura de documentação.**
+  Rede `internal` do Docker **não permite publicar porta** — conferido duas vezes,
+  com e sem vínculo a 127.0.0.1. Daí a topologia de duas redes: banco e correio
+  ficam só na interna, sem rota de saída nem resolução de nome externo; o
+  LimeSurvey fica em ambas, porque publicar porta exige. **A contenção do caminho
+  do correio é integral; o contêiner do LimeSurvey mantém saída HTTP** — dito assim
+  no `infra/README.md`, sem arredondar.
+- **Erro meu, corrigido antes de virar documentação falsa.** Diagnostiquei que o
+  painel não respondia do Windows por causa do endereço de vínculo, e cheguei a
+  escrever isso no README. Testado: com `127.0.0.1` e reinício limpo do WSL, o
+  Windows alcança normalmente. A causa real é **encaminhamento obsoleto do WSL após
+  a distro ser reaberta no meio da sessão**, e o sintoma engana porque o acesso pelo
+  IP da distro continua funcionando. Registrado no README com a pista falsa nomeada.
+- **Linha 6.x do LimeSurvey encerrou suporte em 31/08/2026.** A 7.x é a única
+  linha suportada. Registrado na ADR-0004.
+- **Releituras de fonte — encerradas.** Ferramenta instalada (poppler 24.02,
+  tesseract 5.3.4 com português, ocrmypdf 15.2, Python 3.12.3), e as duas fontes
+  foram relidas **na íntegra**, sem precisar de OCR: ambas tinham camada de texto,
+  e o que faltava antes era a ferramenta.
+  - **Ferreira (2026)** — duas correções materiais. O método **não** é coleta de
+    perfis públicos: o algoritmo **autentica-se no LinkedIn** antes de percorrer os
+    perfis. Isso **reforça** o descarte da raspagem por este projeto, pelo mesmo
+    critério da ADR-0003, em vez de enfraquecê-lo. E a cobertura é de **103 perfis
+    em 127 formados (≈81%)** — alta, mas sobre coorte pequena, recente e de área de
+    tecnologia, sem base para transposição. Corrigidos grau e número de folhas.
+    `quadro-engajamento.md` atualizado nos dois pontos.
+  - **Davis (1989)** — uma correção material: os "n" de 184 e 80 somam *avaliações*,
+    não pessoas; são **112** e **40** participantes. Acrescentada a natureza
+    **prospectiva** do Estudo 2, que delimita o alcance de avaliações de protótipo
+    por TAM — a do SAVE, entre elas.
+- **Python deixou de ser pendência.** Instalado no ambiente (3.12.3), o que resolve
+  o que estava marcado para **E16** e **E28**.
 - **Também recolhe o `.gitattributes`**, ainda não criado. Passa a importar aqui,
   quando os primeiros artefatos de shell entram no repositório e a normalização de
   fim de linha deixa de ser cosmética.
@@ -215,6 +263,13 @@ Meta 2 · ago–set/26
   `parametros-contato.md` deixam de ser especulação. Conferir uma a uma contra a
   instância e registrar o resultado — a E05 declarou expressamente que afirmar o
   que o LimeSurvey faz nativamente, antes disso, seria asserção sem conferência.
+- **Ponto de partida pronto.** O ambiente já está de pé (E07): o instalador do
+  LimeSurvey responde em `http://localhost:8080`. Esta etapa faz a instalação
+  propriamente dita e registra a versão.
+- **Conferir junto (ADR-0004):** o pacote da linha 7.x vem do caminho oficial
+  `latest-master`, nome que sugere compilação de desenvolvimento embora seja a via
+  que a página oficial apresenta como versão corrente. Confirmar contra a instância
+  instalada ao registrar a versão.
 
 ### [ ] E09 — Configurar e verificar o envio de mensagens
 - **Objetivo:** garantir que a instância envia e-mail, pré-requisito da automação.
@@ -232,6 +287,15 @@ Meta 2 · ago–set/26
   o envio e não atendem P8. Ver a mensagem chegar ao capturador **não** satisfaz o
   critério desta etapa. É preciso um serviço que devolva erro permanente para caixa
   inexistente do domínio controlado, e verificar isso explicitamente.
+- **Escopo ampliado pela E07 (ADR-0004).** A leitura de devoluções **não** usará o
+  recurso nativo do LimeSurvey: a extensão `imap` não está na imagem, por decisão
+  registrada. Esta etapa passa a incluir a **rotina própria** que lê a caixa,
+  classifica conforme P8 (permanente marca na 1ª ocorrência; temporário na 3ª do
+  mesmo ciclo) e atualiza o estado. Em Python, mesma via da E28. O serviço de
+  correio precisa, em consequência, **expor caixa legível por essa rotina**.
+- **Lugar exato na topologia, já preparado:** o serviço de correio entra **somente**
+  na rede `interna` do `compose.yml`. É o que garante que mensagem nenhuma saia da
+  máquina, qualquer que seja o endereço de destino. Não colocá-lo na rede `externa`.
 
 ### [ ] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
@@ -342,6 +406,15 @@ Metas 6 e 7 · out–nov/26
 - **"Não respondente" não é estado da base.** É o conjunto de `convidado`,
   `em preenchimento` e `expirado`, conforme a máquina de estados da seção 12 de
   `parametros-contato.md`. Não implementar marcação redundante.
+- **Problema concreto descoberto na E07, mais agudo do que "a máquina precisa estar
+  ligada".** O WSL **encerra a distribuição quando ela fica ociosa**, e com ela
+  param os contêineres — observado nesta etapa, no meio do trabalho. Ao reabrir, o
+  `systemd` sobe o Docker e os contêineres voltam sozinhos pela política de
+  reinício, **mas a distribuição só reabre quando algo a invoca**. Sem mecanismo
+  que a mantenha viva ou a acorde no horário, o disparo agendado simplesmente não
+  ocorre, com a máquina ligada e tudo aparentemente correto. Resolver aqui, e
+  registrar a solução no guia — é o tipo de falha silenciosa que passa por
+  "funcionou nos testes".
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -475,3 +548,4 @@ Uma linha por sessão, mais recente ao final.
 | 20/09/2026 | E04 | E04 concluída. Quadro de engajamento com onze estratégias, estado da evidência declarado por linha e cruzamento com a norma do IFSP. Pendências de fonte passaram a ter etapa responsável. | Nenhuma pendência sem dono. Releituras de fonte (Ferreira 2026, Davis 1989) e `.gitattributes` → E07, junto com a ferramenta de extração e OCR. Conferências de referência (Ranthum, Praga de Souza, OCR da RN 13/2022), Mello et al. (2023) e titularidade do copyright → E31. Python não instalado segue marcado para E16 e E28. |
 | 20/09/2026 | E05 | **Fase 1 encerrada.** E05 concluída: nove parâmetros de contato especificados, cada um com origem declarada (`norma`/`quadro`/`projeto`). Descoberto que o documento do projeto já propunha os sete parâmetros — a etapa manteve os valores e corrigiu a atribuição de origem. Recusa desdobrada em duas; ciclo anual ancorado na turma, absorvendo os arts. 14, 19 e 22 numa só regra. ADR-0003 registrada. | Nenhuma pendência nova sem dono. A E05 **ampliou critérios** de quatro etapas seguintes: E09 (verificar devolução de erro, não só envio), E11 (mais de uma via de contato e semestre de conclusão), E22 (duas manifestações de recusa na tela) e E23 (efeitos distintos por estado). E21 recebeu ponto de verificação sobre o modelo de cadência da rotina nativa. Correção de fundamentação do documento do projeto → E31. Demais pendências inalteradas. |
 | 21/09/2026 | E06 | **Fase 2 iniciada.** E06 concluída: ambiente decidido como conteinerização declarativa em máquina local (Docker Engine + Compose), com o WSL2 registrado como substrato trocável. ADR-0002 preenchida com sete critérios, cinco alternativas e consequências. Estado da máquina foi verificado antes de decidir. | Nenhuma pendência nova sem dono. A E06 **acrescentou dois critérios** (contenção do disparo e operação por linha de comando) e **ampliou** E07 (lista de provisionamento fechada; escolher e fixar a imagem por digest), E08 (conferir C1–C10 contra a instância viva), E09 (capturador de SMTP não atende P8 — exigir serviço que devolva erro), E25 (contenção do disparo como característica verificável), E30 (separar o que o guia ensina do que oferece) e E31 (limitação da compressão temporal). Docker Desktop descartado por licença, não por técnica. Demais pendências inalteradas. |
+| 21/09/2026 | E07 | E07 concluída. Ambiente de pé e conferido: Ubuntu 24.04 sobre WSL2 com systemd, Docker Engine 29.8.1, LimeSurvey 7.2.0 em imagem própria e MariaDB 11.4. `verifica-ambiente.sh` roda 21 conferências, todas passando. ADR-0004 registrada — imagem própria e leitura de devoluções por rotina. As duas releituras de fonte foram encerradas, com correção material em cada uma. | Nenhuma pendência nova sem dono. **Encerradas:** releituras de Ferreira e Davis, `.gitattributes`, Python (que destrava E16 e E28). **Ampliadas:** E09 ganha a rotina própria de devoluções e o correio só na rede interna; E08 ganha a conferência do caminho `latest-master`; E21 ganha o problema do WSL encerrar a distro ociosa e derrubar os contêineres — falha silenciosa que precisa de mecanismo. Conferências de referência e titularidade do copyright seguem na E31. |
