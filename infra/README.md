@@ -16,10 +16,23 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `.env.exemplo` | modelo de configuração, sem valores reais |
 | `limesurvey/Dockerfile` | a imagem própria — **é** o procedimento de instalação |
 | `limesurvey/entrypoint.sh` | gera o `config.php` e instala o LimeSurvey sem interação |
+| `correio/Dockerfile` | MTA de ensaio: Postfix que devolve e Dovecot que serve a caixa |
+| `correio/entrypoint.sh` | configura os três domínios de ensaio e supervisiona os dois serviços |
+| `rotinas/Dockerfile` | onde as rotinas do projeto rodam, dentro da rede interna |
 | `hospedeiro/provisiona-docker.sh` | instala o Docker Engine num hospedeiro Debian ou Ubuntu |
 | `hospedeiro/provisiona-ferramentas.sh` | ferramentas de apoio à pesquisa (não são do mecanismo) |
 | `verifica-ambiente.sh` | confere as propriedades do ambiente |
 | `confere-capacidades.py` | confere as capacidades C1 a C10 contra a instância |
+| `confere-envio.py` | confere a integração: a instância dispara, a devolução volta, a regra se aplica |
+
+Os quatro serviços da composição:
+
+| Serviço | Papel | Redes |
+|---|---|---|
+| `banco` | MariaDB | só interna |
+| `limesurvey` | a instância | interna **e** externa (porta publicada) |
+| `correio` | MTA de ensaio, Postfix e Dovecot | **só interna** |
+| `rotinas` | ponto de execução das rotinas do projeto | **só interna** |
 
 O `.env` real **não é versionado**. O repositório é público.
 
@@ -189,6 +202,90 @@ porque publicar porta exige isso, e portanto mantém saída HTTP. Ele não origi
 mensagem por conta própria — envia pelo serviço de correio configurado —, mas a
 afirmação honesta é que a contenção é do caminho do correio, e não isolamento
 total da aplicação.
+
+## Correio de ensaio
+
+O serviço `correio` **não é um capturador de SMTP**, e a distinção é a razão de
+ele existir. Capturadores de uso corrente em desenvolvimento aceitam toda
+mensagem e nunca devolvem erro: satisfazem "vi a mensagem chegar" e inviabilizam
+o parâmetro P8, que exige **ler e classificar a devolução**. Aqui roda um MTA de
+verdade — Postfix, que devolve — mais um servidor IMAP — Dovecot, para que a
+rotina de leitura converse com a caixa do mesmo modo que conversaria com uma
+caixa institucional numa implantação real.
+
+**Três domínios, cada um produzindo uma linha da tabela de classificação da
+seção 10.1 de [`parametros-contato.md`](../docs/especificacao/parametros-contato.md):**
+
+| Domínio | O que acontece | Resultado |
+|---|---|---|
+| `egressos.test` | entrega normal | chega na caixa `entregues` |
+| `invalido.test` | usuário inexistente | **devolução permanente** (5.x.x) |
+| `indisponivel.test` | servidor inalcançável | **devolução temporária** (4.x.x) |
+
+Todos sob o TLD reservado `.test` (RFC 2606 / 6761), que não resolve na internet
+pública e não pode colidir com domínio de terceiro. É a segunda camada da mesma
+proteção: a primeira é o serviço não ter rota de saída.
+
+**Duas caixas, e a separação importa.** `devolucoes` recebe as devoluções e
+`entregues` recebe as mensagens entregues. Sem separá-las, a rotina de leitura
+veria mensagens comuns no meio das devoluções.
+
+### Verificando as duas direções
+
+```bash
+docker compose exec rotinas python3 verifica_correio.py
+```
+
+Exercita o correio por SMTP direto, sem o LimeSurvey no caminho — isola o
+comportamento do MTA. Leva alguns minutos, porque o aviso de atraso que produz a
+devolução temporária não é imediato.
+
+```bash
+python3 confere-envio.py
+```
+
+Exercita a **integração**: a instância dispara os convites, a devolução volta, a
+rotina classifica e o estado do participante muda. Chama a rotina de verdade, e
+não uma reimplementação dela.
+
+### Três detalhes que custaram tempo, registrados para quem for replicar
+
+**`local_recipient_maps` vazio, de propósito.** Sem isso o Postfix recusa o
+destinatário inexistente no próprio diálogo SMTP, com um 550 síncrono, e **não
+há devolução a ler**. Com o parâmetro vazio ele aceita a mensagem e falha na
+entrega, gerando a devolução assíncrona que o P8 pressupõe.
+
+**`relay_domains` precisa nomear o domínio indisponível.** Ele não é destino
+final deste servidor: precisa ser retransmitido para o endereço inalcançável, e é
+a tentativa frustrada que gera a devolução temporária. Sem declará-lo, o Postfix
+responde `454 4.7.1 Relay access denied` e, de novo, não há o que ler.
+
+**Os dois serviços são supervisionados.** Num hospedeiro WSL o relógio da máquina
+virtual **salta** quando a distribuição suspende e retoma; o Dovecot detecta o
+salto e se recusa a lançar serviços durante aquele intervalo. O sintoma observado
+foi IMAP recusando conexão com o contêiner aparentemente saudável. A inicialização
+vigia os dois processos e encerra em erro se um cair, para que a política de
+reinício recrie o contêiner inteiro.
+
+## Rotinas do projeto
+
+O serviço `rotinas` existe por topologia, não por conveniência: o correio fica
+somente na rede interna, que o hospedeiro não alcança, de modo que qualquer
+rotina que leia a caixa de devoluções precisa rodar de dentro dessa rede.
+
+Os scripts vivem em [`scripts/`](../scripts/), no repositório, montados em modo
+somente leitura. A imagem não carrega cópia deles — assim não há duas versões do
+mesmo arquivo.
+
+```bash
+docker compose exec rotinas python3 ler_devolucoes.py \
+    --ciclo 2026-1 --questionario 123456 --simular
+```
+
+`--simular` lê e classifica sem gravar, marcar nem consumir a caixa.
+
+A E21 substitui o comando desse contêiner pelo agendador. Até lá ele fica de pé,
+ocioso, servindo de ponto de execução.
 
 ## Atualizando a versão do LimeSurvey
 

@@ -317,7 +317,7 @@ Meta 2 · ago–set/26
   importa inativo, e o que parecia tabela ausente era eu procurando pelo nome
   antigo.
 
-### [ ] E09 — Configurar e verificar o envio de mensagens
+### [x] E09 — Configurar e verificar o envio de mensagens
 - **Objetivo:** garantir que a instância envia e-mail, pré-requisito da automação.
 - **Entregável:** configuração de SMTP documentada, sem credenciais versionadas.
 - **Conclusão quando:** um envio de teste chegar a endereço sob domínio controlado
@@ -348,6 +348,70 @@ Meta 2 · ago–set/26
   temporal ou usos restantes, e não a estado de entrega. O que a fila de correção
   da P8 tem de sólido é `emailstatus` e a tabela `lime_failed_emails`, cujo
   esquema já foi conferido e serve.
+- **Concluída em:** 27/09/2026 · `docs/especificacao/leitura-devolucoes.md` ·
+  `infra/correio/` · `infra/rotinas/` · `scripts/`.
+- **Correio de ensaio, em imagem própria.** Postfix mais Dovecot, **somente na
+  rede interna**. Não é capturador de SMTP, e a distinção é o ponto: capturador
+  aceita tudo e nunca devolve, satisfazendo "vi a mensagem chegar" e
+  inviabilizando o P8. Três domínios sob o TLD reservado `.test`, cada um
+  produzindo **uma linha** da tabela de classificação da seção 10.1 — entrega,
+  erro permanente e erro temporário.
+- **Serviço `rotinas` criado, por topologia e não por conveniência.** O correio
+  fica só na rede interna, que o hospedeiro não alcança; logo a rotina que lê a
+  caixa tem de rodar de dentro dela. Desse contêiner se alcança `correio:143`,
+  `limesurvey:80` e `banco:3306`, e **não** a internet — verificado. A **E21** e a
+  **E28** reaproveitam esse ponto de execução.
+- **Rotina implementada.** `scripts/ler_devolucoes.py` lê a caixa, classifica pelo
+  código de estado da RFC 3463, grava em tabela própria `egressos_devolucoes` e
+  aplica a regra do P8: permanente marca na primeira ocorrência, temporário só na
+  terceira do mesmo ciclo. Chave única sobre mensagem e destinatário dá
+  **idempotência** — a mesma devolução lida duas vezes não conta duas.
+- **Cliente de API compartilhado** em `scripts/limesurvey_api.py`, que concentra
+  os enganos daquela interface num lugar só, em vez de repetidos por rotina.
+- **Categoria acrescentada ao P8:** `indeterminado`, para devolução ilegível.
+  O P8 pressupõe retorno legível e nem todo servidor real devolve normalizado.
+  Tratar o ilegível como permanente marcaria por falha de interpretação; como
+  temporário, alimentaria um limiar indevidamente. Registra-se sem agir.
+- **Verificação nas duas direções, conforme a seção 10.4 exige.** Dois artefatos,
+  com divisão deliberada, **ambos 7 de 7**: `scripts/verifica_correio.py` exercita
+  o **correio** por SMTP direto, e `infra/confere-envio.py` exercita a
+  **integração**, chamando a rotina de verdade e não uma cópia dela. Devolução
+  permanente classificada como `5.1.1 / failed`; temporária como `4.4.1 / delayed`,
+  após 124 s.
+- **Caminho completo verificado ponta a ponta:** a instância dispara, a mensagem
+  chega à caixa coletora, a devolução volta, a rotina classifica, marca o contato
+  como inválido, a fila de correção passa a mostrá-lo — e a **recusa permanece
+  intacta** (`token_opted_out=0`), o que confere a distinção da seção 10.2.
+- **Três detalhes de configuração que decidem se existe devolução a ler**, cada um
+  capaz de produzir um ambiente que parece funcionar e no qual o P8 é inexequível:
+  `local_recipient_maps` vazio (sem isso a recusa é síncrona e não há devolução);
+  `relay_domains` nomeando o domínio indisponível (sem isso vem
+  `454 Relay access denied`); e o aviso de atraso, que **não é imediato** — no
+  ensaio está reduzido a um minuto, contra horas em implantação real.
+- **Quatro armadilhas da API, todas encontradas nesta etapa e concentradas no
+  cliente compartilhado.** A **E28 vai encontrar as mesmas**, e todas falham em
+  silêncio:
+  1. o campo `status` **não** significa erro — carrega mensagem informativa de
+     sucesso, como `0 left to send`. O sinal confiável é `error_code`;
+  2. **ausência de dados vem como erro** — `ERR_NO_DATA` num ambiente
+     recém-criado é o estado esperado, não falha;
+  3. a **estrutura de retorno é mista** — em `list_participants`, `email` vem
+     aninhado sob `participant_info` e `emailstatus` vem no nível de cima. Ler os
+     dois do mesmo lugar devolve campo vazio **sem erro**, e foi isso que me fez
+     concluir que uma gravação bem-sucedida não havia pegado: a gravação estava
+     correta, a leitura não;
+  4. **lista vazia não é "todos"** — `invite_participants` com lista vazia de
+     tokens responde "No candidate tokens", que parece falha de configuração.
+- **Achado de ambiente, não do desenho.** O relógio da máquina virtual do WSL
+  **salta** quando a distribuição suspende e retoma; o Dovecot detecta o salto e
+  se recusa a lançar serviços naquele intervalo. O sintoma foi o pior para
+  diagnóstico: contêiner saudável, porta aberta, autenticação interna funcionando
+  e toda sessão de rede recusada — com um registro mostrando
+  `1/1 successful auths in 4294967285 secs`, valor negativo estourado. **Terceiro
+  sintoma da mesma raiz.** A verificação de saúde e a supervisão passaram a fazer
+  **LOGIN de verdade**, e duas falhas seguidas derrubam o contêiner para que ele
+  seja recriado. O serviço passou a se recuperar sozinho — mas a raiz é do
+  hospedeiro e é da **E21**.
 
 ### [ ] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
@@ -442,6 +506,10 @@ Metas 6 e 7 · out–nov/26
 - **Objetivo:** preparar o disparo inicial.
 - **Entregável:** modelos de convite e lembrete, com remetente e assunto padronizados.
 - **Conclusão quando:** o convite de teste chegar corretamente formatado.
+- **Pronto da E09:** o remetente de ensaio é `naoresponda@egressos.test` e o
+  endereço de retorno é `devolucoes@egressos.test`, ambos já configurados e
+  verificados. O remetente **institucional** é especificação de implantação real,
+  conforme a seção 9.1 do P8, e não valor de ensaio — não trocar um pelo outro.
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -471,6 +539,19 @@ Metas 6 e 7 · out–nov/26
   ocorre, com a máquina ligada e tudo aparentemente correto. Resolver aqui, e
   registrar a solução no guia — é o tipo de falha silenciosa que passa por
   "funcionou nos testes".
+- **A mesma raiz voltou na E09, num terceiro sintoma, e agora com custo medido.**
+  O relógio da máquina virtual **salta** quando a distribuição suspende e retoma, e
+  o Dovecot se recusa a lançar serviços naquele intervalo — contêiner saudável,
+  porta aberta, toda sessão de rede recusada. Custou três diagnósticos. O correio
+  ganhou supervisão que o recria, mas **isso trata o sintoma**. A decisão sobre a
+  raiz é desta etapa, e há um caminho conhecido a avaliar: `vmIdleTimeout` no
+  `.wslconfig`, que é configuração da máquina do usuário e portanto precisa de
+  decisão dele.
+- **Duas coisas a agendar, não uma.** A E09 mostrou que a devolução temporária
+  **não chega dentro do mesmo disparo que a originou** — o servidor de origem
+  guarda a mensagem na fila e só avisa depois. A leitura de devoluções tem, por
+  isso, de ser agendada **independentemente** da cadência de disparo, e não como
+  etapa final dela.
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -500,6 +581,12 @@ Metas 6 e 7 · out–nov/26
      que não bloqueia. E a persistência **entre ciclos** só existe pela base
      central `lime_participants`, porque a marcação no token morre com a tabela do
      questionário.
+  0. **Insumo pronto da E09:** a tabela `egressos_devolucoes` já registra, por
+     devolução, data e hora da leitura, ciclo, questionário, participante,
+     endereço, tipo, código, ação, diagnóstico e se houve marcação. É trilha de
+     auditoria do P8 e pode ser aproveitada aqui. A rotina de devoluções **não**
+     toca a marcação de recusa — se esta etapa precisar registrar recusa, é por
+     outra via, e a separação é deliberada.
   2. **A trilha de auditoria exige ativar um plugin pela interface.** O `AuditLog`
      acompanha a plataforma mas vem inativo, e nenhuma tabela de auditoria existe
      antes da ativação. O comando de console não oferece ação para isso, e marcar
@@ -533,6 +620,11 @@ Meta 8 · nov–dez/26
 - **Entregável:** execução dos cenários de preenchimento parcial com retomada,
   ausência de resposta, contato inválido e recusa.
 - **Conclusão quando:** todos os cenários tiverem resultado registrado.
+- **Herdado da E09.** Duas coisas que aquela etapa implementou e **não** pôde
+  exercitar: o **limiar de três ocorrências** de erro temporário, que exige três
+  devoluções ao mesmo participante no mesmo ciclo com os intervalos de P3 entre
+  elas; e o **ciclo de reparo** com o teto de uma rodada. A classificação em si já
+  está verificada.
 - **Herdado da E08, que não pôde fazer.** A E08 demonstrou que o modelo de dados
   **representa** o preenchimento parcial — `submitdate` nulo com `startdate`
   preenchido é lido como resposta incompleta —, mas inseriu a linha direto no
@@ -554,6 +646,11 @@ Metas 9 e 10 · out–dez/26
 - **Objetivo:** obter os dados de forma programática.
 - **Entregável:** rotina de extração via API do LimeSurvey e conjunto exportado.
 - **Conclusão quando:** a extração for reproduzível por comando.
+- **Boa parte do caminho já está aberta pela E09.** Há cliente de API
+  compartilhado em `scripts/limesurvey_api.py`, com as quatro armadilhas daquela
+  interface já tratadas, e o contêiner `rotinas` como ponto de execução. Esta
+  etapa acrescenta a extração, não a infraestrutura.
+- **Lembrete de nome de tabela:** `lime_responses_<sid>`, não `lime_survey_<sid>`.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -572,6 +669,14 @@ Metas 9 e 10 · out–dez/26
   registrar o que muda numa implantação real: hospedeiro que permanece ligado,
   correio institucional e rede não isolada. Sem essa separação, o guia parece
   prescrever um equipamento pessoal, quando o artefato é a composição.
+- **Três detalhes de correio que precisam constar, vindos da E09.** Cada um, se
+  esquecido, produz um ambiente que **parece** funcionar e no qual o P8 é
+  inexequível: `local_recipient_maps` vazio, `relay_domains` nomeando o domínio
+  indisponível, e o fato de o aviso de atraso não ser imediato. Estão explicados em
+  `docs/especificacao/leitura-devolucoes.md`, seção 2.1.
+- **Advertência de método a registrar:** capturador de SMTP não serve. É o atalho
+  natural de quem monta ambiente de ensaio, e ele satisfaz a aparência do critério
+  sem satisfazer o requisito.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -625,3 +730,4 @@ Uma linha por sessão, mais recente ao final.
 | 21/09/2026 | E06 | **Fase 2 iniciada.** E06 concluída: ambiente decidido como conteinerização declarativa em máquina local (Docker Engine + Compose), com o WSL2 registrado como substrato trocável. ADR-0002 preenchida com sete critérios, cinco alternativas e consequências. Estado da máquina foi verificado antes de decidir. | Nenhuma pendência nova sem dono. A E06 **acrescentou dois critérios** (contenção do disparo e operação por linha de comando) e **ampliou** E07 (lista de provisionamento fechada; escolher e fixar a imagem por digest), E08 (conferir C1–C10 contra a instância viva), E09 (capturador de SMTP não atende P8 — exigir serviço que devolva erro), E25 (contenção do disparo como característica verificável), E30 (separar o que o guia ensina do que oferece) e E31 (limitação da compressão temporal). Docker Desktop descartado por licença, não por técnica. Demais pendências inalteradas. |
 | 21/09/2026 | E07 | E07 concluída. Ambiente de pé e conferido: Ubuntu 24.04 sobre WSL2 com systemd, Docker Engine 29.8.1, LimeSurvey 7.2.0 em imagem própria e MariaDB 11.4. `verifica-ambiente.sh` roda 21 conferências, todas passando. ADR-0004 registrada — imagem própria e leitura de devoluções por rotina. As duas releituras de fonte foram encerradas, com correção material em cada uma. | Nenhuma pendência nova sem dono. **Encerradas:** releituras de Ferreira e Davis, `.gitattributes`, Python (que destrava E16 e E28). **Ampliadas:** E09 ganha a rotina própria de devoluções e o correio só na rede interna; E08 ganha a conferência do caminho `latest-master`; E21 ganha o problema do WSL encerrar a distro ociosa e derrubar os contêineres — falha silenciosa que precisa de mecanismo. Conferências de referência e titularidade do copyright seguem na E31. |
 | 22/09/2026 | E08 | E08 concluída. LimeSurvey 7.2.0 build 260921 instalado, com a instalação convertida em desatendida e idempotente — `down -v` seguido de `up -d` devolve instância pronta. Capacidades C1 a C10 conferidas contra a instância viva: 7 atendem, 3 parciais, nenhuma ausente. Registro em `docs/especificacao/capacidades-plataforma.md`; verificador versionado em `infra/confere-capacidades.py`. | Nenhuma pendência nova sem dono. **Ampliadas:** E09 (não usar `token_invalid` como indicador de contato inválido sem saber o que ele conta); E15, E26, E27 e E28 (a tabela de respostas é `lime_responses_<sid>`, não `lime_survey_<sid>`); E22 e E23 (recusa exige `emailstatus=OptOut` mais a base central, e a auditoria exige ativar plugin por interface — decidir entre caminho programático ou exceção documentada ao K7); E26 (exercitar o preenchimento parcial pelo percurso real, que esta etapa não pôde). E21 segue com o problema da distro ociosa e com o modelo de cadência por verificar. |
+| 27/09/2026 | E09 | E09 concluída. Correio de ensaio em imagem própria (Postfix mais Dovecot), somente na rede interna, com três domínios sob `.test` — cada um produzindo uma linha da tabela de classificação do P8. Serviço `rotinas` criado, por topologia. Rotina `ler_devolucoes.py` implementa o P8 com tabela própria de registro e idempotência. Verificação nas duas direções: **7 de 7** no correio isolado e **7 de 7** na integração ponta a ponta. | Nenhuma pendência nova sem dono. **Ampliadas:** E20 (remetente e retorno já configurados; não confundir com o institucional); E21 (agendar a leitura de devoluções **independentemente** da cadência, porque a devolução temporária não chega no mesmo disparo — e decidir a raiz do hospedeiro que suspende, que já custou três diagnósticos); E23 (a tabela `egressos_devolucoes` é insumo de auditoria; a rotina não toca recusa, por decisão); E26 (exercitar o limiar de três ocorrências e o ciclo de reparo); E28 (cliente de API e ponto de execução prontos, com quatro armadilhas já tratadas); E30 (os três detalhes de correio e a advertência sobre capturador de SMTP). |

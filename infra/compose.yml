@@ -63,6 +63,10 @@ services:
     depends_on:
       banco:
         condition: service_healthy
+      # Basta ter partido: o LimeSurvey nao fala com o correio na
+      # inicializacao, so quando ha mensagem a entregar.
+      correio:
+        condition: service_started
     environment:
       # Consumidas pela inicializacao do conteiner, que gera o config.php e
       # executa a instalacao desatendida. Ver limesurvey/entrypoint.sh.
@@ -76,6 +80,11 @@ services:
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@egressos.test}
       LIMESURVEY_DEBUG: ${LIMESURVEY_DEBUG:-0}
       LIMESURVEY_RPC: ${LIMESURVEY_RPC:-json}
+      CORREIO_HOST: correio
+      CORREIO_PORTA: "25"
+      REMETENTE: naoresponda@${CORREIO_DOMINIO:-egressos.test}
+      REMETENTE_NOME: ${REMETENTE_NOME:-Acompanhamento de Egressos (ensaio)}
+      DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}@${CORREIO_DOMINIO:-egressos.test}
     volumes:
       # A configuracao que o instalador grava precisa sobreviver a recriacao
       # do conteiner; os envios, idem.
@@ -90,6 +99,77 @@ services:
     networks:
       - interna
       - externa
+
+  # -------------------------------------------------------------------------
+  # Correio de ensaio
+  # -------------------------------------------------------------------------
+  # SOMENTE na rede interna, e isso nao e detalhe: sem rota de saida, nenhuma
+  # mensagem deixa a maquina, qualquer que seja o endereco de destino —
+  # inclusive um endereco real digitado por engano no arquivo de participantes.
+  # E o que torna a contencao do criterio K6 da ADR-0002 propriedade do
+  # ambiente, e nao regra de conduta. NAO conectar este servico a rede externa.
+  #
+  # Nao e capturador de SMTP: e MTA de verdade, que devolve erro, porque o
+  # parametro P8 exige ler e classificar a devolucao. Ver correio/Dockerfile.
+  correio:
+    build:
+      context: ./correio
+      dockerfile: Dockerfile
+    image: egressos/correio:1.0
+    container_name: egressos-correio
+    restart: unless-stopped
+    environment:
+      DOMINIO: ${CORREIO_DOMINIO:-egressos.test}
+      DOMINIO_INVALIDO: ${CORREIO_DOMINIO_INVALIDO:-invalido.test}
+      DOMINIO_INDISPONIVEL: ${CORREIO_DOMINIO_INDISPONIVEL:-indisponivel.test}
+      CAIXA_DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}
+      CAIXA_ENTREGUES: ${CORREIO_CAIXA_ENTREGUES:-entregues}
+      SENHA_CAIXA: ${CORREIO_SENHA:?defina CORREIO_SENHA no .env}
+    volumes:
+      - filas-correio:/var/spool/postfix
+      - caixas-correio:/home
+    networks:
+      - interna
+
+  # -------------------------------------------------------------------------
+  # Rotinas do projeto
+  # -------------------------------------------------------------------------
+  # Tambem somente na rede interna, e pelo mesmo motivo: e de dentro dela que
+  # se alcanca a caixa de devolucoes do correio. Daqui as rotinas falam com
+  # correio:143, limesurvey:80 e banco:3306.
+  #
+  # Os scripts sao montados a partir de scripts/, no repositorio, em modo
+  # somente leitura. A imagem nao carrega copia dos scripts, para que nao haja
+  # duas versoes do mesmo arquivo.
+  rotinas:
+    build:
+      context: ./rotinas
+      dockerfile: Dockerfile
+    image: egressos/rotinas:1.0
+    container_name: egressos-rotinas
+    restart: unless-stopped
+    depends_on:
+      correio:
+        condition: service_started
+    environment:
+      CORREIO_IMAP_HOST: correio
+      CORREIO_IMAP_PORTA: "143"
+      CORREIO_CAIXA_DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}
+      CORREIO_SENHA: ${CORREIO_SENHA:?defina CORREIO_SENHA no .env}
+      CORREIO_DOMINIO: ${CORREIO_DOMINIO:-egressos.test}
+      LIMESURVEY_URL: http://limesurvey
+      LIMESURVEY_USUARIO: ${ADMIN_USUARIO:?defina ADMIN_USUARIO no .env}
+      LIMESURVEY_SENHA: ${ADMIN_SENHA:?defina ADMIN_SENHA no .env}
+      BANCO_HOST: banco
+      BANCO_PORTA: "3306"
+      BANCO_NOME: ${BANCO_NOME:?defina BANCO_NOME no .env}
+      BANCO_USUARIO: ${BANCO_USUARIO:?defina BANCO_USUARIO no .env}
+      BANCO_SENHA: ${BANCO_SENHA:?defina BANCO_SENHA no .env}
+      BANCO_PREFIXO: lime_
+    volumes:
+      - ../scripts:/rotinas:ro
+    networks:
+      - interna
 
 networks:
 
@@ -110,3 +190,5 @@ volumes:
   dados-banco:
   config-limesurvey:
   uploads-limesurvey:
+  filas-correio:
+  caixas-correio:

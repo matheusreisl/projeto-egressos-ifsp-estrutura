@@ -42,6 +42,16 @@ log() { printf '[inicializacao] %s\n' "$*"; }
 : "${LIMESURVEY_DEBUG:=0}"
 : "${LIMESURVEY_RPC:=json}"
 
+# Correio. O remetente e os destinatarios ficam sob dominio controlado pelo
+# projeto, sem excecao — restricao da secao 9.1 de parametros-contato.md. Usar
+# endereco @ifsp.edu.br como remetente de teste seria, alem de violacao da
+# restricao, uso indevido de identidade institucional.
+: "${CORREIO_HOST:=correio}"
+: "${CORREIO_PORTA:=25}"
+: "${REMETENTE:=naoresponda@egressos.test}"
+: "${REMETENTE_NOME:=Acompanhamento de Egressos (ensaio)}"
+: "${DEVOLUCOES:=devolucoes@egressos.test}"
+
 # ---------------------------------------------------------------------------
 # 1. config.php
 # ---------------------------------------------------------------------------
@@ -88,6 +98,30 @@ return array(
         // (E28) e a rotina de devolucoes (ADR-0004) conversam com a instancia
         // por aqui, e nao por tela. Em implantacao real, avaliar restringir.
         'RPCInterface' => '${LIMESURVEY_RPC}',
+
+        // --- Correio -------------------------------------------------------
+        //
+        // Entrega por SMTP ao servico de correio da propria composicao, que
+        // fica somente na rede interna. Sem autenticacao e sem TLS: a rede e
+        // fechada e o servico nao e alcancavel de fora dela.
+        //
+        // Remetente e devolucoes sob dominio controlado, conforme a restricao
+        // da secao 9.1 de parametros-contato.md. O remetente institucional e
+        // especificacao de implantacao real, e nao valor de ensaio.
+        'emailmethod'       => 'smtp',
+        'emailsmtphost'     => '${CORREIO_HOST}:${CORREIO_PORTA}',
+        'emailsmtpuser'     => '',
+        'emailsmtppassword' => '',
+        'emailsmtpssl'      => '',
+        'emailsmtpdebug'    => 0,
+
+        'siteadminemail'  => '${REMETENTE}',
+        'siteadminname'   => '${REMETENTE_NOME}',
+
+        // Endereco de retorno. E o que faz a devolucao chegar a uma caixa
+        // legivel pela rotina, e nao se perder — sem isso o parametro P8 e
+        // inexequivel, conforme a secao 10.4 de parametros-contato.md.
+        'siteadminbounce' => '${DEVOLUCOES}',
     )
 );
 PHP
