@@ -85,7 +85,10 @@ def rpc(metodo, params, chave=None):
 def sql(consulta):
     """Consulta direta ao banco, para inspecionar esquema."""
     p = subprocess.run(
-        ["docker", "compose", "exec", "-T", "banco", "mariadb",
+        # --skip-ssl: o cliente do MariaDB 11.4 exige TLS por padrao e o
+        # servidor desta composicao o tem desligado, de proposito. O motivo esta
+        # comentado em compose.yml, no servico do banco.
+        ["docker", "compose", "exec", "-T", "banco", "mariadb", "--skip-ssl",
          f"-u{ENV['BANCO_USUARIO']}", f"-p{ENV['BANCO_SENHA']}",
          f"-D{ENV['BANCO_NOME']}", "-N", "-B", "-e", consulta],
         cwd=AQUI, capture_output=True, text=True)

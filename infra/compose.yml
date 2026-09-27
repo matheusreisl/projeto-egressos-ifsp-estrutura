@@ -35,6 +35,24 @@ services:
       # agrupamento entre a criacao do banco e as tabelas da aplicacao.
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+      # TLS desligado, de proposito e por dois motivos que convergem.
+      #
+      # O primeiro e coerencia: nada mais nesta composicao usa TLS, porque a
+      # rede e fechada e o banco nao publica porta — quem nao o alcanca nao
+      # tem o que interceptar. Ver a Parte III do guia de replicacao.
+      #
+      # O segundo e um modo de falha concreto, observado neste projeto. O
+      # MariaDB gera certificado proprio na inicializacao e o usa para
+      # conectar-se a si mesmo no passo de seguranca. Num hospedeiro WSL, o
+      # relogio da maquina virtual SALTA, e um salto para tras durante a
+      # inicializacao faz esse certificado parecer "ainda nao valido". O passo
+      # de seguranca falha, nem root nem a verificacao de saude passam a
+      # autenticar, e o resultado e um banco inicializado pela metade — que
+      # nao se recupera por reinicio, so recriando o volume.
+      #
+      # ATENCAO numa implantacao real: se o banco passar a ser alcancavel por
+      # outra maquina, TLS volta a ser necessario.
+      - --skip-ssl
     volumes:
       - dados-banco:/var/lib/mysql
     networks:

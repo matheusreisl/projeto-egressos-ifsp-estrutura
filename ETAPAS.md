@@ -413,11 +413,49 @@ Meta 2 · ago–set/26
   seja recriado. O serviço passou a se recuperar sozinho — mas a raiz é do
   hospedeiro e é da **E21**.
 
-### [ ] E10 — Documentar o procedimento de instalação
+### [x] E10 — Documentar o procedimento de instalação
 - **Objetivo:** iniciar o guia de replicação.
 - **Entregável:** `entregas/guia-replicacao.md` com requisitos, passo a passo e
   configurações de segurança aplicadas.
 - **Conclusão quando:** um terceiro conseguir reproduzir o ambiente pelo documento.
+- **Concluída em:** 27/09/2026 · `entregas/guia-replicacao.md`. **Fase 2 encerrada.**
+- **Partes I a III completas**, e IV a VI marcadas como pendentes com a etapa
+  responsável de cada uma — de propósito, para que a **E30 preencha em vez de
+  reestruturar**. O documento já tem a forma final.
+- **Critério verificado por execução, e não por leitura.** Destruí o ambiente,
+  inclusive as imagens construídas, **clonei o repositório num diretório novo** e
+  segui a Parte II ao pé da letra. Os três verificadores deram exatamente os
+  resultados que o guia promete: **21/21**, **7 atendem e 3 parciais**, **7/7**.
+  - *Ressalva honesta:* o clone reaproveitou o cache de camadas do Docker, então a
+    construção **fria** — com a descarga de 123 MB — não foi reexercitada aqui. Ela
+    foi exercitada na E07, quando não havia cache.
+- **Defeito de ordem que o teste expôs.** A seção do hospedeiro mandava rodar um
+  script **do repositório**, e o clone só aparecia depois. Um terceiro travaria ali.
+  O clone passou a vir antes, e as seções foram renumeradas.
+- **Números do guia medidos, não estimados.** Imagens: 2,8 GB no total (LimeSurvey
+  1,98 GB, banco 455 MB, correio 211 MB, rotinas 190 MB). Memória em repouso: cerca
+  de 200 MB nos quatro contêineres somados — uma ordem de grandeza abaixo do que eu
+  havia escrito por estimativa.
+- **Seção 8 é a espinha do documento:** lista, item por item, o que precisa mudar
+  antes de o ambiente tocar dado real — sem TLS, correio sem autenticação,
+  interface RPC habilitada, domínios reservados e rede sem saída são ajustes
+  deliberados que tornam o ensaio possível e que precisam ser desfeitos.
+- **Achado novo, e o quarto sintoma do relógio do WSL — o pior até agora.** Um
+  salto **para trás** durante a inicialização do MariaDB faz o certificado que ele
+  mesmo acabou de gerar parecer "ainda não válido"; o passo de segurança falha e o
+  banco fica **inicializado pela metade**, com `root` e a verificação de saúde sem
+  autenticar. Não se recupera por reinício, só recriando o volume.
+  - **Tratado desligando o TLS do banco**, o que é coerente com a postura já
+    documentada do ambiente — nada mais ali usa TLS, e o banco não publica porta.
+  - **Consequência que exigiu ajuste:** o cliente do MariaDB 11.4 **exige** TLS por
+    padrão, então as chamadas de cliente precisaram de `--skip-ssl`. Registrado nos
+    dois lugares onde isso aparece.
+- **Achado operacional para o guia:** a composição tem nome de projeto fixo, então
+  **dois clones na mesma máquina compartilham contêineres e volumes** — um
+  `down -v` em qualquer um apaga os dados de ambos. Documentado com a saída
+  (`COMPOSE_PROJECT_NAME`).
+- **Apêndice A reúne as falhas que de fato ocorreram** no desenvolvimento, porque
+  em todas o sintoma engana — e em três delas o diagnóstico natural é o errado.
 
 ---
 
@@ -700,6 +738,11 @@ Metas 9 e 10 · out–dez/26
 - **Advertência de método a registrar:** capturador de SMTP não serve. É o atalho
   natural de quem monta ambiente de ensaio, e ele satisfaz a aparência do critério
   sem satisfazer o requisito.
+- **O documento já existe e já tem a forma final.** A E10 escreveu as Partes I a
+  III e deixou IV a VI marcadas com a etapa responsável de cada uma. **Esta etapa
+  preenche, não reestrutura** — e, ao preencher, deve refazer o teste do critério
+  da E10: clonar num diretório novo e seguir o guia ao pé da letra, agora incluindo
+  estrutura, automação e conformidade.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -754,3 +797,4 @@ Uma linha por sessão, mais recente ao final.
 | 21/09/2026 | E07 | E07 concluída. Ambiente de pé e conferido: Ubuntu 24.04 sobre WSL2 com systemd, Docker Engine 29.8.1, LimeSurvey 7.2.0 em imagem própria e MariaDB 11.4. `verifica-ambiente.sh` roda 21 conferências, todas passando. ADR-0004 registrada — imagem própria e leitura de devoluções por rotina. As duas releituras de fonte foram encerradas, com correção material em cada uma. | Nenhuma pendência nova sem dono. **Encerradas:** releituras de Ferreira e Davis, `.gitattributes`, Python (que destrava E16 e E28). **Ampliadas:** E09 ganha a rotina própria de devoluções e o correio só na rede interna; E08 ganha a conferência do caminho `latest-master`; E21 ganha o problema do WSL encerrar a distro ociosa e derrubar os contêineres — falha silenciosa que precisa de mecanismo. Conferências de referência e titularidade do copyright seguem na E31. |
 | 22/09/2026 | E08 | E08 concluída. LimeSurvey 7.2.0 build 260921 instalado, com a instalação convertida em desatendida e idempotente — `down -v` seguido de `up -d` devolve instância pronta. Capacidades C1 a C10 conferidas contra a instância viva: 7 atendem, 3 parciais, nenhuma ausente. Registro em `docs/especificacao/capacidades-plataforma.md`; verificador versionado em `infra/confere-capacidades.py`. | Nenhuma pendência nova sem dono. **Ampliadas:** E09 (não usar `token_invalid` como indicador de contato inválido sem saber o que ele conta); E15, E26, E27 e E28 (a tabela de respostas é `lime_responses_<sid>`, não `lime_survey_<sid>`); E22 e E23 (recusa exige `emailstatus=OptOut` mais a base central, e a auditoria exige ativar plugin por interface — decidir entre caminho programático ou exceção documentada ao K7); E26 (exercitar o preenchimento parcial pelo percurso real, que esta etapa não pôde). E21 segue com o problema da distro ociosa e com o modelo de cadência por verificar. |
 | 27/09/2026 | E09 | E09 concluída. Correio de ensaio em imagem própria (Postfix mais Dovecot), somente na rede interna, com três domínios sob `.test` — cada um produzindo uma linha da tabela de classificação do P8. Serviço `rotinas` criado, por topologia. Rotina `ler_devolucoes.py` implementa o P8 com tabela própria de registro e idempotência. Verificação nas duas direções: **7 de 7** no correio isolado e **7 de 7** na integração ponta a ponta. | Nenhuma pendência nova sem dono. **Ampliadas:** E20 (remetente e retorno já configurados; não confundir com o institucional); E21 (agendar a leitura de devoluções **independentemente** da cadência, porque a devolução temporária não chega no mesmo disparo — e decidir a raiz do hospedeiro que suspende, que já custou três diagnósticos); E23 (a tabela `egressos_devolucoes` é insumo de auditoria; a rotina não toca recusa, por decisão); E26 (exercitar o limiar de três ocorrências e o ciclo de reparo); E28 (cliente de API e ponto de execução prontos, com quatro armadilhas já tratadas); E30 (os três detalhes de correio e a advertência sobre capturador de SMTP). |
+| 27/09/2026 | E10 | **Fase 2 encerrada.** E10 concluída: `entregas/guia-replicacao.md` com Partes I a III completas e IV a VI marcadas com a etapa responsável, para que a E30 preencha em vez de reestruturar. Critério verificado por execução — ambiente destruído, repositório clonado em diretório novo, guia seguido ao pé da letra, e os três verificadores nos resultados prometidos (21/21, 7 atendem e 3 parciais, 7/7). | Nenhuma pendência nova sem dono. **Achado novo e quarto sintoma do relógio do WSL, o pior:** um salto para trás durante a inicialização do MariaDB deixa o banco pela metade, sem `root` nem verificação de saúde autenticando — tratado desligando o TLS do banco, coerente com a postura do ambiente, o que obrigou `--skip-ssl` nos clientes porque o cliente 11.4 exige TLS. **Dois defeitos do próprio guia corrigidos pelo teste:** ordem das seções (o script do repositório vinha antes do clone) e números estimados, agora medidos. **Ampliada:** E30 herda a instrução de refazer o teste do critério ao preencher as partes restantes. |

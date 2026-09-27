@@ -53,18 +53,34 @@ marcados como tal; os demais são de shell Unix.
 
 ---
 
-# Parte I — Requisitos e hospedeiro
+# Parte I — Requisitos, repositório e hospedeiro
 
 ## 1. O que é preciso ter
 
 | Requisito | Observação |
 |---|---|
 | **Docker Engine** e o plugin **Compose** | é tudo o que a composição exige |
-| cerca de **4 GB** de memória livre | os quatro serviços juntos |
-| cerca de **8 GB** de disco | imagens e volumes |
+| cerca de **8 GB** de disco | ver a medição abaixo |
 | acesso à internet **na construção** | para baixar imagens e o pacote do LimeSurvey; depois de construído, o ambiente roda isolado |
 | `git` | para obter o repositório |
 | `python3` | para dois dos verificadores |
+
+**Disco, medido.** As imagens ocupam cerca de **2,8 GB** no total: LimeSurvey
+1,98 GB, MariaDB 455 MB, correio 211 MB e rotinas 190 MB. O cache de construção
+acrescenta alguns gigabytes, e os volumes crescem com o uso — daí a folga de 8 GB.
+
+A imagem do LimeSurvey é grande porque as dependências de compilação das
+extensões do PHP **são mantidas de propósito**: purgá-las economizaria centenas de
+megabytes ao custo de um bloco difícil de ler, e essa imagem é antes de tudo um
+documento de instalação destinado a ser lido. Numa implantação real o ajuste é
+legítimo.
+
+**Memória, medida em repouso.** Os quatro contêineres somam cerca de **200 MB**:
+banco 96 MB, LimeSurvey 76 MB, correio 28 MB e rotinas 1,6 MB. Sob carga de
+simulação isso cresce, mas a ordem de grandeza é essa — o consumo dos contêineres
+não é o fator limitante. Num hospedeiro WSL, o que pesa é a memória que a própria
+máquina virtual reserva, metade da RAM da máquina por padrão, ajustável em
+`.wslconfig`.
 
 **Não é preciso**: conta em provedor de nuvem, meio de pagamento, servidor,
 domínio, certificado, nem acesso a qualquer sistema institucional.
@@ -76,12 +92,22 @@ instituto federal não cabe no limiar de porte. O **Docker Engine** é distribu�
 sob licença Apache 2.0, sem limiar algum, e é o que este guia usa. A decisão está
 registrada em [ADR-0002](../docs/decisoes/0002-ambiente-execucao.md).
 
-## 2. Obtendo um hospedeiro Docker
+## 2. Obter o repositório
+
+Isto vem antes do hospedeiro, porque o script que instala o Docker está no
+repositório:
+
+```bash
+git clone https://github.com/matheusreisl/projeto-egressos-ifsp-estrutura.git
+cd projeto-egressos-ifsp-estrutura
+```
+
+## 3. Obtendo um hospedeiro Docker
 
 Esta seção é a única do guia que depende do seu sistema operacional. **A
 composição é a mesma em todos os casos** — o hospedeiro é a peça trocável.
 
-### 2.1 Linux (Debian ou Ubuntu)
+### 3.1 Linux (Debian ou Ubuntu)
 
 O repositório traz o script:
 
@@ -93,13 +119,13 @@ Ele instala o Docker Engine a partir do repositório oficial do Docker, é
 idempotente e, se detectar WSL, habilita o `systemd`. Em outras distribuições
 Linux, instale o Docker Engine pela documentação oficial do Docker e siga daqui.
 
-### 2.2 macOS
+### 3.2 macOS
 
 Instale o Docker Engine por um gerenciador de contêineres que não seja o Docker
 Desktop, ou aceite as condições de licença dele se a sua organização couber nos
 limiares. Daqui em diante o procedimento é idêntico.
 
-### 2.3 Windows, com WSL2
+### 3.3 Windows, com WSL2
 
 Primeiro a distribuição:
 
@@ -107,7 +133,7 @@ Primeiro a distribuição:
 wsl --install -d Ubuntu-24.04
 ```
 
-Depois o Docker, de dentro dela, com o script da seção 2.1. Se ele disser que
+Depois o Docker, de dentro dela, com o script da seção 3.1. Se ele disser que
 habilitou o `systemd`, reinicie com `wsl --shutdown` antes de seguir.
 
 **Um ajuste que o WSL exige e que não é opcional.** O WSL encerra a distribuição
@@ -149,13 +175,13 @@ servidor IMAP recusar conexões com o contêiner aparentemente saudável. O serv
 de correio deste projeto mantém supervisão própria justamente por isso. Em Linux
 nativo nada disso ocorre.
 
-### 2.4 Servidor institucional
+### 3.4 Servidor institucional
 
 É o caso mais simples e o mais adequado a uso contínuo: instale o Docker Engine e
 siga para a Parte II. Leia a **Parte III, seção 8** antes de expor o serviço a
 qualquer rede.
 
-### 2.5 Conferindo o hospedeiro
+### 3.5 Conferindo o hospedeiro
 
 ```bash
 docker --version
@@ -167,14 +193,12 @@ docker run --rm hello-world
 
 # Parte II — Instalação
 
-## 3. Obter o repositório
+Todos os comandos desta parte correm de dentro de `infra/`, no repositório que
+você clonou na seção 2:
 
 ```bash
-git clone https://github.com/matheusreisl/projeto-egressos-ifsp-estrutura.git
-cd projeto-egressos-ifsp-estrutura/infra
+cd infra
 ```
-
-Todos os comandos das seções seguintes correm de dentro de `infra/`.
 
 ## 4. Configurar
 
@@ -318,7 +342,7 @@ deliberado que torna o ensaio possível e que precisa ser desfeito.
 
 | O que está assim | Por que, no ensaio | O que fazer antes de dado real |
 |---|---|---|
-| **Sem TLS**, em nenhum serviço | a rede é fechada e nada trafega fora dela | certificado válido e HTTPS obrigatório no painel e no acesso do respondente |
+| **Sem TLS**, em nenhum serviço — inclusive no banco | a rede é fechada, nada trafega fora dela e nenhum serviço além do painel publica porta | certificado válido e HTTPS obrigatório no painel e no acesso do respondente; e TLS no banco, se ele passar a ser alcançável por outra máquina |
 | **Correio sem autenticação** | só a própria composição o alcança | correio institucional, com autenticação, e remetente identificável |
 | **Interface RPC habilitada** | as rotinas do projeto dependem dela | avaliar restringir o acesso, ou desabilitar quando não houver rotina em uso |
 | **Domínios sob `.test`** | garantem que nada saia | domínios reais, e então a contenção deixa de existir — a partir daí, todo endereço de destino é um endereço de verdade |
@@ -386,7 +410,7 @@ wsl --shutdown
 
 ### Os contêineres reaparecem com poucos segundos de atividade
 
-A distribuição está sendo encerrada por ociosidade. Ver a seção 2.3.
+A distribuição está sendo encerrada por ociosidade. Ver a seção 3.3.
 
 ### O IMAP recusa conexão, com o contêiner saudável
 
@@ -398,6 +422,40 @@ cerca de 20 segundos. Se persistir, `wsl --shutdown` e subir de novo.
 
 Provavelmente está malformado, e o WSL o ignora **sem avisar**. A causa mais comum
 é marcador de ordem de bytes no início do arquivo.
+
+### O banco fica insalubre, e `root` não autentica
+
+Procure nos registros do banco por **`certificate is not yet valid`**:
+
+```bash
+docker compose logs banco | grep -i "not yet valid"
+```
+
+Se aparecer, a inicialização foi interrompida no passo de segurança e o banco está
+**pela metade** — nem `root` nem a verificação de saúde autenticam. A causa é o
+relógio da máquina virtual saltar **para trás** durante a inicialização, o que faz
+o certificado que o próprio banco acabou de gerar parecer ainda não válido.
+
+Isso não se recupera reiniciando. É preciso recriar:
+
+```bash
+docker compose down -v && docker compose up -d
+```
+
+A composição já desliga o TLS do banco justamente para remover esse modo de falha.
+Se o sintoma ocorrer mesmo assim, é sinal de que o relógio do hospedeiro está
+instável; ver a seção 3.3.
+
+### Uma segunda cópia do repositório interfere na primeira
+
+A composição declara um nome de projeto fixo (`egressos`). Dois clones na mesma
+máquina, portanto, **compartilham contêineres e volumes**: subir a partir do
+segundo mexe no ambiente do primeiro, e um `down -v` em qualquer um deles apaga os
+dados de ambos.
+
+Se você precisa de dois ambientes lado a lado, defina nomes distintos com a
+variável `COMPOSE_PROJECT_NAME` no `.env` de cada um, e portas diferentes em
+`PORTA_HTTP`.
 
 ### A devolução de erro não chega
 
