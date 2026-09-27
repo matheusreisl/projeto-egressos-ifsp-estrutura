@@ -67,6 +67,59 @@ wsl --install -d Ubuntu-24.04
 Se o script disser que habilitou o `systemd`, reinicie a distribuição com
 `wsl --shutdown` no PowerShell antes de seguir.
 
+#### Um ajuste do WSL que o projeto exige
+
+O WSL **encerra a distribuição quando ela fica ociosa** — por padrão, depois de
+15 segundos sem sessão ativa. Com os contêineres dentro dela, isso significa que
+o ambiente cai sozinho, e é preciso desligar esse comportamento. Crie
+`%UserProfile%\.wslconfig` com:
+
+```ini
+[general]
+instanceIdleTimeout = -1
+```
+
+E reinicie com `wsl --shutdown`. O ajuste vale para **todas** as distribuições da
+máquina; para desfazer, apague o arquivo e reinicie de novo.
+
+**Como conferir que pegou.** Anote o tempo de atividade da distribuição, espere
+alguns minutos **sem nenhuma sessão aberta no WSL** e compare:
+
+```powershell
+$a = [int]((wsl -d <distro> -u root -- cat /proc/uptime).Split(".")[0])
+Start-Sleep -Seconds 220
+$b = [int]((wsl -d <distro> -u root -- cat /proc/uptime).Split(".")[0])
+"antes=$a depois=$b"
+```
+
+Se o tempo cresceu, a distribuição sobreviveu. Se voltou a um valor baixo, ela foi
+encerrada e reiniciada. Medido aqui: 401 s → 621 s, crescimento de exatamente os
+220 s de espera.
+
+**Atenção ao desenhar esse teste:** ele precisa esperar **do lado do Windows**. Um
+script que espera *dentro* da distribuição mantém uma sessão ativa e dá falso
+positivo — foi o primeiro erro cometido aqui.
+
+**E atenção ao escrever o arquivo:** o WSL ignora um `.wslconfig` malformado **em
+silêncio**, sem aviso. Um marcador de ordem de bytes no início basta para isso, e
+o sintoma é indistinguível de "a configuração não funciona". Grave em texto puro,
+sem BOM.
+
+**Atenção à configuração certa.** Há duas parecidas, e só uma serve: a que
+controla a **distribuição** é `instanceIdleTimeout`, na seção `[general]`, e é a
+única que aceita `-1` para desligar. A que controla a **máquina virtual** é
+`vmIdleTimeout`, na seção `[wsl2]`, e só aceita um número de milissegundos. Como
+a máquina virtual não fica ociosa enquanto a distribuição está de pé, a primeira
+resolve as duas.
+
+**O que isso não resolve.** Se o Windows suspender ou hibernar, a máquina virtual
+suspende de todo modo, e na retomada o relógio dela **salta**. Esse salto faz o
+servidor IMAP recusar conexões — ver a seção sobre o correio de ensaio. É por
+isso que o serviço de correio mantém supervisão própria: o ajuste reduz a causa
+mais frequente, não todas.
+
+Nada disso é necessário em hospedeiro Linux nativo.
+
 **Em macOS ou em outras distribuições Linux**, instale o Docker Engine pela
 documentação oficial do Docker. Daqui em diante o procedimento é idêntico.
 

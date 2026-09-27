@@ -184,16 +184,25 @@ inteiro, marca inconfundível do relógio andando para trás.
 
 **O que se fez.** A verificação de saúde e a supervisão interna passaram a fazer
 **LOGIN de verdade** no IMAP, e não apenas abrir a porta; duas falhas seguidas
-encerram o processo para que a política de reinício recrie o contêiner. O serviço
-passou a se recuperar sozinho.
+encerram o processo para que a política de reinício recrie o contêiner.
 
-**O que isso não resolve.** A causa é o hospedeiro, não o serviço. Em Linux
-nativo o problema não ocorre. Registra-se aqui porque é o terceiro sintoma da
-mesma raiz — a distribuição do WSL suspendendo — e porque **a E21 depende de essa
-raiz ser enfrentada**: uma rotina agendada não sobrevive a um hospedeiro que
-suspende sem aviso.
+**Verificado, e não apenas afirmado.** Matando o Dovecot dentro do contêiner, a
+supervisão reagiu e o contêiner foi **recriado em cerca de 20 segundos**, com o
+serviço de volta e saudável. A recuperação automática é comportamento medido.
 
-## 7. O que esta etapa não permite afirmar
+**O que se fez depois, na raiz.** A causa mais frequente — a distribuição ser
+encerrada por ociosidade — foi desligada no hospedeiro, com
+`instanceIdleTimeout = -1` no `.wslconfig`. Está documentado em
+[`infra/README.md`](../../infra/README.md), na parte de opções de hospedeiro,
+porque é ajuste **do hospedeiro** e não da composição.
+
+**O que continua em aberto.** O ajuste não cobre suspensão ou hibernação do
+Windows, em que a máquina virtual suspende de todo modo e o relógio volta a
+saltar na retomada. Por isso a supervisão do serviço permanece — e por isso a
+**E21** ainda tem de decidir onde o agendador vive. Em Linux nativo nenhuma
+dessas duas coisas ocorre.
+
+## 8. O que esta etapa não permite afirmar
 
 1. **Não se verificou o limiar de três ocorrências em condições reais de
    cadência.** A regra está implementada e a contagem é feita sobre a tabela
@@ -210,7 +219,7 @@ suspende sem aviso.
 4. **Nada aqui foi verificado sobre endereço real.** O correio não tem rota de
    saída; os domínios são reservados; a base é sintética.
 
-## 8. O que determina para as etapas seguintes
+## 9. O que determina para as etapas seguintes
 
 - **E20 (modelos de mensagem)** — o remetente de ensaio é
   `naoresponda@egressos.test` e o endereço de retorno é

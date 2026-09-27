@@ -539,14 +539,37 @@ Metas 6 e 7 · out–nov/26
   ocorre, com a máquina ligada e tudo aparentemente correto. Resolver aqui, e
   registrar a solução no guia — é o tipo de falha silenciosa que passa por
   "funcionou nos testes".
-- **A mesma raiz voltou na E09, num terceiro sintoma, e agora com custo medido.**
-  O relógio da máquina virtual **salta** quando a distribuição suspende e retoma, e
-  o Dovecot se recusa a lançar serviços naquele intervalo — contêiner saudável,
-  porta aberta, toda sessão de rede recusada. Custou três diagnósticos. O correio
-  ganhou supervisão que o recria, mas **isso trata o sintoma**. A decisão sobre a
-  raiz é desta etapa, e há um caminho conhecido a avaliar: `vmIdleTimeout` no
-  `.wslconfig`, que é configuração da máquina do usuário e portanto precisa de
-  decisão dele.
+- **A mesma raiz voltou na E09, num terceiro sintoma.** O relógio da máquina
+  virtual **salta** quando a distribuição suspende e retoma, e o Dovecot se recusa
+  a lançar serviços naquele intervalo — contêiner saudável, porta aberta, toda
+  sessão de rede recusada. Custou três diagnósticos. O correio ganhou supervisão
+  que o recria, mas isso trata o sintoma.
+- **Parte da raiz foi tratada em 27/09/2026, com autorização do orientando:**
+  `instanceIdleTimeout = -1` na seção `[general]` do `%UserProfile%\.wslconfig`,
+  que impede o encerramento da distribuição por ociosidade. Documentado em
+  `infra/README.md`, na parte de opções de hospedeiro — é ajuste **do hospedeiro**,
+  não da composição.
+  - **Efeito medido:** tempo de atividade da distribuição de 401 s para 621 s ao
+    longo de 220 s de ociosidade **sem sessão anexada** — cresceu exatamente o
+    tempo esperado, em vez de zerar. Antes do ajuste, o padrão a encerrava em 15 s.
+  - **Dois tropeços do caminho, registrados porque enganam:** o primeiro teste que
+    escrevi esperava *dentro* da distribuição, o que mantém sessão ativa e dá falso
+    positivo; e o arquivo saiu com marcador de ordem de bytes, que o WSL trata como
+    malformado e **ignora em silêncio** — sintoma indistinguível de "não funciona".
+  - **Supervisão do correio verificada na mesma sessão:** matando o Dovecot, o
+    contêiner foi recriado em cerca de 20 s e voltou saudável.
+  - **Correção de rumo registrada:** eu havia indicado `vmIdleTimeout`, da seção
+    `[wsl2]`. Era a configuração errada. Aquela governa a máquina virtual e só
+    aceita número de milissegundos; a que governa a **distribuição** — que era o
+    que se observava morrendo — é `instanceIdleTimeout`, e é a única das duas que
+    aceita `-1`.
+  - **O que continua em aberto para esta etapa:** o ajuste não cobre suspensão ou
+    hibernação do Windows, em que a máquina virtual suspende de todo modo. E ele é
+    do ambiente de trabalho, **não** do entregável: a decisão de arquitetura desta
+    etapa é onde o agendador vive, e a resposta portátil é **dentro da composição**
+    (no contêiner `rotinas`), com o hospedeiro permanecer acordado virando
+    requisito documentado. Não amarrar o agendamento ao Agendador de Tarefas do
+    Windows, que tornaria o mecanismo dependente de um sistema operacional.
 - **Duas coisas a agendar, não uma.** A E09 mostrou que a devolução temporária
   **não chega dentro do mesmo disparo que a originou** — o servidor de origem
   guarda a mensagem na fila e só avisa depois. A leitura de devoluções tem, por
