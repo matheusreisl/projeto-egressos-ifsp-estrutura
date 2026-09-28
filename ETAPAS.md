@@ -521,7 +521,7 @@ Meta 3 · set–out/26
 - **Pendência encaminhada para a E31:** atualizar o leiaute no documento do
   projeto. Sem alteração de escopo, meta ou cronograma.
 
-### [ ] E12 — Especificar os blocos estruturais do instrumento
+### [x] E12 — Especificar os blocos estruturais do instrumento
 - **Objetivo:** definir os contêineres que acolherão as questões.
 - **Entregável:** `docs/especificacao/blocos-instrumento.md` com bloco,
   finalidade estrutural e indicador alimentado.
@@ -531,6 +531,48 @@ Meta 3 · set–out/26
   atributos — curso, nível, campus, ano e semestre de conclusão —, e a segmentação
   que ele alimenta passa a incluir o nível, que o Ind2 do Regulamento exige. O
   documento do projeto nomeia só curso, campus e ano.
+- **Concluída em:** 28/09/2026 · `docs/especificacao/blocos-instrumento.md` ·
+  **ADR-0006**.
+- **Descoberta que mudou o desenho da etapa: três referências que não
+  coincidem.** O documento do projeto propunha sete blocos próprios, anteriores ao
+  Regulamento, e deixava seis indicadores do Anexo I sem bloco (Ind13 a Ind17 e
+  Ind19). O art. 17 do Regulamento estrutura o questionário do IFSP em outros sete
+  blocos. E três destes — II, VI e VII — não alimentam nenhum indicador do Anexo I,
+  embora sirvam a objetivos expressos da mesma norma.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução e
+  registradas na **ADR-0006**):
+  - a estrutura parte dos sete blocos do art. 17, com nomes e ordem da norma, mais
+    três de controle — consentimento, identificação acadêmica, contato e
+    manifestações — e um de recortes de equidade: **onze blocos**;
+  - "indicador correspondente" é um indicador do Anexo I **ou** um objetivo
+    expresso do Regulamento (arts. 3º e 34), operacionalizado por indicador mínimo
+    proposto pelo projeto, com origem declarada — escala Anexo I / objetivo +
+    projeto / controle, na lógica da E05.
+- **Critério verificado nas duas direções, e por execução:** onze blocos, nenhum
+  sem indicador; dezoito dos dezenove indicadores do Anexo I alimentados — o Ind1
+  é listagem de atividades institucionais, e não dado de questionário —; e os dez
+  objetivos de coleta do art. 3º com bloco.
+- **Achado no Anexo I.** As fórmulas são texto no PDF, e não imagem, como a linha
+  de base registrava. Conferidas contra as páginas, três medem outra coisa que a
+  própria descrição — a do Ind7 repete a do Ind5, a do Ind12 repete a do Ind10, e
+  a do Ind11 tem outro denominador; as dos Ind9 a Ind12 contam só quem está
+  cursando, quando as descrições incluem quem já concluiu; e o Ind13 pede média,
+  maior e menor remuneração com faixas cuja última é aberta. **Regra adotada: a
+  descrição prevalece** — decisão de projeto, a comunicar ao Comitê Permanente.
+- **Recortes de equidade, com dado sensível.** Raça/cor e deficiência. O bloco
+  depende de consentimento específico e destacado (LGPD, art. 11, I), é opcional e
+  oferece não declarar em cada questão. Quem o pede é o próprio Regulamento
+  (art. 3º, item 16).
+- **Linha de base corrigida em três pontos**, cada um marcado no texto: as
+  fórmulas não estavam perdidas; são seis os indicadores em escala de 1 a 10, e
+  não sete; e os pares Ind5/Ind9 e Ind6/Ind10 diferem no numerador, e não no
+  denominador.
+- **Não relido:** o conteúdo vigente dos blocos. A finalidade de cada um parte do
+  nome dado pelo art. 17 e do objetivo que ele operacionaliza — limitação
+  sobretudo para o Bloco II, cuja leitura como "anterior ao ingresso no curso" a
+  E13 confirma.
+- **Pendência encaminhada para a E31:** atualizar a tabela de blocos no documento
+  do projeto e comunicar ao Comitê Permanente as divergências do Anexo I.
 
 ### [ ] E13 — Definir domínios, obrigatoriedade e validações
 - **Objetivo:** fechar os domínios de valores e as regras de preenchimento.
@@ -543,11 +585,25 @@ Meta 3 · set–out/26
   Sem "Outros": quem informa é o sistema da instituição, não o egresso. Decidir
   se a lista de cursos registra o nível de cada curso; se registrar, a coerência
   entre `curso` e `nivel` vira regra de validação do leiaute.
+- **Vindo da E12** (`blocos-instrumento.md`, seções 4 e 11). Aplicar aos campos o
+  critério que a E12 aplicou aos blocos, com a mesma escala de origem. Fechar no
+  Bloco IV as três distinções que as descrições do Anexo I exigem — concluiu ou
+  cursa, IFSP ou outra instituição, mesma área ou não. Decidir se o Ind4 é
+  autodeclarado ou derivado e se o Ind13 é valor declarado ou faixa; justificar ou
+  retirar setor e localidade; decidir entre gênero e sexo; prever não declarar nos
+  recortes de equidade e "não conheço" no Bloco VII; confirmar a leitura do Bloco
+  II; e fixar a obrigatoriedade, a começar pelo Bloco III. O entregável completa a
+  seção 12 do mesmo arquivo, deixada em aberto para isso.
 
 ### [ ] E14 — Definir a lógica de navegação condicional
 - **Objetivo:** mapear os caminhos alternativos do instrumento.
 - **Entregável:** `docs/especificacao/navegacao-condicional.md` com as regras e um diagrama de fluxo.
 - **Conclusão quando:** todos os caminhos previstos estiverem descritos.
+- **Vindo da E12:** os públicos da seção 2 de `blocos-instrumento.md` viram regras
+  — Bloco V só com atividade remunerada e Bloco VI só sem; a parte de continuidade
+  do Bloco IV só para técnico e graduação, pelo `nivel` pré-preenchido; recortes
+  de equidade só com o consentimento específico; e as duas recusas do
+  consentimento encerram o preenchimento. O fluxo parte dos onze blocos.
 
 ### [ ] E15 — Implementar a estrutura no LimeSurvey
 - **Objetivo:** materializar a especificação na instância.
@@ -557,6 +613,8 @@ Meta 3 · set–out/26
   **`lime_responses_<sid>`**, e não `lime_survey_<sid>`. O nome antigo é o que
   aparece na documentação e nos tutoriais, e leva a consulta a falhar sem motivo
   aparente. Vale para esta etapa e para E26, E27 e E28.
+- **Vindo da E12:** bloco é grupo de questões, e a estrutura exportada reproduz os
+  onze blocos de `blocos-instrumento.md`.
 
 ---
 
@@ -603,6 +661,8 @@ Metas 4 e 5 · set–nov/26
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
 - **Entregável:** configuração aplicada e documentada.
 - **Conclusão quando:** um acesso de amostra abrir com os atributos corretos.
+- **Vindo da E12:** os cinco atributos vão para o bloco de identificação
+  acadêmica, editáveis, com a correção registrada e o valor original preservado.
 
 ### [ ] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
@@ -710,6 +770,10 @@ Metas 6 e 7 · out–nov/26
   contatado* (permanente até revogação). Uma única opção de recusa erra em qualquer
   das direções — ou exclui para sempre quem apenas hesitou, ou ignora quem pediu
   para sair. Justificativa em `parametros-contato.md`, seção 8.
+- **Vindo da E12: três manifestações, e não duas.** Além das duas recusas da P6,
+  o consentimento específico e destacado do dado sensível (LGPD, art. 11, I), que
+  os recortes de equidade exigem. Negá-lo dispensa só aquele bloco, sem encerrar o
+  questionário.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -744,12 +808,18 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E11:** o relatório de validação da importação não reproduz nome,
   endereço nem telefone, e a eliminação do arquivo de entrada depois de importado
   entra na política de retenção.
+- **Vindo da E12:** a correção de atributo pré-preenchido e a atualização de
+  contato pelo egresso entram na trilha; e o dado sensível dos recortes de
+  equidade exige tratamento próprio na anonimização.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
 - **Entregável:** seção no guia de replicação sobre divulgação em colação de grau,
   grupos de turma e ações dirigidas a turmas antigas.
 - **Conclusão quando:** cada recomendação estiver ligada à evidência da literatura.
+- **Vindo da E12:** a adesão voluntária, que o documento do projeto punha no bloco
+  de contato e que exige termo próprio (Regulamento, art. 40), e os objetivos de
+  ação institucional do art. 3º do Regulamento (itens 9, 10, 11, 13 e 14).
 
 ---
 
@@ -768,6 +838,10 @@ Meta 8 · nov–dez/26
   **inválidos de propósito**, um por regra de rejeição de `leiaute-entrada.md`, e
   não só do sintético válido. A rejeição de endereço fora de `.test` é
   característica verificável da contenção, na mesma linha do K6.
+- **Vindo da E12:** "registro do consentimento" passa a incluir o consentimento
+  específico do dado sensível; e "navegação condicional" é redigido contra os
+  públicos de `blocos-instrumento.md`, e não contra a noção genérica de "blocos
+  pertinentes".
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -808,6 +882,9 @@ Metas 9 e 10 · out–dez/26
   interface já tratadas, e o contêiner `rotinas` como ponto de execução. Esta
   etapa acrescenta a extração, não a infraestrutura.
 - **Lembrete de nome de tabela:** `lime_responses_<sid>`, não `lime_survey_<sid>`.
+- **Vindo da E12:** calcular os indicadores pelas **descrições** do Anexo I, e não
+  pelas fórmulas, registrando a divergência (`blocos-instrumento.md`, seção 6); e
+  aplicar os recortes de equidade aos Ind3, Ind4 e Ind5 a Ind12.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -815,6 +892,9 @@ Metas 9 e 10 · out–dez/26
 - **Conclusão quando:** os indicadores forem exibidos a partir dos dados extraídos.
 - **Atenção:** só iniciar após E01–E28. Se o prazo não comportar, especificar
   como trabalho futuro e marcar esta etapa como dispensada.
+- **Vindo da E12:** exibir separados os indicadores do Anexo I e os propostos pelo
+  projeto, com o rótulo de origem — os segundos não são indicadores
+  institucionais.
 
 ### [ ] E30 — Consolidar o guia de replicação
 - **Objetivo:** entregar o artefato replicável por outras instituições.
@@ -889,6 +969,10 @@ Metas 9 e 10 · out–dez/26
 - **Limitação vinda da E11 (ADR-0005):** uma linha por egresso adere só em parte à
   letra do art. 19 do Regulamento — a turma anterior perde o egresso que conclui
   outro curso. Enunciar assim, junto das demais limitações.
+- **Vinda da E12:** atualizar a tabela de blocos no documento do projeto;
+  comunicar ao Comitê Permanente as divergências entre fórmula e descrição no
+  Anexo I — Ind7, Ind11 e Ind12, e o alcance dos Ind9 a Ind12; e declarar como
+  propostas os indicadores que o projeto acrescentou (ADR-0006).
 
 ---
 
@@ -907,3 +991,4 @@ Uma linha por sessão, mais recente ao final.
 | 27/09/2026 | E09 | E09 concluída. Correio de ensaio em imagem própria (Postfix mais Dovecot), somente na rede interna, com três domínios sob `.test` — cada um produzindo uma linha da tabela de classificação do P8. Serviço `rotinas` criado, por topologia. Rotina `ler_devolucoes.py` implementa o P8 com tabela própria de registro e idempotência. Verificação nas duas direções: **7 de 7** no correio isolado e **7 de 7** na integração ponta a ponta. | Nenhuma pendência nova sem dono. **Ampliadas:** E20 (remetente e retorno já configurados; não confundir com o institucional); E21 (agendar a leitura de devoluções **independentemente** da cadência, porque a devolução temporária não chega no mesmo disparo — e decidir a raiz do hospedeiro que suspende, que já custou três diagnósticos); E23 (a tabela `egressos_devolucoes` é insumo de auditoria; a rotina não toca recusa, por decisão); E26 (exercitar o limiar de três ocorrências e o ciclo de reparo); E28 (cliente de API e ponto de execução prontos, com quatro armadilhas já tratadas); E30 (os três detalhes de correio e a advertência sobre capturador de SMTP). |
 | 27/09/2026 | E10 | **Fase 2 encerrada.** E10 concluída: `entregas/guia-replicacao.md` com Partes I a III completas e IV a VI marcadas com a etapa responsável, para que a E30 preencha em vez de reestruturar. Critério verificado por execução — ambiente destruído, repositório clonado em diretório novo, guia seguido ao pé da letra, e os três verificadores nos resultados prometidos (21/21, 7 atendem e 3 parciais, 7/7). | Nenhuma pendência nova sem dono. **Achado novo e quarto sintoma do relógio do WSL, o pior:** um salto para trás durante a inicialização do MariaDB deixa o banco pela metade, sem `root` nem verificação de saúde autenticando — tratado desligando o TLS do banco, coerente com a postura do ambiente, o que obrigou `--skip-ssl` nos clientes porque o cliente 11.4 exige TLS. **Dois defeitos do próprio guia corrigidos pelo teste:** ordem das seções (o script do repositório vinha antes do clone) e números estimados, agora medidos. **Ampliada:** E30 herda a instrução de refazer o teste do critério ao preencher as partes restantes. |
 | 28/09/2026 | E11 | **Fase 3 iniciada.** E11 concluída: `docs/especificacao/leiaute-entrada.md` com dez campos — os nove do documento do projeto, que já propunha o leiaute e já atendia à E05, mais `nivel`, exigido pelos indicadores do Regulamento. Uma linha por egresso, com a conclusão mais recente (ADR-0005). Identificador estável, sem forma de CPF e distinto do token; nome de tratamento (nome social, Decreto nº 8.727/2016); leiaute fechado, com três níveis de consequência e as restrições do ensaio como propriedade do arquivo. Critério verificado nas duas direções — dez campos e onze consumidores, nenhum órfão — e por execução do exemplo contra as próprias regras. | Nenhuma pendência nova sem dono. **Não conferido:** tamanhos do leiaute contra as colunas da plataforma → E17. **Ampliadas:** E12 (cinco atributos pré-preenchidos, com nível); E13 (domínio de cursos e unidades compartilhado, sem "Outros"); E16 (leiaute, e DDD terminado em 0 só depois de reconferir na Anatel); E17 (validação prévia, trilha e eliminação do arquivo, precedência entre contato corrigido e extração nova); E19; E20 (saudação neutra); E21 (D0 por calendário, âncora móvel, duas vias na fila de correção); E23; E25 (arquivos inválidos de propósito); E26 (reparo automatizável); E30; E31 (atualizar o leiaute no documento do projeto e declarar a aderência parcial ao art. 19). |
+| 28/09/2026 | E12 | E12 concluída: `docs/especificacao/blocos-instrumento.md` com onze blocos — os sete do art. 17 do Regulamento, três de controle (consentimento, identificação acadêmica, contato e manifestações) e um de recortes de equidade. Critério lido como indicador do Anexo I ou objetivo expresso do Regulamento, com origem declarada (ADR-0006). Verificado nas duas direções e por execução: nenhum bloco sem indicador, dezoito dos dezenove indicadores do Anexo I alimentados (o Ind1 é registro institucional) e todos os objetivos de coleta do art. 3º com bloco. Achado: as fórmulas do Anexo I são texto, e três medem outra coisa que a descrição; adotada a descrição. Linha de base corrigida em três pontos. | Nenhuma pendência nova sem dono. **Não relido:** o conteúdo vigente dos blocos → a E13 confirma a leitura do Bloco II. **Ampliadas:** E13 (critério por campo, três distinções do Bloco IV, Ind4, Ind13, setor e localidade, gênero ou sexo; completa a seção 12), E14 (públicos viram regras), E15, E18, E22 (três manifestações, com o consentimento do dado sensível), E23, E24 (adesão voluntária), E25, E28 (calcular pelas descrições), E29 e E31 (tabela de blocos no documento do projeto; divergências do Anexo I ao Comitê Permanente). |

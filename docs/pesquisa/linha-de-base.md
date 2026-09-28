@@ -311,10 +311,11 @@ evidência que o conceito 3 descreve.
 ## 9. Limitações desta análise
 
 - **O Regulamento foi recuperado por inteiro**, por descompressão dos fluxos do
-  PDF, incluindo os anexos. As únicas perdas são as expressões matemáticas dos
-  indicadores, publicadas como imagem — supridas pelas descrições textuais
-  reproduzidas no Anexo A — e o Apêndice I, o Plano de Acompanhamento de Egressos,
-  que não foi examinado por estar fora do recorte desta etapa.
+  PDF, incluindo os anexos. Só o Apêndice I, o Plano de Acompanhamento de
+  Egressos, não foi examinado, por estar fora do recorte desta etapa. *Corrigido
+  na E12:* esta linha dava também como perdidas as expressões matemáticas dos
+  indicadores, "publicadas como imagem". Não estão: são texto no PDF, a E12 as
+  extraiu, e várias divergem das descrições (ver o Anexo A).
 - **A estrutura foi reconstruída por fonte secundária.** Os relatórios são
   documentos oficiais da própria DAEST e publicam enunciados e domínios, mas não
   substituem a inspeção da configuração do questionário. Aspectos como
@@ -410,22 +411,28 @@ indicador correspondente — e para o painel da E29, caso executado.
 | Ind18 | Associação entre atividade exercida e curso | afinidade em escala de 1 a 10 |
 | Ind19 | Satisfação com a formação recebida no IFSP | média em escala de 1 a 10 |
 
-**Sobre as fórmulas.** O Regulamento apresenta a expressão matemática de cada
-índice como imagem, que a extração de texto não recupera. A perda é imaterial: a
-descrição textual que precede cada fórmula é inequívoca quanto ao numerador e ao
-denominador, e a coluna acima a reproduz. Caso a E12 exija a notação exata, basta
-consultar as páginas 20 a 27 do PDF.
+**Sobre as fórmulas.** *Corrigido na E12.* Este parágrafo dizia que o Regulamento
+apresenta as fórmulas como imagem, que a extração de texto não recupera, e que a
+perda era imaterial, porque a descrição seria inequívoca. As duas afirmações
+estavam erradas. As fórmulas são texto no PDF, e a E12 as extraiu; e três delas
+medem outra coisa que a própria descrição — a do Ind7 repete a do Ind5, a do Ind12
+repete a do Ind10, e a do Ind11 tem outro denominador —, além de divergências de
+alcance e de rótulo. A E12 adotou a descrição como definição e registrou as
+divergências em [`blocos-instrumento.md`](../especificacao/blocos-instrumento.md),
+seção 6. A coluna acima reproduz as descrições e continua valendo.
 
 **Três observações úteis para a E12.**
 
 1. **A distinção entre verticalização e continuidade é a chave do conjunto.** Os
-   pares Ind5/Ind9 e Ind6/Ind10 medem a mesma trajetória com denominadores
-   diferentes: o primeiro pergunta se o egresso continuou **no IFSP**, o segundo
-   se continuou **em qualquer instituição**. Coletar isso exige distinguir, no
+   pares Ind5/Ind9 e Ind6/Ind10 têm o mesmo denominador e numeradores
+   diferentes: o primeiro conta quem continuou **no IFSP**, o segundo quem
+   continuou **em qualquer instituição**. Coletar isso exige distinguir, no
    instrumento, a instituição em que o egresso prosseguiu — campo que precisa
-   existir com domínio adequado.
-2. **Sete dos dezenove indicadores usam escala de 1 a 10** (Ind14 a Ind19, mais o
-   Ind18 de afinidade). Isso fixa um tipo de campo padronizado para vários blocos.
+   existir com domínio adequado. *Corrigido na E12: dizia "denominadores
+   diferentes".*
+2. **Seis dos dezenove indicadores usam escala de 1 a 10** (Ind14 a Ind19); o
+   Ind18, de afinidade, é um deles. Isso fixa um tipo de campo padronizado para
+   vários blocos. *Corrigido na E12: dizia "sete", contando o Ind18 duas vezes.*
 3. **Ind4 e Ind18 dependem de julgamento sobre "área de formação"** — se a
    atividade é ou não relacionada ao curso. Convém decidir na E13 se isso é
    autodeclaração do egresso ou classificação posterior, porque muda o campo.
