@@ -462,7 +462,7 @@ Meta 2 · ago–set/26
 ## Fase 3 — Estrutura de dados e campos do instrumento
 Meta 3 · set–out/26
 
-### [ ] E11 — Especificar o leiaute do arquivo de entrada
+### [x] E11 — Especificar o leiaute do arquivo de entrada
 - **Objetivo:** definir o arquivo que popula a base de participantes.
 - **Entregável:** `docs/especificacao/leiaute-entrada.md` com campo, descrição,
   tipo, obrigatoriedade e regra de validação.
@@ -471,6 +471,55 @@ Meta 3 · set–out/26
   que a fila de correção do parâmetro P8 não tem para onde recorrer e o reparo de
   contato inválido fica decorativo. E o **semestre de conclusão**, que é a âncora
   do ciclo anual em P5 — sem ele não há como aplicar a regra dos arts. 14/19/22.
+- **Concluída em:** 28/09/2026 · `docs/especificacao/leiaute-entrada.md` ·
+  **ADR-0005**. **Fase 3 iniciada.**
+- **Descoberta que mudou o desenho da etapa — a mesma da E05:** o documento do
+  projeto **já propunha** o leiaute, com nove campos e a obrigatoriedade de cada
+  um, e já atendia às duas exigências da E05. A etapa não o inventou: testou-o
+  contra o princípio da necessidade e contra os consumidores que surgiram depois
+  dele, e acrescentou o que o entregável pede e o documento não tinha — tipo e
+  regra de validação.
+- **Leiaute final: dez campos.** Os nove do documento, com a mesma
+  obrigatoriedade, mais `nivel`. **Critério verificado nas duas direções:** todo
+  campo tem consumidor — parâmetro, capacidade, indicador ou etapa — e todo
+  consumidor tem campo; dez campos, onze consumidores, nenhum órfão. Treze
+  candidatos ficaram de fora, cada um com o motivo, de CPF e data de nascimento a
+  raça/cor e perfis em redes sociais.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - **uma linha por egresso**, com a conclusão mais recente. A P4 e a P5 foram
+    escritas por participante, e uma linha por curso daria dois convites por ano
+    a quem tem duas formações. Custo declarado: a turma anterior perde o egresso
+    quando ele conclui o curso seguinte. Registrada na **ADR-0005**;
+  - **`nivel` acrescentado** — técnico, graduação ou pós-graduação. O Ind2 do
+    Regulamento conta egressos por nível, e os Ind5 a Ind12 separam técnicos de
+    graduação. O documento do projeto não cita o Regulamento, que só foi
+    recuperado na E03.
+- **Duas precisões que o documento não fazia.** O `identificador` precisa ser
+  **estável entre extrações** — sem isso a recusa permanente da P6 não sobrevive
+  ao ciclo seguinte — e não pode ser CPF nem o token de acesso; valor com forma de
+  CPF, mesmo pontuado, rejeita o registro. E o `nome` é o **nome de tratamento**:
+  o social, quando registrado, pelo Decreto nº 8.727/2016, que alcança os
+  Institutos Federais por serem autarquias.
+- **O leiaute é fechado**, que é a forma operacional da necessidade: coluna a mais
+  ou a menos rejeita o arquivo. Há três níveis de consequência — rejeita o arquivo,
+  rejeita o registro ou aceita com alerta —, e o relatório de validação não
+  reproduz dado pessoal.
+- **Restrições do ensaio convertidas em propriedade do arquivo**, como a E06 fez
+  com o ambiente: endereço fora de `.test`, ou telefone fora de DDD terminado em 0,
+  rejeita o arquivo inteiro. Nenhum dos 67 DDDs em uso termina em zero — conferido
+  em fonte secundária, porque a página da Anatel não respondeu; a E16 reconfere.
+- **Verificado por execução, e não por leitura.** O exemplo do próprio documento
+  passa pelas regras que ele especifica — um registro aceito e outro aceito com
+  alerta, como o texto afirma —, os links internos estão íntegros, e a guarda
+  contra CPF colide em 1,01% de 200 mil códigos aleatórios, o que confirma o
+  "cerca de um em cem" do texto. As normas citadas foram conferidas no texto
+  oficial: o Decreto nº 8.727/2016, a LGPD e a Lei nº 11.892/2008, esta já com a
+  redação dada pela Lei nº 15.521/2026, que mantém os IFs como autarquias.
+- **Não conferido:** a compatibilidade dos tamanhos do leiaute com as colunas da
+  plataforma. A leitura do esquema da instância não foi feita nesta sessão, e a
+  conferência passa à E17, em que a importação real a exercita.
+- **Pendência encaminhada para a E31:** atualizar o leiaute no documento do
+  projeto. Sem alteração de escopo, meta ou cronograma.
 
 ### [ ] E12 — Especificar os blocos estruturais do instrumento
 - **Objetivo:** definir os contêineres que acolherão as questões.
@@ -478,12 +527,22 @@ Meta 3 · set–out/26
   finalidade estrutural e indicador alimentado.
 - **Conclusão quando:** nenhum bloco existir sem indicador correspondente.
 - **Atenção:** estrutura apenas. Conteúdo temático das questões não entra aqui.
+- **Vindo da E11:** o bloco de identificação acadêmica pré-preenche **cinco**
+  atributos — curso, nível, campus, ano e semestre de conclusão —, e a segmentação
+  que ele alimenta passa a incluir o nível, que o Ind2 do Regulamento exige. O
+  documento do projeto nomeia só curso, campus e ano.
 
 ### [ ] E13 — Definir domínios, obrigatoriedade e validações
 - **Objetivo:** fechar os domínios de valores e as regras de preenchimento.
 - **Entregável:** seção complementar em `blocos-instrumento.md`, incluindo o
   comportamento do pré-preenchimento quando o dado de origem estiver desatualizado.
 - **Conclusão quando:** todo campo padronizável tiver domínio fechado.
+- **Vindo da E11:** as listas de cursos e de unidades são **domínio compartilhado**
+  entre o arquivo de entrada e o bloco de identificação que ele pré-preenche — se
+  diferissem, o pré-preenchimento exibiria valor fora das opções do instrumento.
+  Sem "Outros": quem informa é o sistema da instituição, não o egresso. Decidir
+  se a lista de cursos registra o nível de cada curso; se registrar, a coerência
+  entre `curso` e `nivel` vira regra de validação do leiaute.
 
 ### [ ] E14 — Definir a lógica de navegação condicional
 - **Objetivo:** mapear os caminhos alternativos do instrumento.
@@ -510,6 +569,12 @@ Metas 4 e 5 · set–nov/26
   distribuídos em 10 anos de conclusão.
 - **Conclusão quando:** a base refletir o leiaute de E11 e usar apenas domínio controlado.
 - **Atenção:** nenhum dado de pessoa real, nem parcial, nem "de exemplo".
+- **Leiaute fixado pela E11** (`leiaute-entrada.md`): uma linha por pessoa
+  (ADR-0005); identificadores sintéticos estáveis e sem forma de CPF; endereços só
+  sob `.test`; telefones `+55` com DDD terminado em 0 — **reconferir antes, na
+  fonte oficial da Anatel**, que nenhum DDD em uso termina em zero, porque a E11
+  só pôde conferir em fonte secundária; e parte da base sem via alternativa e
+  parte com `email_alternativo`, para exercitar o alerta e o reparo.
 
 ### [ ] E17 — Importar a base e ativar a tabela de participantes
 - **Objetivo:** converter o questionário para acesso controlado.
@@ -524,6 +589,15 @@ Metas 4 e 5 · set–nov/26
   trilha de auditoria (E23). São escolhas legítimas e opostas diante do mesmo
   princípio da necessidade, e há literatura no caminho oposto: registrar em ADR,
   conforme recomendado no fichamento do RAEG.
+- **Vindo da E11** (`leiaute-entrada.md`, seções 3 a 7 e 11). A validação do
+  arquivo é **prévia** à importação e roda em modo de ensaio; o egresso é
+  reencontrado na base central pelo `identificador`, que **nunca** é o token. Três
+  coisas a fazer aqui: conferir os tamanhos do leiaute contra as colunas da
+  plataforma, que a E11 não conferiu; registrar cada importação na trilha — data,
+  SHA-256 do arquivo e contagens por regra — e eliminar o arquivo depois (LGPD,
+  art. 16); e **decidir** o que prevalece quando a extração nova traz um contato
+  que o mecanismo já corrigiu por busca ativa. A correspondência campo a campo com
+  a plataforma está proposta, não verificada.
 
 ### [ ] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
@@ -534,6 +608,9 @@ Metas 4 e 5 · set–nov/26
 - **Objetivo:** garantir integridade da base de participantes.
 - **Entregável:** registro da verificação.
 - **Conclusão quando:** nenhum token repetido ou inválido for encontrado.
+- **Vindo da E11:** além de token repetido, verificar identificador repetido,
+  identificador igual a algum token e o alerta de endereço principal compartilhado
+  por identificadores distintos — sintoma de pessoa duplicada.
 
 ---
 
@@ -548,6 +625,10 @@ Metas 6 e 7 · out–nov/26
   endereço de retorno é `devolucoes@egressos.test`, ambos já configurados e
   verificados. O remetente **institucional** é especificação de implantação real,
   conforme a seção 9.1 do P8, e não valor de ensaio — não trocar um pelo outro.
+- **Vindo da E11:** o convite usa o `nome` inteiro — o nome de tratamento, que já
+  chega como nome social quando houver registro — e saudação neutra. Não há campo
+  de gênero, de propósito: a necessidade não sustenta um campo só para flexionar
+  a saudação.
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -613,6 +694,11 @@ Metas 6 e 7 · out–nov/26
   guarda a mensagem na fila e só avisa depois. A leitura de devoluções tem, por
   isso, de ser agendada **independentemente** da cadência de disparo, e não como
   etapa final dela.
+- **Vindo da E11.** A data do D0 vem de calendário configurável por semestre, e
+  não do arquivo, que traz só ano e semestre; e a âncora muda quando chega
+  conclusão nova (ADR-0005). A fila de correção tem **duas vias de naturezas
+  diferentes**: o `email_alternativo`, que admite reconvite automatizado dentro da
+  rodada única de reparo, e o `telefone`, que é operação humana (ADR-0003).
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -655,6 +741,9 @@ Metas 6 e 7 · out–nov/26
      via. **Decidir aqui** entre achar caminho programático ou declarar exceção
      documentada ao critério K7, com a operação de tela descrita. Não resolver por
      omissão — auditoria é requisito de conformidade.
+- **Vindo da E11:** o relatório de validação da importação não reproduz nome,
+  endereço nem telefone, e a eliminação do arquivo de entrada depois de importado
+  entra na política de retenção.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -675,6 +764,10 @@ Meta 8 · nov–dez/26
 - **Acrescentado pela E06:** a **contenção do disparo** passou a ser propriedade do
   ambiente, e não regra de conduta — logo é verificável e deve entrar na matriz
   como característica do ambiente, não como procedimento de operação.
+- **Vindo da E11:** o requisito "importação da base" precisa de arquivos
+  **inválidos de propósito**, um por regra de rejeição de `leiaute-entrada.md`, e
+  não só do sintético válido. A rejeição de endereço fora de `.test` é
+  característica verificável da contenção, na mesma linha do K6.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -692,6 +785,9 @@ Meta 8 · nov–dez/26
   banco, porque o método `add_response` da API grava `submitdate` mesmo quando não
   se pede, isto é, cria sempre resposta concluída. **Exercitar o percurso real do
   respondente é desta etapa**, e é o que fecha a verificação de C3.
+- **Vindo da E11:** o ciclo de reparo ganhou uma via automatizável — o
+  `email_alternativo` —, e é por ela que o cenário de contato inválido pode ser
+  exercitado sem ação humana.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -743,6 +839,11 @@ Metas 9 e 10 · out–dez/26
   preenche, não reestrutura** — e, ao preencher, deve refazer o teste do critério
   da E10: clonar num diretório novo e seguir o guia ao pé da letra, agora incluindo
   estrutura, automação e conformidade.
+- **Vindo da E11:** como produzir o arquivo de entrada — UTF-8 e vírgula, com a
+  armadilha da planilha em português, que exporta ponto e vírgula em codificação
+  regional; o nome de tratamento; a pseudonimização do identificador por resumo
+  com chave, quando a origem não tiver código estável; e o desligamento
+  **consciente** do modo de ensaio numa implantação real.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -781,6 +882,13 @@ Metas 9 e 10 · out–dez/26
 - **Titularidade do copyright** a confirmar antes da entrega: a licença MIT nomeia
   um titular, e o repositório é público. Definir se o titular é o estudante, a
   orientação ou o IFSP, e ajustar o `LICENSE` se for o caso.
+- **Atualização do leiaute no documento do projeto**, vinda da E11: acréscimo de
+  `nivel`, unidade do registro, propriedades do identificador e nome de
+  tratamento, conforme a seção 10 de `leiaute-entrada.md`. Sem alteração de
+  escopo, meta ou cronograma.
+- **Limitação vinda da E11 (ADR-0005):** uma linha por egresso adere só em parte à
+  letra do art. 19 do Regulamento — a turma anterior perde o egresso que conclui
+  outro curso. Enunciar assim, junto das demais limitações.
 
 ---
 
@@ -798,3 +906,4 @@ Uma linha por sessão, mais recente ao final.
 | 22/09/2026 | E08 | E08 concluída. LimeSurvey 7.2.0 build 260921 instalado, com a instalação convertida em desatendida e idempotente — `down -v` seguido de `up -d` devolve instância pronta. Capacidades C1 a C10 conferidas contra a instância viva: 7 atendem, 3 parciais, nenhuma ausente. Registro em `docs/especificacao/capacidades-plataforma.md`; verificador versionado em `infra/confere-capacidades.py`. | Nenhuma pendência nova sem dono. **Ampliadas:** E09 (não usar `token_invalid` como indicador de contato inválido sem saber o que ele conta); E15, E26, E27 e E28 (a tabela de respostas é `lime_responses_<sid>`, não `lime_survey_<sid>`); E22 e E23 (recusa exige `emailstatus=OptOut` mais a base central, e a auditoria exige ativar plugin por interface — decidir entre caminho programático ou exceção documentada ao K7); E26 (exercitar o preenchimento parcial pelo percurso real, que esta etapa não pôde). E21 segue com o problema da distro ociosa e com o modelo de cadência por verificar. |
 | 27/09/2026 | E09 | E09 concluída. Correio de ensaio em imagem própria (Postfix mais Dovecot), somente na rede interna, com três domínios sob `.test` — cada um produzindo uma linha da tabela de classificação do P8. Serviço `rotinas` criado, por topologia. Rotina `ler_devolucoes.py` implementa o P8 com tabela própria de registro e idempotência. Verificação nas duas direções: **7 de 7** no correio isolado e **7 de 7** na integração ponta a ponta. | Nenhuma pendência nova sem dono. **Ampliadas:** E20 (remetente e retorno já configurados; não confundir com o institucional); E21 (agendar a leitura de devoluções **independentemente** da cadência, porque a devolução temporária não chega no mesmo disparo — e decidir a raiz do hospedeiro que suspende, que já custou três diagnósticos); E23 (a tabela `egressos_devolucoes` é insumo de auditoria; a rotina não toca recusa, por decisão); E26 (exercitar o limiar de três ocorrências e o ciclo de reparo); E28 (cliente de API e ponto de execução prontos, com quatro armadilhas já tratadas); E30 (os três detalhes de correio e a advertência sobre capturador de SMTP). |
 | 27/09/2026 | E10 | **Fase 2 encerrada.** E10 concluída: `entregas/guia-replicacao.md` com Partes I a III completas e IV a VI marcadas com a etapa responsável, para que a E30 preencha em vez de reestruturar. Critério verificado por execução — ambiente destruído, repositório clonado em diretório novo, guia seguido ao pé da letra, e os três verificadores nos resultados prometidos (21/21, 7 atendem e 3 parciais, 7/7). | Nenhuma pendência nova sem dono. **Achado novo e quarto sintoma do relógio do WSL, o pior:** um salto para trás durante a inicialização do MariaDB deixa o banco pela metade, sem `root` nem verificação de saúde autenticando — tratado desligando o TLS do banco, coerente com a postura do ambiente, o que obrigou `--skip-ssl` nos clientes porque o cliente 11.4 exige TLS. **Dois defeitos do próprio guia corrigidos pelo teste:** ordem das seções (o script do repositório vinha antes do clone) e números estimados, agora medidos. **Ampliada:** E30 herda a instrução de refazer o teste do critério ao preencher as partes restantes. |
+| 28/09/2026 | E11 | **Fase 3 iniciada.** E11 concluída: `docs/especificacao/leiaute-entrada.md` com dez campos — os nove do documento do projeto, que já propunha o leiaute e já atendia à E05, mais `nivel`, exigido pelos indicadores do Regulamento. Uma linha por egresso, com a conclusão mais recente (ADR-0005). Identificador estável, sem forma de CPF e distinto do token; nome de tratamento (nome social, Decreto nº 8.727/2016); leiaute fechado, com três níveis de consequência e as restrições do ensaio como propriedade do arquivo. Critério verificado nas duas direções — dez campos e onze consumidores, nenhum órfão — e por execução do exemplo contra as próprias regras. | Nenhuma pendência nova sem dono. **Não conferido:** tamanhos do leiaute contra as colunas da plataforma → E17. **Ampliadas:** E12 (cinco atributos pré-preenchidos, com nível); E13 (domínio de cursos e unidades compartilhado, sem "Outros"); E16 (leiaute, e DDD terminado em 0 só depois de reconferir na Anatel); E17 (validação prévia, trilha e eliminação do arquivo, precedência entre contato corrigido e extração nova); E19; E20 (saudação neutra); E21 (D0 por calendário, âncora móvel, duas vias na fila de correção); E23; E25 (arquivos inválidos de propósito); E26 (reparo automatizável); E30; E31 (atualizar o leiaute no documento do projeto e declarar a aderência parcial ao art. 19). |
