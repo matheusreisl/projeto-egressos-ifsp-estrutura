@@ -273,6 +273,10 @@ o titular: é função do curso. Está no leiaute para que a segmentação exigi
 Regulamento não dependa de um catálogo mantido à parte. Se a lista de cursos da
 E13 registrar o nível de cada curso, a coerência entre os dois campos vira regra
 de validação — e a redundância passa a proteger, em vez de arriscar.
+*Atualizado na E13:* a lista registra o nível de cada curso
+([`blocos-instrumento.md`](blocos-instrumento.md), seção 12.3). A regra está
+ativa: `nivel` diferente do nível do curso na lista **rejeita o registro**, e a
+E17 a implementa com as demais.
 
 ### 4.5 `ano_conclusao` e `semestre_conclusao`
 

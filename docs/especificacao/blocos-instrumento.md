@@ -74,7 +74,7 @@ na [ADR-0006](../decisoes/0006-estrutura-a-partir-do-art-17.md)):
 |---|---|---|---|---|---|
 | 1 | Consentimento | registrar aceite, data, hora e versão do termo antes de qualquer coleta; oferecer as duas recusas da P6 e o consentimento específico do dado sensível | registro do consentimento; tratamento da recusa | controle | todos |
 | 2 | Identificação acadêmica | exibir os cinco atributos pré-preenchidos, editáveis, registrando a correção e preservando o valor original | Ind2, entre os respondentes; recorte de todos os demais; qualidade da base | Anexo I + controle | todos |
-| 3 | I — Avaliação da Formação | avaliação, pelo egresso, da formação recebida | Ind19 | Anexo I | todos |
+| 3 | I — Avaliação da Formação | avaliação, pelo egresso, da formação recebida e do seu impacto | Ind19; impacto do curso (E13) | Anexo I; objetivo + projeto (art. 3º, item 3) | todos |
 | 4 | II — Atividade Profissional Anterior | situação profissional anterior ao ingresso no curso | proporção dos egressos com atividade remunerada que já a exerciam antes do curso | objetivo + projeto (art. 3º, item 3) | todos |
 | 5 | III — Situação Atual | classificar o respondente quanto à atividade remunerada atual; é a bifurcação entre V e VI | Ind3 | Anexo I | todos |
 | 6 | IV — Evolução na Formação | continuidade dos estudos no nível seguinte; demandas de formação | Ind5 a Ind12; distribuição das demandas de formação | Anexo I; objetivo + projeto (art. 3º, item 12) | todos; a parte de continuidade, só técnico e graduação |
@@ -185,6 +185,13 @@ programático, estágios e atividades de extensão, pesquisa e inovação (art. 
 §2º). O bloco já existe pelo Ind19; se cada um desses itens entra como campo é
 decisão da E13, pelo mesmo critério aplicado aqui aos blocos.
 
+**O nome e o conteúdo documentado não coincidem.** *Atualizado na E13.* No
+instrumento descrito pelo Relatório 2 da PAE, o Bloco I não avalia a formação: reúne
+sexo, raça/cor, escolaridade, campus, tipo de curso e modalidade. Esses campos vão
+para a identificação acadêmica, para os recortes de equidade ou saem, e o Bloco I
+recebe as duas questões de impacto que o instrumento documentado guardava no
+Bloco VII (seções 4.7 e 12.3).
+
 **Público:** todos.
 
 ### 4.2 Bloco II — Atividade Profissional Anterior
@@ -203,10 +210,10 @@ trabalhadores ou apenas recebido trabalhadores já formados no mercado, e o índ
 sozinho não separa os dois casos. O bloco dá ao Ind3 a linha de base individual
 que ele não tem.
 
-**Limite de leitura, declarado.** O nome do bloco não diz "anterior a quê". A
-leitura que o faz servir a um objetivo expresso é "anterior ao ingresso no curso".
-O conteúdo vigente do bloco — as questões 7 a 14 — não foi relido nesta etapa, e a
-E13 precisa confrontar essa leitura com o conteúdo que o projeto correlato trouxer.
+**Limite de leitura — resolvido na E13.** O nome do bloco não diz "anterior a quê",
+e a E12 adotou "anterior ao ingresso no curso" sem ter relido o conteúdo. O
+Relatório 2 da PAE confirma a leitura: a questão 7, que abre o bloco, é "Você
+trabalhava quando entrou no curso do IFSP?".
 
 **Público:** todos.
 
@@ -298,7 +305,9 @@ redundantes para eles.
 as áreas de atuação profissional com os níveis de remuneração" (art. 3º, item 6), o que
 dá consumidor à área de atuação — o bloco 4 do documento do projeto. Setor e
 localidade, que o mesmo bloco 4 também previa, não têm indicador nem objetivo que
-os peça. A E13 os justifica ou os retira.
+os peça. A E13 os justifica ou os retira. *Resolvido na E13:* a área de atuação é
+registrada pelo setor de atividade, com o domínio da questão 20 do instrumento
+documentado, e a localidade sai (seção 12.3).
 
 ### 4.6 Bloco VI — Motivos da Não Inserção no Mercado de Trabalho
 
@@ -323,6 +332,15 @@ item 1), cujos resultados o Comitê analisa (art. 38).
 respondentes. Origem: objetivo + projeto. A escala é da E13 — que deve prever a
 opção de não conhecer as ações, porque avaliação de quem não conhece o programa
 não mede o programa.
+
+**O conteúdo documentado é outro.** *Atualizado na E13.* No instrumento descrito
+pelo Relatório 2 da PAE, o Bloco VII — ali "Avaliação da PAE" — não avalia o
+programa. Suas duas questões medem o impacto do curso: a situação profissional atual
+comparada à do ingresso (questão 29) e uma nota de 1 a 10 para a contribuição do
+curso ao trabalho atual (questão 30). Decidido com o orientando: as duas vão para o
+Bloco I, que avalia a formação pelo impacto (art. 3º, item 3), e o Bloco VII fica com
+a avaliação do programa, como a E12 e a ADR-0006 estabeleceram, em campo novo
+(seção 12.3).
 
 **Público:** todos.
 
@@ -383,19 +401,19 @@ vigente pergunta sexo. O domínio é da E13.
 
 ### 5.2 Com o instrumento vigente
 
-| Bloco | Questões no instrumento vigente | O que muda |
+| Bloco | Questões no instrumento documentado | O que muda — *atualizado na E13* |
 |---|---|---|
-| I | 1 a 6 | campus, tipo e nome do curso saem para a identificação acadêmica, pré-preenchidos |
-| II | 7 a 14 | — |
-| III | 15 | — |
-| IV | 16 | a parte de continuidade passa a depender do nível |
-| V | 19 a 28 | — |
-| VI | 17 e 18 | — |
-| VII | 29 e 30 | — |
+| I | 1 a 6 | sexo e raça/cor vão para os recortes de equidade; campus e tipo de curso, para a identificação acadêmica, pré-preenchidos; escolaridade e modalidade saem; o bloco recebe as questões 29 e 30 e o Ind19 |
+| II | 7 a 14 | ficam a 7 e o vínculo anterior (10); saem setor, porte, benefícios, horas e renda anteriores |
+| III | 15 | ganha o vínculo atual (22), que decide quem tem atividade remunerada |
+| IV | 16 | reestruturado nas três distinções das descrições do Anexo I, mais as demandas de formação |
+| V | 19 a 28 | ficam a relação com a área (24) e o setor (20); a renda passa a faixas; entram as escalas dos Ind14 a Ind18; saem as demais |
+| VI | 17 e 18 | as duas viram um campo só |
+| VII | 29 e 30 | as duas vão para o Bloco I; entra a avaliação do programa |
 
-A numeração é a da [linha de base](../pesquisa/linha-de-base.md), seção 2. O
-conteúdo das questões não foi relido nesta etapa, porque a estrutura não depende
-dele.
+A numeração é a da [linha de base](../pesquisa/linha-de-base.md), seção 2. *Atualizado
+na E13:* a E12 não releu o conteúdo das questões; a E13 o leu no Relatório 2 da PAE,
+que descreve o instrumento de 2019 a 2023, e o detalhe está na seção 12.
 
 ## 6. Divergências do Anexo I
 
@@ -440,7 +458,7 @@ dois sentidos, como na E11.
 |---|---|---|
 | Consentimento | registro do consentimento; tratamento da recusa | controle |
 | Identificação acadêmica | Ind2; qualidade da base | Anexo I + controle |
-| I | Ind19 | Anexo I |
+| I | Ind19; impacto do curso (E13) | Anexo I; objetivo + projeto |
 | II | proporção dos inseridos que já exerciam atividade remunerada antes do curso | objetivo + projeto |
 | III | Ind3 | Anexo I |
 | IV | Ind5 a Ind12; demandas de formação | Anexo I; objetivo + projeto |
@@ -508,7 +526,11 @@ Hipótese de trabalho para a E15, **não verificada nesta etapa**:
    redefini-los. Não devem ser apresentados como parte do Anexo I.
 2. **O conteúdo vigente dos blocos não foi relido.** A finalidade de cada bloco
    parte do nome dado pelo art. 17 e do objetivo que ele operacionaliza, e não das
-   questões atuais. É limitação sobretudo para o Bloco II (seção 4.2).
+   questões atuais. É limitação sobretudo para o Bloco II (seção 4.2). *Atualizado
+   na E13:* o conteúdo documentado foi lido no Relatório 2 da PAE. Confirmou a
+   leitura do Bloco II e mostrou que os Blocos I e VII tinham conteúdo diferente do
+   nome (seções 4.1 e 4.7). A versão hoje no ar não foi percorrida, e já difere
+   da documentada (seção 12.1).
 3. **"A descrição prevalece" é decisão de projeto**, não regra do Regulamento
    (seção 6).
 4. **Nada foi implementado nem conferido na plataforma.**
@@ -569,4 +591,408 @@ Anexo I ao Comitê Permanente.
 
 ## 12. Domínios, obrigatoriedade e validações
 
-*Seção a preencher pela **E13**, que completa este arquivo em vez de criar outro.*
+**Etapa:** E13 — definir domínios, obrigatoriedade e validações
+**Data:** 28/09/2026
+**Conclusão quando:** todo campo padronizável tiver domínio fechado
+
+Esta seção completa o arquivo: que campos cada bloco tem, de que tipo, com que
+domínio, obrigatoriedade e regra de validação; como o pré-preenchimento se comporta
+quando o dado de origem está desatualizado; e o que saiu do instrumento. O **texto**
+de cada pergunta continua fora — vem do projeto correlato. Código, tipo e domínio
+são estrutura.
+
+### 12.1 Ponto de partida: o instrumento documentado
+
+O Relatório 2 da PAE, que cobre 2019 a 2023, publica as trinta questões do
+instrumento institucional com todas as opções de resposta. É o **instrumento
+documentado**, e não necessariamente o vigente: a tela inicial observada em 2026
+([fichamento do portal](../pesquisa/fichamentos/ifsp-portal-egressos-2022.md)) tem
+uma pergunta de nome do curso em texto livre que o relatório não mostra. A versão no
+ar não foi percorrida, porque percorrê-la criaria registros na base real.
+
+**O que o relatório mostrou, em três pontos.**
+
+1. **Nome e conteúdo divergem em dois blocos** — o I, que não avalia a formação, e
+   o VII, que mede impacto e não avalia o programa (seções 4.1 e 4.7). O Bloco II
+   confirmou a leitura da E12 (seção 4.2).
+2. **O instrumento documentado calcula pouco do Anexo I**, que é de 2025:
+
+   | Indicadores | O que o instrumento documentado permite |
+   |---|---|
+   | Ind3 | só combinando duas questões: "trabalhando" (questão 15) inclui trabalho sem remuneração — a questão 22 tem "estagiário não remunerado" e "negócio familiar sem remuneração" |
+   | Ind4 | a questão 24 serve |
+   | Ind5 a Ind12 | a questão 16 só pergunta a quem está matriculado agora, não tem opção de pós-graduação e não pergunta a área: os indicadores de graduação, os de área correlata e a conclusão do nível seguinte ficam sem dado |
+   | Ind13 | a renda era pergunta aberta, e o próprio relatório só publicou menor e maior valor, "por ser uma pergunta aberta que recebeu respostas em diversos formatos" |
+   | Ind14 a Ind19 | nenhuma escala de 1 a 10; a questão 30 mede a contribuição do curso para o trabalho, que é outro constructo |
+
+   É o padrão que a linha de base já havia encontrado: a norma à frente do suporte
+   técnico.
+3. **Parte do instrumento documentado serve, e é reaproveitada** para preservar a
+   série histórica: questões 2, 7, 10, 15, 17, 20, 22, 24, 29 e 30.
+
+**Escala de origem do domínio.** Na mesma lógica da seção 1.2:
+
+| Rótulo | Significado |
+|---|---|
+| **Anexo I** | o domínio é fixado pelo Anexo I do Regulamento — escalas de 1 a 10 e faixas de rendimento |
+| **documentado** | o domínio reproduz o do instrumento documentado, com o número da questão |
+| **oficial** | o domínio segue classificação ou definição de norma externa |
+| **E11** | o domínio é o do arquivo de entrada |
+| **projeto** | domínio definido por este projeto |
+
+### 12.2 Regras gerais
+
+1. **Campo precisa de consumidor** — indicador do Anexo I, objetivo expresso do
+   Regulamento com indicador proposto, ou controle —, com a mesma escala da seção
+   1.2. É o critério da ADR-0006 aplicado aos campos.
+2. **Campo padronizável tem domínio fechado.** Onde a exaustividade exige, há uma
+   categoria residual — "outro" —, **sem** campo de texto acoplado: é a diretriz do
+   documento do projeto de substituir texto livre por domínio fechado.
+3. **Campos não padronizáveis são quatro** — os três de contato, validados pela
+   sintaxe da [E11](leiaute-entrada.md), e um de sugestões, o único texto livre do
+   instrumento (seção 12.3).
+4. **Obrigatoriedade**, pela regra do documento do projeto: são obrigatórios os
+   campos de situação ocupacional (Bloco III) e de aderência à formação (os dois
+   primeiros do Bloco V), além das manifestações do consentimento e da confirmação
+   da identificação. **Os demais são opcionais**, "de modo a não onerar o
+   respondente nem induzir abandono". Campo condicional só é obrigatório quando
+   exibido.
+5. **Escalas de 1 a 10** são escolha única entre dez valores, em que 1 é o menor grau
+   e 10 o maior. Os rótulos dos extremos são texto, e vêm com as perguntas.
+6. **Três domínios são configuração** da instituição, versionada por ciclo: a lista
+   de cursos, a lista de unidades e as faixas de rendimento, cujos valores em reais
+   envelhecem.
+7. **Os códigos são propostos**: alfanuméricos, começando por letra, com prefixo do
+   bloco. A E15 confere se a plataforma os aceita.
+
+### 12.3 Campos por bloco
+
+**Consentimento** — público: todos.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| CON1 | manifestação sobre o termo | escolha única | concordo · não concordo com o termo neste ciclo · não quero mais ser contatado | sim | registro do consentimento; P6 | projeto (P6) |
+| CON2 | consentimento específico para os recortes de equidade | escolha única | concordo · não concordo | sim, se exibido | LGPD, art. 11, I | projeto |
+
+CON2 só é exibido se CON1 for "concordo". Data, hora e versão do termo são
+metadados registrados pela plataforma, e não campos — é a E22 que os implementa.
+
+**Identificação acadêmica** — público: todos. Os cinco campos vêm pré-preenchidos
+(seção 12.5).
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| IDA1 | curso | escolha única | lista de cursos da instituição, cada curso com o seu nível | sim | Ind2; recortes; qualidade da base | E11 |
+| IDA2 | nível | derivado do curso | técnico · graduação · pós-graduação | — | Ind2; Ind5 a Ind12; exibição do Bloco IV | E11 |
+| IDA3 | campus | escolha única | lista de unidades, **com as instituições antecessoras** | sim | Ind2; recortes | E11; documentado (4) |
+| IDA4 | ano de conclusão | número inteiro | quatro dígitos, do limite configurado ao ano corrente | sim | Ind2; coorte | E11 |
+| IDA5 | semestre de conclusão | escolha única | 1 · 2 | sim | coorte; turma do art. 19 | E11 |
+
+**Decisão que a E11 deixou para cá: a lista de cursos registra o nível de cada
+curso.** Com isso, o nível deixa de ser editável por conta própria — ele acompanha o
+curso escolhido —, e a coerência entre `curso` e `nivel` vira regra de validação do
+arquivo de entrada, como a seção 4.4 do leiaute previa.
+
+**A lista de unidades inclui as instituições antecessoras.** O instrumento
+documentado já as oferece — Escola Industrial de São Paulo e Escola Técnica de São
+Paulo, Escola Técnica Federal de São Paulo, CEFET-SP (questão 4) —, porque há
+egressos delas no universo do programa. Uma lista só com os campi atuais deixaria
+esses egressos sem valor possível.
+
+**Bloco I — Avaliação da Formação** — público: todos.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| AF1 | satisfação com a formação recebida no IFSP | escala | 1 a 10 | não | Ind19 | Anexo I |
+| AF2 | situação profissional atual comparada à do ingresso | escolha única | melhor · igual · pior | não | impacto do curso (art. 3º, item 3) | documentado (29) |
+| AF3 | contribuição do curso para a situação de trabalho atual | escala | 1 a 10 | não | impacto do curso (art. 3º, item 3) | documentado (30) |
+| AF4 | sugestões para a melhoria do curso | texto livre | até 1.000 caracteres | não | direito do egresso (Regulamento, art. 12, item 4) | projeto |
+
+AF2 e AF3 vieram do Bloco VII documentado (seção 4.7). Os indicadores propostos para
+eles são a distribuição da comparação e a média da contribuição — origem
+objetivo + projeto. **AF4 é o único texto livre do instrumento**, e é o campo com
+maior risco de conter dado pessoal não previsto, inclusive de terceiros: é tratado
+antes de qualquer exportação (E23).
+
+**Bloco II — Atividade Profissional Anterior** — público: todos.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| AP1 | trabalhava quando entrou no curso | escolha única | sim · não | não | indicador do Bloco II | documentado (7) |
+| AP2 | vínculo quando entrou no curso | escolha única | o mesmo de SA2 | não | indicador do Bloco II; comparação entre antes e agora | documentado (10) |
+
+AP2 só é exibido se AP1 for "sim". É ele que diz se a atividade anterior era
+**remunerada** — o que o indicador do bloco exige, e que "trabalhava" sozinho não
+diz.
+
+**Bloco III — Situação Atual** — público: todos. É o bloco direcional.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| SA1 | situação atual | escolha única | estudando · trabalhando · estudando e trabalhando · nem trabalhando, nem estudando | sim | Ind3; exibição dos Blocos V e VI | documentado (15) |
+| SA2 | vínculo de trabalho atual | escolha única | assalariado de empresa ou organização privada com carteira assinada · assalariado sem carteira assinada · empregado ou servidor público · autônomo · microempresário · proprietário agrícola · estagiário remunerado · estagiário não remunerado · em negócio familiar sem remuneração | sim, se exibido | Ind3; espaços de inserção (art. 3º, item 16); comparação com AP2 | documentado (22) |
+
+SA2 é exibido se SA1 incluir "trabalhando". **Tem atividade remunerada** quem está
+trabalhando **e** não é estagiário não remunerado nem trabalha em negócio familiar
+sem remuneração. O estágio remunerado conta, pela letra do Anexo I: "alguma
+atividade remunerada".
+
+**O vínculo sobe do Bloco V para o III** — no instrumento documentado era a questão
+22. Precisa vir antes da bifurcação, porque é ele que decide quem tem atividade
+remunerada, e portanto quem segue para o V e quem segue para o VI.
+
+**Lacuna registrada.** O domínio documentado não nomeia pessoa jurídica,
+microempreendedor individual nem trabalho por plataforma, que ficam absorvidos por
+"autônomo" e "microempresário". Mantém-se o domínio pela série; desdobrá-lo é
+decisão que a instituição pode tomar, declarando o indicador.
+
+**Bloco IV — Evolução na Formação** — público: todos; EF1 a EF3 só para técnico e
+graduação.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| EF1 | situação no nível seguinte ao do curso concluído | escolha única | concluí · estou matriculado · não | não | Ind5 a Ind12 | projeto (descrições do Anexo I) |
+| EF2 | instituição desse curso | escolha única | IFSP · outra instituição | não | Ind5 a Ind8 | documentado (16), agregado |
+| EF3 | esse curso é na mesma área de formação | escolha única | sim, totalmente · sim, parcialmente · não · não sei | não | Ind11, Ind12 | documentado (escala da 24) |
+| EF4 | demandas de formação | escolha múltipla | curso técnico · graduação · especialização · mestrado ou doutorado · curso de extensão ou de curta duração · nenhuma no momento | não | demandas de formação (art. 3º, item 12; art. 14, item 3) | projeto |
+
+**"Nível seguinte"** é o superior, para o egresso técnico, e a pós-graduação, para o
+de graduação. EF2 e EF3 só são exibidos se EF1 não for "não". Em EF4, "nenhuma no
+momento" exclui as demais opções.
+
+**EF2 agrega o domínio documentado.** A questão 16 separava instituição pública de
+privada, distinção que nenhum indicador usa. A série se preserva pela união das duas.
+
+**EF3 usa a mesma escala da relação com a área** (PM1), pela coerência: "mesma área"
+conta só com "sim, totalmente", como no Ind4.
+
+**Bloco V — Perfil do Egresso no Mercado de Trabalho** — público: quem tem atividade
+remunerada.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| PM1 | relação da atividade com a área de formação | escolha única | sim, totalmente · sim, parcialmente · não · não sei | sim | Ind4; corte dos Ind15 e Ind16 | documentado (24) |
+| PM2 | afinidade entre as atividades e o conteúdo do curso | escala | 1 a 10 | sim | Ind18 | Anexo I |
+| PM3 | remuneração bruta mensal | escolha única | as cinco faixas do Anexo I | não | Ind13 | Anexo I, como configuração |
+| PM4 | satisfação com a remuneração | escala | 1 a 10 | não | Ind14; Ind15 e Ind16 pelo corte de PM1 | Anexo I |
+| PM5 | satisfação com a atividade profissional | escala | 1 a 10 | não | Ind17 | Anexo I |
+| PM6 | setor de atividade | escolha única | indústria · comércio · transportes · construção civil · agricultura e pecuária · serviços sociais (saúde, educação, assistência) · serviços financeiros · serviços de utilidade pública (água, energia, saneamento, limpeza urbana) · demais serviços · outro | não | áreas de atuação e remuneração (art. 3º, item 6) | documentado (20) |
+
+**PM1 e o Ind4.** "Diretamente relacionada à área de formação" conta **só** "sim,
+totalmente". "Sim, parcialmente" fica fora do numerador e é informado à parte, como
+análise de sensibilidade. É leitura estrita e declarada, e é decisão de projeto.
+
+**PM3 e o Ind13.** As faixas são as do Anexo I — até R$ 2.259,20; de R$ 2.259,21 a
+R$ 2.826,65; de R$ 2.826,66 a R$ 3.751,05; de R$ 3.751,06 a R$ 4.664,68; acima de
+R$ 4.664,68 —, guardadas como configuração versionada por ciclo. Com elas, o Ind13
+dá a faixa mais frequente e as faixas extremas observadas. **A média não é
+calculável com rigor**, porque a última faixa é aberta. É adaptação declarada, e
+entra na comunicação ao Comitê Permanente (seção 6).
+
+**PM6 unifica o residual.** O domínio documentado tinha "outro" e "outros" como duas
+categorias. Aqui é uma só.
+
+**Bloco VI — Motivos da Não Inserção no Mercado de Trabalho** — público: quem não tem
+atividade remunerada.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| MI1 | principal motivo de não exercer atividade remunerada | escolha única | decidi só estudar · os salários oferecidos são baixos · há pouca oferta de trabalho na região onde moro · não encontrei trabalho na área do curso realizado no IFSP · não tenho a qualificação exigida · não tenho a experiência exigida · motivos pessoais · outro | não | elementos limitadores (art. 3º, item 5) | documentado (17 e 18) |
+
+O instrumento documentado tinha duas versões da mesma pergunta — a 18 sem "decidi
+só estudar". Aqui é um campo só.
+
+**Bloco VII — Avaliação da PAEG** — público: todos.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| AV1 | avaliação das ações do programa de acompanhamento | escolha única | 1 a 10 · não conheço as ações do programa | não | avaliação do programa (art. 34, item 1) | projeto |
+
+O indicador tem duas partes: a média entre quem conhece as ações e a proporção de
+quem não as conhece — que é, por si, medida do alcance do programa.
+
+**Recortes de equidade** — público: quem deu o consentimento específico (CON2).
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| EQ1 | gênero | escolha única | mulher · homem · pessoa não binária · outra identidade · prefiro não declarar | não | recortes de gênero (art. 3º, item 16) | projeto |
+| EQ2 | raça/cor | escolha única | preta · parda · indígena · amarela · branca · prefiro não declarar | não | recortes de raça (art. 3º, item 16) | oficial; documentado (2) |
+| EQ3 | pessoa com deficiência | escolha única | sim · não · prefiro não declarar | não | recortes de deficiência (art. 4º, item 4) | projeto; conceito oficial |
+| EQ4 | avaliação das políticas de ações afirmativas | escolha única | 1 a 10 · não conheço as políticas | não | percepção das ações afirmativas (art. 3º, item 17) | projeto |
+
+- **EQ1 — gênero, e não sexo.** O objetivo do art. 3º, item 16 fala em gênero, e o
+  gênero é autodeclarado. O instrumento documentado perguntava sexo — feminino,
+  masculino, outro (questão 1) —, e **as duas séries não são equivalentes**: a
+  correspondência entre "mulher" e "feminino", ou entre "homem" e "masculino", é
+  aproximação, e deve ser declarada como tal em qualquer comparação.
+- **EQ2 — raça/cor** reproduz as cinco categorias do quesito cor ou raça do IBGE, a
+  que o Estatuto da Igualdade Racial remete para definir a população negra — pretos
+  e pardos (Lei nº 12.288/2010, art. 1º, parágrafo único, IV). É o mesmo domínio do
+  instrumento documentado; o rótulo "não desejo declarar" vira "prefiro não
+  declarar", sem mudar a categoria.
+- **EQ3 — deficiência** é autodeclaração binária, no conceito da Lei Brasileira de
+  Inclusão: impedimento de longo prazo que, em interação com barreiras, pode obstruir
+  a participação plena (Lei nº 13.146/2015, art. 2º). O recorte da diretriz não pede o
+  tipo de deficiência.
+
+**Contato e manifestações** — público: todos.
+
+| Código | Dado | Tipo | Domínio | Obrig. | Consumidor | Origem |
+|---|---|---|---|---|---|---|
+| CT1 | e-mail principal atualizado | texto com validação | sintaxe da seção 4.6 do leiaute | não | P8, por prevenção | E11 |
+| CT2 | e-mail alternativo atualizado | texto com validação | a mesma sintaxe, diferente de CT1 | não | P8 | E11 |
+| CT3 | telefone atualizado | texto com validação | E.164, seção 4.7 do leiaute | não | P8; P9 | E11 |
+| CT4 | não quero mais ser contatado nos próximos ciclos | caixa de marcação | marcada · não marcada | não | P6 | projeto (P6) |
+
+Os campos de contato **não** vêm pré-preenchidos: são preenchidos só por quem quer
+atualizar, o que evita exibir dado pessoal sem necessidade. No modo de ensaio,
+valem as restrições da seção 7 do leiaute — endereço sob `.test` e código de área
+terminado em 0 —, e a E15 as aplica também no questionário.
+
+### 12.4 Como os campos compõem os indicadores
+
+A verificação de suficiência desce aqui ao nível do campo. Os denominadores são os
+respondentes do nível correspondente — a mesma leitura que a seção 6 fixou para o
+Ind3.
+
+| Indicador | Numerador | Denominador |
+|---|---|---|
+| Ind2 | respondentes por IDA1, IDA2, IDA3 e IDA4 | — |
+| Ind3 | com atividade remunerada (SA1 e SA2) | respondentes |
+| Ind4 | PM1 = sim, totalmente | com atividade remunerada |
+| Ind5 / Ind6 | EF1 = matriculado e EF2 = IFSP | técnicos / graduados |
+| Ind7 / Ind8 | EF1 = matriculado e EF2 = IFSP | técnicos / graduados com EF1 = concluí ou matriculado |
+| Ind9 / Ind10 | EF1 = concluí ou matriculado | técnicos / graduados |
+| Ind11 / Ind12 | EF1 = concluí ou matriculado e EF3 = sim, totalmente | técnicos / graduados com EF1 = concluí ou matriculado |
+| Ind13 | distribuição de PM3 | com atividade remunerada |
+| Ind14 | média de PM4 | com atividade remunerada |
+| Ind15 / Ind16 | média de PM4 | com PM1 = sim, totalmente / com PM1 = não |
+| Ind17 | média de PM5 | com atividade remunerada |
+| Ind18 | média de PM2 | com atividade remunerada |
+| Ind19 | média de AF1 | respondentes |
+
+"Técnicos" e "graduados" são os respondentes com IDA2 igual a técnico ou a
+graduação. No Ind16, "sim, parcialmente" e "não sei" ficam fora dos dois cortes, e
+isso é declarado. Os indicadores propostos pelo projeto compõem-se do mesmo modo:
+Bloco II, com AP1, AP2, SA1 e SA2; impacto, com AF2 e AF3; demandas, com EF4;
+elementos limitadores, com MI1; programa, com AV1; e percepção das ações
+afirmativas, com EQ4.
+
+### 12.5 Pré-preenchimento com dado de origem desatualizado
+
+O entregável da E13 pede, expressamente, este comportamento.
+
+1. **Os cinco atributos aparecem com o valor da base**, e o respondente confirma ou
+   corrige **dentro do domínio fechado**. Não há correção em texto livre.
+2. **O valor original é preservado.** A resposta guarda o valor confirmado; o
+   atributo do participante continua com o valor da base. É a "auditoria da
+   qualidade da base" do documento do projeto (seção 3.2).
+3. **A navegação usa o valor confirmado.** Se o respondente corrige o curso, e com
+   ele o nível, é o nível corrigido que decide se a parte de continuidade do Bloco
+   IV aparece (E14).
+4. **Os indicadores "relativos aos respondentes" usam o valor confirmado**; os
+   indicadores "no sistema", o da base.
+5. **A correção não move o ciclo em andamento.** Ano e semestre de conclusão são a
+   âncora da P5, e a âncora vem da base, não da autodeclaração: o mecanismo não
+   reescreve o registro acadêmico por conta do que o respondente disse — o
+   respondente pode errar, e a fonte é o sistema acadêmico. A correção entra na
+   fila de revisão; se a extração seguinte trouxer o valor corrigido, a âncora muda
+   então, pela regra da ADR-0005.
+6. **A fila de revisão não é estrutura nova.** É a consulta dos registros em que o
+   valor confirmado difere do original, por atributo — como a fila de correção de
+   contato da E09. O que prevalece numa reimportação é a decisão que a E17 já tem
+   pendente para o contato, agora estendida a estes atributos.
+7. **A taxa de correção por atributo é o indicador de qualidade da base** da seção
+   3.2.
+
+### 12.6 Continuidade com a série documentada
+
+| Questão documentada | Campo | Relação |
+|---|---|---|
+| 2 — raça/cor | EQ2 | idêntica; muda só o rótulo da recusa |
+| 7 — trabalhava ao entrar | AP1 | idêntica |
+| 10 — vínculo ao entrar | AP2 | idêntica |
+| 15 — situação atual | SA1 | idêntica |
+| 22 — vínculo atual | SA2 | idêntica; muda de bloco |
+| 24 — trabalha na área | PM1 | idêntica |
+| 20 — setor de atividade | PM6 | idêntica; residual unificado |
+| 17 e 18 — por que não trabalha | MI1 | unificadas |
+| 29 — situação comparada ao ingresso | AF2 | idêntica; muda de bloco |
+| 30 — contribuição do curso | AF3 | idêntica; muda de bloco |
+| 16 — tipo de curso em que está matriculado | EF1 e EF2 | reestruturada; a série parcial é "superior no IFSP" para técnicos matriculados |
+| 4 e 5 — campus e tipo de curso | IDA3, IDA1 e IDA2 | de autodeclarados a pré-preenchidos; agregáveis |
+| 1 — sexo | EQ1 | **não equivalente** |
+| 27 e 28 — renda aberta | PM3 | sem série a preservar: o relatório não conseguiu apurar |
+
+### 12.7 O que ficou de fora
+
+Decidido com o orientando: os campos do instrumento documentado sem consumidor
+ficam fora, pelo mesmo critério aplicado aos blocos.
+
+| Questão ou candidato | Por que fica fora |
+|---|---|
+| 3 — escolaridade atual | EF1 pergunta diretamente o que os indicadores pedem |
+| 6 — modalidade | sem consumidor; deriva do curso |
+| 8 — setor anterior | sem consumidor; a comparação entre antes e agora usa o vínculo |
+| 9 e 21 — porte da empresa | sem consumidor |
+| 11 e 25 — benefícios | sem consumidor |
+| 12 e 26 — horas semanais | sem consumidor |
+| 13 e 14 — renda anterior | sem consumidor, e é dado sensível para o respondente |
+| 19 — mesma empresa de antes | sem consumidor que AF2, AP1 e AP2 não atendam |
+| 23 — tipo de atividade | sem consumidor; a área de atuação é o setor (PM6) |
+| nome do curso em texto livre (versão no ar) | substituído pela lista fechada (IDA1) |
+| localidade (documento do projeto) | sem consumidor |
+| forma de ingresso por ação afirmativa | o indicador proposto é de percepção; avaliar resultados por condição de beneficiário exigiria o dado, que o sistema acadêmico tem — decisão da instituição |
+
+A instituição pode reintroduzir qualquer um deles **declarando o indicador que ele
+alimenta** — é a mesma porta que a ADR-0006 deixa aberta para os blocos.
+
+### 12.8 Verificação do critério
+
+**Trinta e cinco campos**: trinta e um padronizáveis, todos com domínio fechado; e
+quatro não padronizáveis — os três de contato, validados por sintaxe, e o de
+sugestões, com limite de tamanho e consumidor declarado. Todo campo tem consumidor,
+e todo indicador do Anexo I, exceto o Ind1, se compõe dos campos (seção 12.4).
+**Critério atendido.**
+
+### 12.9 O que esta seção não permite afirmar
+
+1. **A comparação é com o instrumento documentado de 2019 a 2023**, não com a versão
+   no ar, que não foi percorrida.
+2. **O texto das perguntas e os rótulos dos extremos das escalas não são daqui.**
+3. **Os indicadores propostos pelo projeto continuam propostas** (ADR-0006).
+4. **Nada foi implementado na plataforma.** Códigos e tipos são propostos; a E15
+   confere.
+5. **A média do Ind13 não é calculável com rigor por faixas.**
+
+### 12.10 O que esta seção determina para as etapas seguintes
+
+- **E14 (navegação)** — CON2 só se CON1 for "concordo"; recortes de equidade só se
+  CON2 for "concordo"; AP2 só se AP1 for "sim"; SA2 só se SA1 incluir "trabalhando";
+  Bloco V só com atividade remunerada, e Bloco VI no caso contrário; EF1 a EF3 só
+  para técnico e graduação; EF2 e EF3 só se EF1 não for "não"; e toda regra que
+  dependa de atributo usa o **valor confirmado** na identificação.
+- **E15 (implementação)** — os 35 campos, com os códigos e tipos propostos; a lista
+  de cursos com nível, a lista de unidades com as antecessoras e as faixas de
+  rendimento como configuração versionada; as restrições do modo de ensaio também
+  nos campos de contato.
+- **E17 (importação)** — ativar a regra de coerência entre `curso` e `nivel` no
+  arquivo de entrada; e a decisão de precedência na reimportação passa a cobrir os
+  cinco atributos corrigidos, além do contato.
+- **E18 (pré-preenchimento)** — cinco atributos, com o nível derivado do curso e o
+  valor original preservado.
+- **E22 (consentimento)** — CON1 e CON2, com os metadados de data, hora e versão.
+- **E23 (conformidade)** — AF4, o texto livre, tratado antes de qualquer
+  exportação; faixa de renda e recortes de equidade na anonimização; correções da
+  identificação na trilha.
+- **E25 (matriz)** — "pré-preenchimento" inclui a correção com preservação do
+  original; "navegação condicional", as regras acima.
+- **E26 (cenários)** — incluir quem trabalha sem remuneração, que segue para o Bloco
+  VI, e a correção de nível que muda a exibição do Bloco IV.
+- **E28 (extração)** — os indicadores pelas composições da seção 12.4; o Ind4 com
+  "sim, totalmente" e a parcela "parcialmente" como sensibilidade; o Ind13 por
+  faixas.
+- **E30 (guia)** — a atualização das faixas de rendimento a cada ciclo, com versão.
+- **E31 (relatório final)** — comunicar ao Comitê Permanente que o instrumento
+  documentado não calcula a maior parte do Anexo I (seção 12.1) e as adaptações do
+  Ind13 e do Ind4; declarar que a série de sexo e a de gênero não são equivalentes.
