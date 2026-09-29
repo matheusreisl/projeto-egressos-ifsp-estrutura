@@ -638,7 +638,7 @@ Meta 3 · set–out/26
   instrumento documentado não calcula a maior parte do Anexo I, e as adaptações
   do Ind13 e do Ind4.
 
-### [ ] E14 — Definir a lógica de navegação condicional
+### [x] E14 — Definir a lógica de navegação condicional
 - **Objetivo:** mapear os caminhos alternativos do instrumento.
 - **Entregável:** `docs/especificacao/navegacao-condicional.md` com as regras e um diagrama de fluxo.
 - **Conclusão quando:** todos os caminhos previstos estiverem descritos.
@@ -652,6 +652,38 @@ Meta 3 · set–out/26
   "trabalhando"; Bloco V só com atividade remunerada, que depende de SA1 **e** SA2;
   EF2 e EF3 só se EF1 não for "não". E toda regra que dependa de atributo usa o
   valor **confirmado** na identificação, e não o pré-preenchido.
+- **Concluída em:** 29/09/2026 · `docs/especificacao/navegacao-condicional.md`.
+- **Consolidação, e não invenção.** As regras de exibição vinham decididas pela E12
+  e pela E13; a etapa as reuniu numa tabela só e acrescentou o que nenhuma das duas
+  decidira: como o preenchimento termina, em que estado deixa o participante, e como
+  o respondente se movimenta.
+- **Achado que precisa chegar à plataforma: recusa não é resposta.** Com o
+  consentimento na primeira página, quem recusa também envia uma página — e a E08
+  mostrou que é o envio de página que cria a resposta. Conforme a plataforma
+  encerre, a recusa pode sair marcada como concluída. **O estado do participante sai
+  de CON1, e não da marca de "concluído"**; sem isso, quem recusou entraria no
+  denominador de todos os indicadores.
+- **Dez caminhos:** duas recusas e oito de preenchimento, decididos por CON2, pelo
+  nível confirmado e pela atividade remunerada; com diagrama de fluxo em Mermaid.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - um bloco por página, com o consentimento sempre na primeira;
+  - voltar permitido, com as regras recalculadas e o **descarte** do que sai do
+    caminho — mudar CON1 para recusa descarta todo o preenchimento, e retirar CON2
+    descarta os recortes de equidade;
+  - **retomada por "salvar e retomar", com nome e senha**, e não pela reabertura do
+    endereço individual. Contra a recomendação inicial, e com argumento que ficou
+    registrado: o endereço é transportável (ADR-0003) e as respostas salvas podem
+    conter dado sensível, de modo que a senha separa quem tem o link de quem
+    respondeu. Custos declarados: o lembrete precisa explicar a retomada, quem
+    interromper sem salvar recomeça, e reabrir o link pode criar preenchimento
+    órfão.
+- **Verificado por execução.** Uma implementação independente das regras percorreu
+  **2.802 combinações** das respostas que decidem o caminho: cada uma caiu em
+  exatamente um dos dez caminhos, e os dez foram alcançados. A primeira execução
+  acusou as duas recusas como ambíguas — defeito da verificação, que comparava só
+  os blocos, e não a linha inteira; corrigido e registrado. O diagrama foi
+  renderizado pela biblioteca Mermaid 11, sem erro, com os dezenove nós.
+- **Não conferido:** nada na plataforma. As cinco conferências ficam com a E15.
 
 ### [ ] E15 — Implementar a estrutura no LimeSurvey
 - **Objetivo:** materializar a especificação na instância.
@@ -667,6 +699,14 @@ Meta 3 · set–out/26
   os códigos e os tipos propostos; a lista de cursos com nível, a de unidades com
   as antecessoras e as faixas de rendimento como configuração versionada; e as
   restrições do modo de ensaio também nos campos de contato.
+- **Vindo da E14** (`navegacao-condicional.md`, seção 10): um grupo por bloco, na
+  ordem da seção 2; condições por grupo e por campo, com as dependências na mesma
+  página **dinâmicas**. E cinco conferências na instância, porque nenhuma foi feita:
+  se a plataforma descarta as respostas que saem do caminho; como "salvar e
+  retomar" se comporta com participantes identificados; se o formulário de
+  salvamento pede e-mail, e se isso se desativa; o que acontece quando o endereço é
+  reaberto sem carregar o salvo; e como a recusa encerra o preenchimento, e com que
+  marca.
 
 ---
 
@@ -720,6 +760,8 @@ Metas 4 e 5 · set–nov/26
   acadêmica, editáveis, com a correção registrada e o valor original preservado.
 - **Vindo da E13:** o nível não se edita por conta própria — acompanha o curso
   escolhido; e a correção não move o ciclo em andamento (seção 12.5).
+- **Vindo da E14:** o nível acompanha o curso **na própria página 2**, porque é o
+  valor enviado nela que decide o que o Bloco IV exibe.
 
 ### [ ] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
@@ -746,6 +788,9 @@ Metas 6 e 7 · out–nov/26
   chega como nome social quando houver registro — e saudação neutra. Não há campo
   de gênero, de propósito: a necessidade não sustenta um campo só para flexionar
   a saudação.
+- **Vindo da E14:** o lembrete a quem está `em preenchimento` explica como retomar —
+  carregar o questionário não finalizado com o nome e a senha escolhidos — e que,
+  esquecida a senha, o preenchimento recomeça.
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -816,6 +861,9 @@ Metas 6 e 7 · out–nov/26
   conclusão nova (ADR-0005). A fila de correção tem **duas vias de naturezas
   diferentes**: o `email_alternativo`, que admite reconvite automatizado dentro da
   rodada única de reparo, e o `telefone`, que é operação humana (ADR-0003).
+- **Vindo da E14:** o estado do participante sai de CON1 e da conclusão, e **não**
+  só da marca de "concluído" da plataforma — a recusa pode vir marcada como
+  concluída; e as recusas interrompem a cadência.
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -833,6 +881,8 @@ Metas 6 e 7 · out–nov/26
   questionário.
 - **Vindo da E13:** os campos são CON1 e CON2, e data, hora e versão do termo são
   metadados registrados pela plataforma, e não campos.
+- **Vindo da E14:** mudar CON1 para uma das recusas descarta todas as respostas
+  daquele preenchimento, e retirar CON2 descarta os recortes de equidade.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -873,6 +923,8 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E13:** o campo de sugestões (AF4) é o único texto livre e o de maior
   risco de conter dado pessoal não previsto, inclusive de terceiros — tratá-lo antes
   de qualquer exportação; e a faixa de renda entra na anonimização.
+- **Vindo da E14:** o e-mail do formulário de salvamento, se a plataforma não o
+  deixar desativar; e os descartes por mudança de caminho como eventos da trilha.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -907,6 +959,9 @@ Meta 8 · nov–dez/26
 - **Vindo da E13:** "pré-preenchimento" inclui corrigir um atributo e verificar
   que o original foi preservado; "navegação condicional", as regras de campo da
   seção 12.10.
+- **Vindo da E14:** "navegação condicional" é redigido contra os **dez caminhos** de
+  `navegacao-condicional.md`; e "retomada de preenchimento" passa a ser salvar,
+  fechar e carregar com nome e senha.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -929,6 +984,9 @@ Meta 8 · nov–dez/26
   exercitado sem ação humana.
 - **Vindo da E13:** incluir quem trabalha sem remuneração, que segue para o Bloco
   VI, e a correção de nível que muda a exibição do Bloco IV.
+- **Vindo da E14:** cada um dos dez caminhos ao menos uma vez; interrupção com e
+  sem salvamento; voltar mudando a situação atual; e recusa na primeira página,
+  conferindo que ela não conta como resposta.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -955,6 +1013,9 @@ Metas 9 e 10 · out–dez/26
 - **Vindo da E13:** calcular pelas composições da seção 12.4 de
   `blocos-instrumento.md` — o Ind4 com "sim, totalmente" e a parcela
   "parcialmente" como sensibilidade; o Ind13 por faixas, sem média rigorosa.
+- **Vindo da E14:** denominadores sem as recusas; no máximo uma resposta concluída
+  por participante e ciclo; parciais órfãs descartadas; e, se a plataforma guardar
+  respostas fora do caminho, a extração reaplica as regras de exibição.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1069,3 +1130,4 @@ Uma linha por sessão, mais recente ao final.
 | 28/09/2026 | E11 | **Fase 3 iniciada.** E11 concluída: `docs/especificacao/leiaute-entrada.md` com dez campos — os nove do documento do projeto, que já propunha o leiaute e já atendia à E05, mais `nivel`, exigido pelos indicadores do Regulamento. Uma linha por egresso, com a conclusão mais recente (ADR-0005). Identificador estável, sem forma de CPF e distinto do token; nome de tratamento (nome social, Decreto nº 8.727/2016); leiaute fechado, com três níveis de consequência e as restrições do ensaio como propriedade do arquivo. Critério verificado nas duas direções — dez campos e onze consumidores, nenhum órfão — e por execução do exemplo contra as próprias regras. | Nenhuma pendência nova sem dono. **Não conferido:** tamanhos do leiaute contra as colunas da plataforma → E17. **Ampliadas:** E12 (cinco atributos pré-preenchidos, com nível); E13 (domínio de cursos e unidades compartilhado, sem "Outros"); E16 (leiaute, e DDD terminado em 0 só depois de reconferir na Anatel); E17 (validação prévia, trilha e eliminação do arquivo, precedência entre contato corrigido e extração nova); E19; E20 (saudação neutra); E21 (D0 por calendário, âncora móvel, duas vias na fila de correção); E23; E25 (arquivos inválidos de propósito); E26 (reparo automatizável); E30; E31 (atualizar o leiaute no documento do projeto e declarar a aderência parcial ao art. 19). |
 | 28/09/2026 | E12 | E12 concluída: `docs/especificacao/blocos-instrumento.md` com onze blocos — os sete do art. 17 do Regulamento, três de controle (consentimento, identificação acadêmica, contato e manifestações) e um de recortes de equidade. Critério lido como indicador do Anexo I ou objetivo expresso do Regulamento, com origem declarada (ADR-0006). Verificado nas duas direções e por execução: nenhum bloco sem indicador, dezoito dos dezenove indicadores do Anexo I alimentados (o Ind1 é registro institucional) e todos os objetivos de coleta do art. 3º com bloco. Achado: as fórmulas do Anexo I são texto, e três medem outra coisa que a descrição; adotada a descrição. Linha de base corrigida em três pontos. | Nenhuma pendência nova sem dono. **Não relido:** o conteúdo vigente dos blocos → a E13 confirma a leitura do Bloco II. **Ampliadas:** E13 (critério por campo, três distinções do Bloco IV, Ind4, Ind13, setor e localidade, gênero ou sexo; completa a seção 12), E14 (públicos viram regras), E15, E18, E22 (três manifestações, com o consentimento do dado sensível), E23, E24 (adesão voluntária), E25, E28 (calcular pelas descrições), E29 e E31 (tabela de blocos no documento do projeto; divergências do Anexo I ao Comitê Permanente). |
 | 28/09/2026 | E13 | E13 concluída: seção 12 de `blocos-instrumento.md` com 35 campos, cada um com tipo, domínio, obrigatoriedade, consumidor e origem do domínio. Achado: o Relatório 2 da PAE, lido nesta etapa, mostra que o instrumento documentado calcula pouco do Anexo I e que os Blocos I e VII têm conteúdo diferente do nome. Renda por faixas do Anexo I; doze campos sem consumidor fora; questões 29 e 30 no Bloco I. Pré-preenchimento desatualizado: correção preserva o original e não move o ciclo. Critério verificado por execução: 31 campos padronizáveis com domínio fechado e 4 não padronizáveis justificados. | Nenhuma pendência nova sem dono. **Não percorrida:** a versão do instrumento hoje no ar. **Corrigidos:** oito pontos da E12 e a regra `curso`–`nivel` no leiaute da E11. **Ampliadas:** E14 (regras de campo; valor confirmado), E15 (35 campos e configuração versionada), E17 (regra `curso`–`nivel`; precedência dos atributos corrigidos), E18, E22, E23 (texto livre), E25, E26 (trabalho sem remuneração), E28 (composições; Ind4 e Ind13), E30 (faixas por ciclo) e E31 (comunicação ao Comitê; sexo e gênero não equivalentes). |
+| 29/09/2026 | E14 | E14 concluída: `docs/especificacao/navegacao-condicional.md` com as regras de exibição consolidadas, as saídas e os estados, dez caminhos e o diagrama de fluxo. Achado: a recusa, enviada na primeira página, pode sair marcada como concluída — o estado do participante sai de CON1, e não da marca da plataforma. Um bloco por página; voltar com descarte do que sai do caminho; retomada com nome e senha, por decisão do orientando e com o motivo registrado. Verificado por execução: 2.802 combinações, cada uma em exatamente um caminho, e o diagrama renderizado. | Nenhuma pendência nova sem dono. **Não conferido:** nada na plataforma — cinco conferências para a E15. **Ampliadas:** E15 (conferências e dependências dinâmicas), E18, E20 (lembrete explica a retomada), E21 (estado sai de CON1), E22 (descartes na recusa), E23 (e-mail do salvamento; descartes na trilha), E25 (dez caminhos; retomada com senha), E26 (caminhos e recusa) e E28 (denominadores sem recusas; parciais órfãs). |
