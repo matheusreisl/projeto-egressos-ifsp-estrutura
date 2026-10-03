@@ -518,6 +518,11 @@ Hipótese de trabalho para a E15, **não verificada nesta etapa**:
 - o consentimento pode ser grupo próprio ou recurso nativo da plataforma, e a E22
   decide depois de conferir o que a instância oferece.
 
+*Atualizado na E15:* confirmada — onze grupos, um por bloco, com o público como
+condição de exibição. O consentimento foi implantado como grupo próprio, e o
+recurso nativo de aviso de política ficou desligado; a E22 pode rever
+([`infra/instrumento/`](../../infra/instrumento/README.md)).
+
 ## 9. O que esta especificação não permite afirmar
 
 1. **Os indicadores propostos pelo projeto não são indicadores institucionais.**
@@ -962,7 +967,9 @@ e todo indicador do Anexo I, exceto o Ind1, se compõe dos campos (seção 12.4)
 2. **O texto das perguntas e os rótulos dos extremos das escalas não são daqui.**
 3. **Os indicadores propostos pelo projeto continuam propostas** (ADR-0006).
 4. **Nada foi implementado na plataforma.** Códigos e tipos são propostos; a E15
-   confere.
+   confere. *Atualizado na E15:* os 35 códigos e os tipos foram aceitos como
+   propostos; os códigos de opção têm no máximo cinco caracteres, limite da
+   plataforma ([`infra/instrumento/`](../../infra/instrumento/README.md)).
 5. **A média do Ind13 não é calculável com rigor por faixas.**
 
 ### 12.10 O que esta seção determina para as etapas seguintes

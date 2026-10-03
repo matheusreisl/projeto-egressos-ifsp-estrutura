@@ -685,7 +685,7 @@ Meta 3 · set–out/26
   renderizado pela biblioteca Mermaid 11, sem erro, com os dezenove nós.
 - **Não conferido:** nada na plataforma. As cinco conferências ficam com a E15.
 
-### [ ] E15 — Implementar a estrutura no LimeSurvey
+### [x] E15 — Implementar a estrutura no LimeSurvey
 - **Objetivo:** materializar a especificação na instância.
 - **Entregável:** questionário estruturado; exportação da estrutura versionada em `infra/`.
 - **Conclusão quando:** todos os caminhos forem percorríveis manualmente.
@@ -707,6 +707,76 @@ Meta 3 · set–out/26
   salvamento pede e-mail, e se isso se desativa; o que acontece quando o endereço é
   reaberto sem carregar o salvo; e como a recusa encerra o preenchimento, e com que
   marca.
+- **Concluída em:** 03/10/2026 · `infra/instrumento/` · `infra/confere-instrumento.py`
+  · `navegacao-condicional.md`, seção 11. **Fase 3 encerrada.**
+- **Instrumento implantado:** questionário **202615**, onze grupos, 35 campos e 229
+  opções, inativo e sem participantes, para a E17. A exportação da própria instância
+  está versionada em `infra/instrumento/instrumento.lss`.
+- **Estrutura, e não conteúdo.** Cada enunciado é um marcador que nomeia o campo e o
+  dado. O texto das perguntas, o do termo e o de encerramento ficam com o projeto
+  correlato e a E22. Os domínios entram completos.
+- **Por linha de comando, de ponta a ponta (K7).** Um gerador em Python monta o
+  `.lss` a partir de `estrutura.py` e da configuração versionada, e o importa pela
+  API. A exportação é feita por comando de console próprio, porque a API do
+  LimeSurvey 7 importa `.lss` e **não exporta** — conferido contra a lista de
+  métodos. O console carrega comandos de `YII_CONSOLE_COMMANDS`, e o comando usa a
+  mesma função do botão de exportação do painel; a imagem não muda.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - **unidades reais, cursos ilustrativos** — os 57 campi da página oficial do IFSP,
+    com a sigla oficial como código, mais as três antecessoras registradas na E13; e
+    treze cursos ilustrativos nos três níveis, a substituir pela instituição;
+  - **conferências numa cópia descartável** — mesmo `.lss`, outro sid, ativada com
+    participantes sintéticos e removida ao fim sem resíduo —, para que o instrumento
+    chegue à E17 inativo.
+- **Configurações declaradas, cada uma com o motivo** no README da pasta: um grupo
+  por página, voltar, salvar e retomar **sem** retomada pelo link (E14); respostas
+  **não anônimas**, porque o estado sai de CON1 ligado ao token — a anonimização é
+  da E23; data registrada; IP, URL de origem e tempos não registrados; sem opção
+  "sem resposta", sem índice, sem captcha. **Nenhuma ADR nova:** as escolhas
+  aplicam a E14, o K7 e a minimização, sem decisão de arquitetura própria.
+- **Os 35 códigos da E13 foram aceitos como propostos.** Códigos de opção têm no
+  máximo **cinco caracteres**, limite da coluna `lime_answers.code`, conferido. O
+  nível vem do prefixo do código do curso, e o gerador recusa curso incoerente.
+- **Dois defeitos meus, achados por conferência antes de virarem resultado:**
+  1. o Bloco VI **sumia** para quem só estuda. O Expression Manager torna falsa
+     toda expressão de exibição que cite questão oculta sem o sufixo `.NAOK`, e SA2
+     está oculto justamente nesse caso. Achado na fonte (`em_core_helper.php`),
+     antes do percurso; corrigido com `SA2.NAOK`;
+  2. o nível derivado gravava **o texto da fórmula**: o atributo de equação é texto
+     com trechos `{…}`, e não expressão. Achado no percurso, e **não** pela
+     conferência estrutural, que avaliava a equação como expressão. Corrigidos o
+     instrumento e a conferência.
+- **Conferência estrutural independente do gerador.** `confere-instrumento.py` lê a
+  especificação direto dos documentos das E13 e E14, e a instância pela API: **6 de
+  6**, inclusive os dez caminhos avaliados com as expressões da instância sobre as
+  **2.802 combinações** da E14, nas mesmas contagens por caminho. **A conferência
+  foi testada por mutação:** a primeira versão **não acusava** o defeito do
+  `.NAOK`, porque o avaliador fazia curto-circuito e o Expression Manager não faz.
+  Corrigida, ela reprova as cinco mutações apresentadas.
+- **Critério verificado no navegador.** Os **dez caminhos foram percorridos** pela
+  interface do respondente, cada um com os blocos da seção 5 da E14, e nenhum
+  registro tem V e VI juntos. A exibição dinâmica na mesma página funciona,
+  inclusive o nível acompanhando o curso. As validações barram o envio: ano, `.test`,
+  código de área real, alternativo igual ao principal.
+- **As cinco conferências da E14** (seção 11.2 de `navegacao-condicional.md`):
+  - (a) a plataforma **descarta, mas só no envio final**: recusa depois de preencher
+    deixa só CON1, e a resposta **interrompida** guarda campos fora do caminho;
+  - (b) salvar e retomar funciona com participante identificado, com a senha em
+    bcrypt e o IP vazio;
+  - (c) o formulário pede **e-mail opcional**, fixo no tema, **sem configuração**
+    que o desligue;
+  - (d) reabrir o link sem carregar o salvo **cria uma segunda resposta** — a órfã
+    que a E14 previa;
+  - (e) a recusa encerra pelo fim natural e sai **marcada como concluída**, na
+    resposta e no participante. A plataforma contou 13 completas onde havia 10
+    respondentes e 3 recusas.
+- **Achados para a extração:** as colunas de resposta chamam-se `Q<qid>`, e não pelo
+  código; IDA4 sai em decimal; EF4 e CT4 viram subcolunas (`EF4_NEN`, `CT4_RECT`).
+- **Fonte não baixada.** O PDF do Relatório 2 da PAE é servido como download, e não
+  foi baixado sem autorização; as antecessoras vêm do registro da E13.
+- **Não conferido:** preenchimento por uma pessoa — foi conduzido por script, na
+  interface real; outros navegadores e telas pequenas; a janela de 60 dias; e o
+  encerramento da recusa por cota.
 
 ---
 
@@ -725,6 +795,10 @@ Metas 4 e 5 · set–nov/26
   fonte oficial da Anatel**, que nenhum DDD em uso termina em zero, porque a E11
   só pôde conferir em fonte secundária; e parte da base sem via alternativa e
   parte com `email_alternativo`, para exercitar o alerta e o reparo.
+- **Vindo da E15:** cursos e unidades vêm de `infra/instrumento/configuracao/` — o
+  arquivo de entrada leva o **nome**, e o nível tem de ser o do curso na lista. A
+  lista de cursos é **ilustrativa**, treze cursos nos três níveis; a de unidades é
+  a oficial, com as antecessoras. Ano de conclusão de 1909 ao ano corrente.
 
 ### [ ] E17 — Importar a base e ativar a tabela de participantes
 - **Objetivo:** converter o questionário para acesso controlado.
@@ -751,6 +825,11 @@ Metas 4 e 5 · set–nov/26
 - **Vindo da E13:** ativar a regra de coerência entre `curso` e `nivel` do arquivo
   de entrada — a lista de cursos registra o nível —; e a decisão de precedência na
   reimportação passa a cobrir também os cinco atributos corrigidos pelo egresso.
+- **Vindo da E15:** o instrumento é o questionário **202615**, inativo. A sequência
+  que funcionou na cópia de ensaio está em `instrumento.py copia-de-ensaio`: acesso
+  fechado (`access_mode = C`), ativação e tabela de participantes, nessa ordem.
+  **Ativar trava a estrutura** — mudança depois disso é nova versão do instrumento.
+  O questionário não é anônimo, por decisão: a E23 trata a anonimização.
 
 ### [ ] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
@@ -762,6 +841,10 @@ Metas 4 e 5 · set–nov/26
   escolhido; e a correção não move o ciclo em andamento (seção 12.5).
 - **Vindo da E14:** o nível acompanha o curso **na própria página 2**, porque é o
   valor enviado nela que decide o que o Bloco IV exibe.
+- **Vindo da E15:** isso já funciona — IDA2 é equação sobre o prefixo do código do
+  curso, conferida no navegador. O que falta é a tradução: o arquivo de entrada traz
+  **nomes** de curso e de campus, e o instrumento usa **códigos** (`T01`…, a sigla
+  do campus); o pré-preenchimento converte pela `configuracao/`.
 
 ### [ ] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
@@ -791,6 +874,9 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E14:** o lembrete a quem está `em preenchimento` explica como retomar —
   carregar o questionário não finalizado com o nome e a senha escolhidos — e que,
   esquecida a senha, o preenchimento recomeça.
+- **Vindo da E15:** reabrir o link sem carregar o salvo **começa outro
+  preenchimento**, conferido; o lembrete precisa dizer isso. E a recusa consome o
+  convite do ciclo: quem recusou e reabre o link vê "Esse convite já foi utilizado".
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -864,6 +950,10 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E14:** o estado do participante sai de CON1 e da conclusão, e **não**
   só da marca de "concluído" da plataforma — a recusa pode vir marcada como
   concluída; e as recusas interrompem a cadência.
+- **Vindo da E15:** confirmado — a recusa sai com `completed` preenchido no
+  participante e `submitdate` na resposta. E um participante pode ter **duas
+  respostas** no ciclo, a concluída e uma parcial órfã; a rotina não decide pelo
+  número de respostas.
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -883,6 +973,13 @@ Metas 6 e 7 · out–nov/26
   metadados registrados pela plataforma, e não campos.
 - **Vindo da E14:** mudar CON1 para uma das recusas descarta todas as respostas
   daquele preenchimento, e retirar CON2 descarta os recortes de equidade.
+- **Vindo da E15:** o consentimento já é grupo próprio, com CON1 e CON2, e o aviso
+  nativo de política está desligado. Os dois descartes acontecem **no envio final**
+  — conferido. O formulário de salvamento pede **e-mail opcional**, fixo no modelo
+  do tema (`save.twig`), sem configuração: decidir entre derivar o tema e manter o
+  campo, tratando-o na E23. A recusa encerra pelo fim natural e marca o
+  participante como concluído; o encerramento por cota, não testado, é a
+  alternativa se isso atrapalhar.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -925,6 +1022,13 @@ Metas 6 e 7 · out–nov/26
   de qualquer exportação; e a faixa de renda entra na anonimização.
 - **Vindo da E14:** o e-mail do formulário de salvamento, se a plataforma não o
   deixar desativar; e os descartes por mudança de caminho como eventos da trilha.
+- **Vindo da E15:** a plataforma **não** deixa desativar o e-mail do salvamento por
+  configuração; ele vai para `lime_saved_control`, com o nome e a senha em hash, e o
+  registro é apagado na conclusão. Mais grave: o descarte só ocorre no envio final,
+  e a resposta **interrompida** guarda campos fora do caminho — por inferência,
+  também os recortes de equidade de quem retirou CON2 e abandonou. Tratar a parcial
+  com CON2 diferente de "concordo" como portadora de dado sensível sem
+  consentimento.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -962,6 +1066,9 @@ Meta 8 · nov–dez/26
 - **Vindo da E14:** "navegação condicional" é redigido contra os **dez caminhos** de
   `navegacao-condicional.md`; e "retomada de preenchimento" passa a ser salvar,
   fechar e carregar com nome e senha.
+- **Vindo da E15:** a conferência estrutural já existe e é executável —
+  `infra/confere-instrumento.py`, seis conferências — e pode ser o procedimento do
+  requisito de estrutura do instrumento.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -987,6 +1094,10 @@ Meta 8 · nov–dez/26
 - **Vindo da E14:** cada um dos dez caminhos ao menos uma vez; interrupção com e
   sem salvamento; voltar mudando a situação atual; e recusa na primeira página,
   conferindo que ela não conta como resposta.
+- **Vindo da E15:** `infra/instrumento/instrumento.py copia-de-ensaio` monta uma
+  cópia percorrível, e `remover` a desfaz. Duas sessões no mesmo navegador colidem
+  ("código de acesso incompatível"); `&newtest=Y` abre sessão nova. O cenário de
+  interrupção precisa conferir os campos fora do caminho, que a parcial guarda.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -1016,6 +1127,13 @@ Metas 9 e 10 · out–dez/26
 - **Vindo da E14:** denominadores sem as recusas; no máximo uma resposta concluída
   por participante e ciclo; parciais órfãs descartadas; e, se a plataforma guardar
   respostas fora do caminho, a extração reaplica as regras de exibição.
+- **Vindo da E15:** a plataforma **guarda**, nas parciais — reaplicar as regras deixa
+  de ser condicional. As colunas de `lime_responses_<sid>` chamam-se **`Q<qid>`** e
+  `Q<qid>_S<sqid>`, e não pelo código do campo: traduzir por `lime_questions`, ou
+  exportar pela API com cabeçalho por código. IDA4 sai em decimal
+  (`2020.0000000000`). EF4 e CT4 são subcolunas (`EF4_NEN`, `CT4_RECT` = `Y`). E a
+  contagem nativa de completas inclui as recusas: 13 contra 10 respondentes na
+  cópia de ensaio.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1057,6 +1175,12 @@ Metas 9 e 10 · out–dez/26
   **consciente** do modo de ensaio numa implantação real.
 - **Vindo da E13:** a atualização das faixas de rendimento a cada ciclo, com versão,
   porque os valores em reais do Anexo I envelhecem.
+- **Vindo da E15:** a Parte IV do guia parte de `infra/instrumento/README.md` —
+  implantar, conferir, exportar. Numa implantação real, trocar as duas expressões
+  do modo de ensaio (e-mail sob `.test`, código de área terminado em 0) e a lista
+  ilustrativa de cursos. E as seis armadilhas daquele README, que falham sem erro.
+  O `.gitattributes` trata `.lss` como binário: as versões do instrumento não
+  mostram diferença no Git.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1131,3 +1255,4 @@ Uma linha por sessão, mais recente ao final.
 | 28/09/2026 | E12 | E12 concluída: `docs/especificacao/blocos-instrumento.md` com onze blocos — os sete do art. 17 do Regulamento, três de controle (consentimento, identificação acadêmica, contato e manifestações) e um de recortes de equidade. Critério lido como indicador do Anexo I ou objetivo expresso do Regulamento, com origem declarada (ADR-0006). Verificado nas duas direções e por execução: nenhum bloco sem indicador, dezoito dos dezenove indicadores do Anexo I alimentados (o Ind1 é registro institucional) e todos os objetivos de coleta do art. 3º com bloco. Achado: as fórmulas do Anexo I são texto, e três medem outra coisa que a descrição; adotada a descrição. Linha de base corrigida em três pontos. | Nenhuma pendência nova sem dono. **Não relido:** o conteúdo vigente dos blocos → a E13 confirma a leitura do Bloco II. **Ampliadas:** E13 (critério por campo, três distinções do Bloco IV, Ind4, Ind13, setor e localidade, gênero ou sexo; completa a seção 12), E14 (públicos viram regras), E15, E18, E22 (três manifestações, com o consentimento do dado sensível), E23, E24 (adesão voluntária), E25, E28 (calcular pelas descrições), E29 e E31 (tabela de blocos no documento do projeto; divergências do Anexo I ao Comitê Permanente). |
 | 28/09/2026 | E13 | E13 concluída: seção 12 de `blocos-instrumento.md` com 35 campos, cada um com tipo, domínio, obrigatoriedade, consumidor e origem do domínio. Achado: o Relatório 2 da PAE, lido nesta etapa, mostra que o instrumento documentado calcula pouco do Anexo I e que os Blocos I e VII têm conteúdo diferente do nome. Renda por faixas do Anexo I; doze campos sem consumidor fora; questões 29 e 30 no Bloco I. Pré-preenchimento desatualizado: correção preserva o original e não move o ciclo. Critério verificado por execução: 31 campos padronizáveis com domínio fechado e 4 não padronizáveis justificados. | Nenhuma pendência nova sem dono. **Não percorrida:** a versão do instrumento hoje no ar. **Corrigidos:** oito pontos da E12 e a regra `curso`–`nivel` no leiaute da E11. **Ampliadas:** E14 (regras de campo; valor confirmado), E15 (35 campos e configuração versionada), E17 (regra `curso`–`nivel`; precedência dos atributos corrigidos), E18, E22, E23 (texto livre), E25, E26 (trabalho sem remuneração), E28 (composições; Ind4 e Ind13), E30 (faixas por ciclo) e E31 (comunicação ao Comitê; sexo e gênero não equivalentes). |
 | 29/09/2026 | E14 | E14 concluída: `docs/especificacao/navegacao-condicional.md` com as regras de exibição consolidadas, as saídas e os estados, dez caminhos e o diagrama de fluxo. Achado: a recusa, enviada na primeira página, pode sair marcada como concluída — o estado do participante sai de CON1, e não da marca da plataforma. Um bloco por página; voltar com descarte do que sai do caminho; retomada com nome e senha, por decisão do orientando e com o motivo registrado. Verificado por execução: 2.802 combinações, cada uma em exatamente um caminho, e o diagrama renderizado. | Nenhuma pendência nova sem dono. **Não conferido:** nada na plataforma — cinco conferências para a E15. **Ampliadas:** E15 (conferências e dependências dinâmicas), E18, E20 (lembrete explica a retomada), E21 (estado sai de CON1), E22 (descartes na recusa), E23 (e-mail do salvamento; descartes na trilha), E25 (dez caminhos; retomada com senha), E26 (caminhos e recusa) e E28 (denominadores sem recusas; parciais órfãs). |
+| 03/10/2026 | E15 | **Fase 3 encerrada.** E15 concluída: instrumento implantado como questionário 202615 — onze grupos, 35 campos, inativo, para a E17 —, com a exportação da instância versionada em `infra/instrumento/instrumento.lss`. Tudo por linha de comando: gerador, importação pela API e exportação por comando de console próprio, porque a API não exporta. Unidades reais (57 campi e 3 antecessoras), cursos ilustrativos. Dois defeitos meus achados por conferência — Bloco VI sumindo sem `.NAOK` e equação sem chaves — e corrigidos. Conferência estrutural independente do gerador, 6 de 6, testada por mutação. Dez caminhos percorridos no navegador numa cópia descartável; cinco conferências da E14 respondidas. | Nenhuma pendência nova sem dono. **Não conferido:** preenchimento por pessoa, outros navegadores, janela de 60 dias, recusa por cota. **Ampliadas:** E16 (listas e nomes da `configuracao/`), E17 (sid, sequência de ativação, estrutura travada), E18 (nome do arquivo para código do instrumento), E20 (reabrir o link recomeça; recusa consome o convite), E21 (recusa marcada como concluída; duas respostas por participante), E22 (e-mail do salvamento fixo no tema; cota como alternativa), E23 (parcial guarda campos fora do caminho, inclusive dado sensível), E25 (conferência estrutural pronta), E26 (cópia de ensaio; `newtest=Y`), E28 (colunas `Q<qid>`, IDA4 decimal, contagem nativa inclui recusas) e E30 (Parte IV a partir do README; trocar as validações do ensaio e a lista de cursos). |

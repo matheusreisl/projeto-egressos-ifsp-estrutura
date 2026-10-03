@@ -1,0 +1,61 @@
+codigo,nome,situacao
+ARQ,Campus Araraquara,campus
+AVR,Campus Avaré,campus
+BRT,Campus Barretos,campus
+BRU,Campus Bauru,campus
+BRI,Campus Birigui,campus
+BTV,Campus Boituva,campus
+BRA,Campus Bragança Paulista,campus
+CMP,Campus Campinas,campus
+CJO,Campus Campos do Jordão,campus
+CPV,Campus Capivari,campus
+CAR,Campus Caraguatatuba,campus
+CRP,Campus Carapicuíba,campus
+CTD,Campus Catanduva,campus
+CIT,Campus Cidade Tiradentes,campus
+COT,Campus Cotia,campus
+CBT,Campus Cubatão,campus
+DID,Campus Diadema,campus
+FRO,Campus Franco da Rocha,campus
+GJA,Campus Guarujá,campus
+GRU,Campus Guarulhos,campus
+HTO,Campus Hortolândia,campus
+IST,Campus Ilha Solteira,campus
+ITP,Campus Itapetininga,campus
+ITQ,Campus Itaquaquecetuba,campus
+JCR,Campus Jacareí,campus
+JCN,Campus Jaçanã,campus
+JAN,Campus Jardim Ângela,campus
+JND,Campus Jundiaí,campus
+MTO,Campus Matão,campus
+MAU,Campus Mauá,campus
+MRC,Campus Miracatu,campus
+OSA,Campus Osasco,campus
+PRC,Campus Piracicaba,campus
+PTB,Campus Pirituba,campus
+PEP,Campus Presidente Epitácio,campus
+PRU,Campus Presidente Prudente,campus
+RGT,Campus Registro,campus
+RPR,Campus Ribeirão Preto,campus
+RCL,Campus Rio Claro,campus
+SLT,Campus Salto,campus
+SAN,Campus Santos,campus
+SBC,Campus São Bernardo do Campo,campus
+SCL,Campus São Carlos,campus
+SBV,Campus São João da Boa Vista,campus
+SJP,Campus São José do Rio Preto,campus
+SJC,Campus São José dos Campos,campus
+SMP,Campus São Miguel Paulista,campus
+SPO,Campus São Paulo,campus
+SRQ,Campus São Roque,campus
+SVC,Campus São Vicente,campus
+SER,Campus Serrana,campus
+SRT,Campus Sertãozinho,campus
+SOR,Campus Sorocaba,campus
+SMR,Campus Sumaré,campus
+SZN,Campus Suzano,campus
+TUP,Campus Tupã,campus
+VTP,Campus Votuporanga,campus
+EIETS,Escola Industrial de São Paulo e Escola Técnica de São Paulo,antecessora
+ETFSP,Escola Técnica Federal de São Paulo,antecessora
+CEFET,CEFET-SP,antecessora

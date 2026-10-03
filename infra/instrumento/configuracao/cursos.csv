@@ -1,0 +1,14 @@
+codigo,nome,nivel
+T01,Técnico em Informática,tecnico
+T02,Técnico em Mecânica,tecnico
+T03,Técnico em Eletrotécnica,tecnico
+T04,Técnico em Administração,tecnico
+T05,Técnico em Edificações,tecnico
+G01,Tecnologia em Análise e Desenvolvimento de Sistemas,graduacao
+G02,Engenharia de Controle e Automação,graduacao
+G03,Licenciatura em Matemática,graduacao
+G04,Bacharelado em Ciência da Computação,graduacao
+G05,Tecnologia em Gestão de Turismo,graduacao
+P01,Especialização em Gestão Pública,pos_graduacao
+P02,Especialização em Ensino de Ciências e Matemática,pos_graduacao
+P03,Mestrado Profissional em Educação Profissional e Tecnológica,pos_graduacao

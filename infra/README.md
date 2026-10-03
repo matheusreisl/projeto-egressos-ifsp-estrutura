@@ -24,6 +24,8 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `verifica-ambiente.sh` | confere as propriedades do ambiente |
 | `confere-capacidades.py` | confere as capacidades C1 a C10 contra a instância |
 | `confere-envio.py` | confere a integração: a instância dispara, a devolução volta, a regra se aplica |
+| `instrumento/` | a estrutura do questionário: exportação versionada, gerador e configuração (E15) — ver o [README](instrumento/README.md) |
+| `confere-instrumento.py` | confere o instrumento implantado contra a especificação das E13 e E14 |
 
 Os quatro serviços da composição:
 
@@ -377,7 +379,6 @@ mesmo ambiente duas vezes.
 - **Rotina de leitura de devoluções** — decidida na ADR-0004, é rotina própria do
   projeto, e não o recurso nativo do LimeSurvey.
 - **Rotina agendada de lembretes** — entra na E21.
-- **Estrutura do questionário** — exportada e versionada na E15.
 
 ## Regras que valem para tudo o que entrar aqui
 

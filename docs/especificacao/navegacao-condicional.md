@@ -287,7 +287,7 @@ blocos — e não só os blocos. **Critério atendido.**
 1. **Nada foi conferido na plataforma**: a exibição dinâmica na mesma página, o
    descarte do que sai do caminho, o comportamento de "salvar e retomar" com
    participantes identificados e o modo como a recusa encerra o preenchimento. É
-   tudo conferência da E15.
+   tudo conferência da E15. *Atualizado na E15:* conferido — seção 11.
 2. **O texto das telas não é daqui** — nem o do consentimento, nem o da tela de
    salvamento.
 3. **O diagrama simplifica**: interrupção e voltar valem em qualquer ponto e não
@@ -319,3 +319,134 @@ blocos — e não só os blocos. **Critério atendido.**
 - **E28 (extração)** — denominadores sem as recusas; uma resposta concluída por
   participante e ciclo; parciais órfãs descartadas; e, se a plataforma guardar
   respostas fora do caminho, a extração reaplica as regras da seção 3.
+
+## 11. Conferência na plataforma (E15)
+
+**Etapa:** E15 — implementar a estrutura no LimeSurvey
+**Data:** 03/10/2026
+
+A estrutura está implantada no questionário 202615
+([`infra/instrumento/`](../../infra/instrumento/README.md)). As conferências desta
+seção foram feitas numa **cópia descartável** dele — mesmo `.lss`, outro sid, acesso
+fechado, ativada, com participantes sintéticos sob `.test` — e a cópia foi removida
+ao fim, sem tabela remanescente. O instrumento continua inativo e sem participantes,
+para a E17.
+
+**Como se percorreu.** No navegador, pela interface do respondente: as páginas que a
+plataforma serve, as regras de exibição executadas pelo Expression Manager no
+próprio navegador e o envio pelo botão de cada página. O preenchimento de cada
+página foi conduzido por script na própria página, que registrava o bloco exibido e
+os campos visíveis e ocultos antes de avançar. Depois de cada percurso, o registro
+gravado foi lido em `lime_responses_<sid>`.
+
+### 11.1 Os dez caminhos
+
+| Caminho | Respostas que decidem | Blocos exibidos | Gravado |
+|---|---|---|---|
+| C1 | CON1 = não concordo neste ciclo | Consentimento | só CON1 = `RCONS` |
+| C2 | CON1 = não quero mais ser contatado | Consentimento | só CON1 = `RCONT` |
+| C3 | técnico; trabalhando, assalariado com carteira | …, IV completo, V, VII, Equidade, Contato | V preenchido; nada em VI |
+| C4 | graduação; só estudando | …, IV completo, VI, VII, Equidade, Contato | VI preenchido; nada em V nem em SA2 |
+| C5 | pós; estudando e trabalhando, estágio remunerado | …, IV só EF4, V, VII, Equidade, Contato | nada em EF1 a EF3 |
+| C6 | pós; trabalhando, negócio familiar sem remuneração | …, IV só EF4, **VI**, VII, Equidade, Contato | VI preenchido |
+| C7 | técnico; CON2 = não; autônomo; EF1 = não | …, IV completo com EF2 e EF3 ocultos, V, VII, Contato | nada em Equidade |
+| C8 | graduação; CON2 = não; nem trabalhando nem estudando | …, IV completo, VI, VII, Contato | nada em Equidade nem em SA2 |
+| C9 | pós; CON2 = não; microempresário; campus antecessor | …, IV só EF4, V, VII, Contato | IDA3 = `ETFSP` |
+| C10 | pós; CON2 = não; estágio não remunerado | …, IV só EF4, **VI**, VII, Contato | VI preenchido |
+
+"…" é Consentimento, Identificação, I, II e III, exibidos em todos os caminhos com
+consentimento. **Os dez caminhos foram percorridos de ponta a ponta, cada um exibiu
+exatamente os blocos da seção 5, e nenhum registro tem respostas nos Blocos V e VI
+ao mesmo tempo.** C6 e C10 são os casos que a E13 corrigiu: trabalho sem
+remuneração segue para o Bloco VI.
+
+**A exibição dinâmica na mesma página funciona**, como a seção 3.2 exige: CON2
+aparece e some conforme CON1; AP2, conforme AP1; SA2 só com "trabalhando" ou
+"estudando e trabalhando"; EF2 e EF3 somem com EF1 = não; e o nível exibido em IDA2
+acompanha o curso escolhido na própria página 2 — Graduação, Pós-graduação,
+Técnico —, sem envio.
+
+**As validações barram o envio.** Ano de conclusão posterior ao corrente ("a sua
+resposta deve ser entre 1909 e 2026"), e-mail fora de `.test`, telefone com código
+de área real e e-mail alternativo igual ao principal: a página não avança até a
+correção.
+
+**Dois defeitos da implementação foram achados pelo caminho**, e não teriam
+aparecido sem conferência: o Bloco VI sumia para quem só estuda — regra do
+Expression Manager sobre questão oculta —, e o nível derivado gravava o texto da
+fórmula em vez do nível. Ambos corrigidos antes do percurso registrado aqui, e
+descritos em [`infra/instrumento/README.md`](../../infra/instrumento/README.md),
+"Armadilhas encontradas".
+
+### 11.2 As cinco conferências da seção 10
+
+**(a) A plataforma descarta as respostas que saem do caminho? Sim, no envio final.**
+
+- Um respondente preencheu o caminho C3 até o Contato, inclusive os Blocos V e de
+  equidade; voltou, mudou a situação atual para "só estudando", o curso para um de
+  pós-graduação e CON2 para "não concordo", e concluiu. O registro final **não tem**
+  SA2, EF1 a EF3, PM1 a PM3, EQ1 nem EQ2 — todos preenchidos e todos fora do novo
+  caminho.
+- Outro preencheu até o Bloco III, voltou ao consentimento e mudou CON1 para
+  recusa. O registro final tem **só** CON1 = `RCONS`: identificação, avaliação e o
+  texto livre de AF4 foram descartados. É o descarte com peso de conformidade da
+  seção 7.2, e a plataforma o faz sem configuração adicional.
+- **Mas o descarte só acontece no envio final.** Um terceiro foi até o Bloco V,
+  voltou, mudou a situação atual para "nem trabalhando nem estudando" e parou no
+  Bloco IV. O registro parcial perdeu SA2, que estava na página da mudança, mas
+  **guarda PM1 a PM3**, do Bloco V que já não está no caminho. Pela mesma mecânica —
+  inferência, não exercitada diretamente —, quem retirar CON2 e abandonar antes do
+  fim deixa os **recortes de equidade, dado sensível, gravados na resposta
+  parcial.** Consequências: a extração (E28)
+  reaplica as regras da seção 3 às respostas parciais, como a seção 10 já previa
+  para o caso; e a E23 trata a resposta parcial com CON2 = não concordo como
+  portadora de dado sensível sem consentimento.
+
+**(b) Como "salvar e retomar" se comporta com participantes identificados? Como a
+seção 7.3 decidiu.** O botão "Retomar mais tarde" fica no menu do tema. O
+salvamento grava em `lime_saved_control` o nome escolhido, a senha **em hash
+bcrypt** e o passo em que o respondente estava, ligado à resposta parcial; o IP
+fica vazio, porque o registro de IP está desligado. Carregar com nome e senha
+devolve a página em que se parou, com as respostas; a conclusão vai para essa
+resposta, e o registro de salvamento é apagado pela plataforma.
+
+**(c) O formulário de salvamento pede e-mail? Sim, como campo opcional, e não há
+configuração que o desligue.** O campo está fixo no modelo do tema (`save.twig`),
+fora das opções do questionário. Removê-lo exige derivar o tema, o que não se fez
+aqui. No ensaio, salvou-se sem e-mail, e a coluna ficou vazia. Fica para a E22, que
+decide a tela, e para a E23, que trata o dado se o campo permanecer.
+
+**(d) O que acontece quando o endereço é reaberto sem carregar o salvo? A plataforma
+começa outro preenchimento.** Aberto numa sessão nova — como o egresso que volta
+outro dia pelo convite —, o endereço mostra a página 1 vazia, e o primeiro envio
+cria **uma segunda resposta** para o mesmo participante. Concluída a salva, a outra
+ficou parcial e vazia (`lastpage = 0`): é a parcial órfã da seção 7.3, agora
+observada. A regra da seção 7.3 — uma resposta concluída por participante e ciclo,
+e órfãs descartadas na extração — passa de precaução a necessidade. Depois da
+conclusão, o endereço não reabre: "Esse convite já foi utilizado".
+
+**(e) Como a recusa encerra o preenchimento, e com que marca? Pelo fim natural do
+questionário, e marcada como concluída.** Com CON1 diferente de "concordo", nenhum
+grupo seguinte é exibido, e o envio da página 1 leva à página de encerramento. A
+resposta sai com `submitdate` preenchido e o participante sai com `completed`
+preenchido — **indistinguível, pela marca, de uma resposta completa**. Na cópia, a
+plataforma contou **13 respostas completas**; pela regra da seção 4, eram **10
+respondentes e 3 recusas**. É a regra que decide: o estado sai de CON1. E a recusa
+consome o convite do ciclo — quem recusou e muda de ideia não reabre o endereço.
+
+### 11.3 O que esta conferência não permite afirmar
+
+1. **O preenchimento foi conduzido por script**, na interface real, e não por
+   cliques de uma pessoa. O que se afirma é que os caminhos existem e são
+   percorríveis pela interface do respondente; ergonomia e clareza das telas não
+   foram avaliadas, nem poderiam, sem os textos.
+2. **Um navegador só.** O comportamento em telas pequenas e em outros navegadores
+   não foi visto.
+3. **A cópia, e não o instrumento.** O instrumento é o mesmo arquivo, e a
+   conferência estrutural (`infra/confere-instrumento.py`) roda contra ele — 6 de
+   6 —, mas o preenchimento se deu na cópia.
+4. **A janela de 60 dias e a validade do acesso** não foram exercitadas: são da E18
+   e da E21.
+5. **Encerramento da recusa por cota** — que marcaria o participante com estado
+   próprio — não foi testado. É alternativa para a E22, se a marca de concluído
+   atrapalhar a rotina.
