@@ -403,6 +403,17 @@ terminado em zero é bem formado e **não pertence a ninguém**, que é exatamen
 que a base sintética precisa. A regra do ensaio é mais estrita que a da seção 4.7,
 e é a seção 4.7 que a torna possível.
 
+*Atualizado na E16:* **reconferido na fonte oficial**, em 03/10/2026 — o painel
+"CN – Áreas de Numeração" da Anatel, que segue o Plano Geral de Códigos Nacionais
+anexo ao Despacho Decisório nº 20/2026/PRRE/SPR, filtrado pelos códigos vigentes.
+Os 67 códigos em uso são 11 a 19, 21, 22, 24, 27, 28, 31 a 35, 37, 38, 41 a 49,
+51, 53 a 55, 61 a 69, 71, 73 a 75, 77, 79, 81 a 89 e 91 a 99: **nenhum termina em
+zero**, e a busca por `*0` no próprio filtro do painel não encontra
+correspondência. O painel exibe "68" na contagem do filtro, mas o contador soma
+sempre um ao número de valores — conferido em três buscas —, e os valores são 67.
+O plano muda por despacho: a regra precisa ser reconferida se o ensaio for
+retomado depois de nova alteração do PGCN.
+
 **A contenção do ambiente continua sendo a garantia principal.** O caminho do
 correio não tem rota para fora da máquina ([ADR-0002](../decisoes/0002-ambiente-execucao.md),
 [ADR-0004](../decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md)). As regras

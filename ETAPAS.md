@@ -783,7 +783,7 @@ Meta 3 · set–out/26
 ## Fase 4 — Base sintética e acesso rastreável
 Metas 4 e 5 · set–nov/26
 
-### [ ] E16 — Gerar a base sintética
+### [x] E16 — Gerar a base sintética
 - **Objetivo:** produzir a base de validação.
 - **Entregável:** `scripts/gerar_base_sintetica.py` e base de ~500 registros
   distribuídos em 10 anos de conclusão.
@@ -799,6 +799,53 @@ Metas 4 e 5 · set–nov/26
   arquivo de entrada leva o **nome**, e o nível tem de ser o do curso na lista. A
   lista de cursos é **ilustrativa**, treze cursos nos três níveis; a de unidades é
   a oficial, com as antecessoras. Ano de conclusão de 1909 ao ano corrente.
+- **Concluída em:** 03/10/2026 · `scripts/gerar_base_sintetica.py` · base em
+  `dados/sinteticos/base-sintetica.csv`, não versionada. **Fase 4 iniciada.**
+- **DDDs reconferidos na fonte oficial, primeiro.** No painel "CN – Áreas de
+  Numeração" da Anatel (PGCN anexo ao Despacho Decisório nº 20/2026/PRRE/SPR),
+  filtrado pelos vigentes, foram coletados os 67 códigos, um a um: **nenhum
+  termina em zero**, e a busca `*0` no próprio filtro não encontra nada. O painel
+  conta "68", mas o contador soma sempre um — conferido em três buscas. A regra da
+  E11 está confirmada, e a seção 7 do leiaute registra a reconferência.
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - **nomes inventados**, por sílabas, com acentos, partícula, apóstrofo, hífen e
+    abreviatura com ponto, para exercitar a seção 4.2 do leiaute. **Correção de
+    uma afirmação minha:** ao propor a opção, escrevi que nomes inventados "não
+    coincidem com pessoa real nem por acaso", o que é forte demais. Para chegar
+    perto disso, o gerador recusa todo prenome ou sobrenome que coincida com os
+    mais frequentes no Brasil; a coincidência do nome inteiro fica improvável, e
+    não impossível, e é assim que está declarada;
+  - **janela de 2016 a 2025**, dez anos completos.
+- **A base: 500 registros, determinística** — a mesma semente produz o mesmo
+  arquivo, byte a byte, o que dá ao identificador a estabilidade que o leiaute
+  exige. Composição de ensaio, e não estimativa de população:
+  - de 41 a 58 concluintes por ano; 255 técnicos, 202 de graduação e 43 de
+    pós-graduação; os treze cursos e os 57 campi; as antecessoras ficam fora,
+    porque são anteriores a 2008;
+  - e-mail principal em `egressos.test` (436), `invalido.test` (45) e
+    `indisponivel.test` (19) — as três linhas da tabela do P8; dez com domínio em
+    maiúsculas, para exercitar a normalização;
+  - 198 com `email_alternativo`, 21 deles reparando um principal que devolve;
+    271 com telefone; **139 sem via alternativa** (alerta); e **três pares** com o
+    mesmo e-mail principal sob identificadores distintos (alerta, sintoma que a
+    E19 verifica);
+  - identificadores `SIN-000001` a `SIN-000500`.
+- **Critério verificado por conferência independente do gerador**, que
+  reimplementa as regras das seções 3 a 5 e 7 do leiaute: **10 de 10** — leiaute,
+  regras por campo, unicidade e guarda de CPF, endereços só nos três domínios
+  `.test`, telefones só com DDD terminado em 0 e fora dos 67 da Anatel, dez anos,
+  vias alternativas, nomes fora de uma lista de frequentes distinta da do gerador,
+  e determinismo. **A conferência foi testada por mutação** e reprova os sete
+  defeitos plantados: e-mail fora de `.test`, DDD em uso, identificador com forma
+  de CPF, curso incoerente com o nível, identificador repetido com outra caixa,
+  nome com dígito e alternativo igual ao principal. A primeira rodada de mutação
+  "passou" em tudo — a conferência tinha quebrado por uma edição minha e não
+  imprimia nada; o teste passou a exigir saída válida antes de julgar.
+- **A conferência não foi versionada**, de propósito: o validador que barra a
+  importação é entregável da E17, e duas implementações das mesmas regras no
+  repositório divergiriam. O resultado fica registrado aqui.
+- **Não conferido:** como a plataforma recebe os nomes e os tamanhos — é a
+  importação real, na E17.
 
 ### [ ] E17 — Importar a base e ativar a tabela de participantes
 - **Objetivo:** converter o questionário para acesso controlado.
@@ -830,6 +877,14 @@ Metas 4 e 5 · set–nov/26
   fechado (`access_mode = C`), ativação e tabela de participantes, nessa ordem.
   **Ativar trava a estrutura** — mudança depois disso é nova versão do instrumento.
   O questionário não é anônimo, por decisão: a E23 trata a anonimização.
+- **Vindo da E16:** a base é `dados/sinteticos/base-sintetica.csv`, gerada por
+  `python3 scripts/gerar_base_sintetica.py` (semente padrão 2016). Ela deve passar
+  **inteira** no validador desta etapa — nenhum registro rejeitado —, com três
+  tipos de alerta esperados: 139 sem via alternativa, três pares com o mesmo
+  e-mail principal e dez domínios em maiúsculas a normalizar. Se o validador
+  rejeitar algum registro, ou o validador ou o gerador está errado, e a
+  divergência é achado. Nomes têm de 10 a 54 caracteres, com acentos, apóstrofo e
+  hífen — o caso para conferir contra `firstname`.
 
 ### [ ] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
@@ -853,6 +908,9 @@ Metas 4 e 5 · set–nov/26
 - **Vindo da E11:** além de token repetido, verificar identificador repetido,
   identificador igual a algum token e o alerta de endereço principal compartilhado
   por identificadores distintos — sintoma de pessoa duplicada.
+- **Vindo da E16:** a base traz **três pares plantados** com o mesmo e-mail
+  principal sob identificadores distintos. A verificação tem de achar exatamente
+  esses três.
 
 ---
 
@@ -1069,6 +1127,13 @@ Meta 8 · nov–dez/26
 - **Vindo da E15:** a conferência estrutural já existe e é executável —
   `infra/confere-instrumento.py`, seis conferências — e pode ser o procedimento do
   requisito de estrutura do instrumento.
+- **Vindo da E16:** sete defeitos já foram plantados em cópias da base para testar
+  a conferência da E16 — e-mail fora de `.test`, DDD em uso, identificador com
+  forma de CPF, curso incoerente com o nível, identificador repetido com outra
+  caixa, nome com dígito e alternativo igual ao principal. São ponto de partida
+  para os arquivos inválidos de propósito, um por regra; faltam os de arquivo
+  (codificação, separador, cabeçalho, aspas). Identificador com forma de CPF se
+  constrói a partir de base fixa e dígitos calculados, nunca de número real.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1094,6 +1159,10 @@ Meta 8 · nov–dez/26
 - **Vindo da E14:** cada um dos dez caminhos ao menos uma vez; interrupção com e
   sem salvamento; voltar mudando a situação atual; e recusa na primeira página,
   conferindo que ela não conta como resposta.
+- **Vindo da E16:** a base dá os casos do P8 prontos — 45 principais em
+  `invalido.test` (erro permanente), 19 em `indisponivel.test` (erro temporário) e
+  21 principais que devolvem com alternativo entregável, que é o reparo
+  automatizável.
 - **Vindo da E15:** `infra/instrumento/instrumento.py copia-de-ensaio` monta uma
   cópia percorrível, e `remover` a desfaz. Duas sessões no mesmo navegador colidem
   ("código de acesso incompatível"); `&newtest=Y` abre sessão nova. O cenário de
@@ -1256,3 +1325,4 @@ Uma linha por sessão, mais recente ao final.
 | 28/09/2026 | E13 | E13 concluída: seção 12 de `blocos-instrumento.md` com 35 campos, cada um com tipo, domínio, obrigatoriedade, consumidor e origem do domínio. Achado: o Relatório 2 da PAE, lido nesta etapa, mostra que o instrumento documentado calcula pouco do Anexo I e que os Blocos I e VII têm conteúdo diferente do nome. Renda por faixas do Anexo I; doze campos sem consumidor fora; questões 29 e 30 no Bloco I. Pré-preenchimento desatualizado: correção preserva o original e não move o ciclo. Critério verificado por execução: 31 campos padronizáveis com domínio fechado e 4 não padronizáveis justificados. | Nenhuma pendência nova sem dono. **Não percorrida:** a versão do instrumento hoje no ar. **Corrigidos:** oito pontos da E12 e a regra `curso`–`nivel` no leiaute da E11. **Ampliadas:** E14 (regras de campo; valor confirmado), E15 (35 campos e configuração versionada), E17 (regra `curso`–`nivel`; precedência dos atributos corrigidos), E18, E22, E23 (texto livre), E25, E26 (trabalho sem remuneração), E28 (composições; Ind4 e Ind13), E30 (faixas por ciclo) e E31 (comunicação ao Comitê; sexo e gênero não equivalentes). |
 | 29/09/2026 | E14 | E14 concluída: `docs/especificacao/navegacao-condicional.md` com as regras de exibição consolidadas, as saídas e os estados, dez caminhos e o diagrama de fluxo. Achado: a recusa, enviada na primeira página, pode sair marcada como concluída — o estado do participante sai de CON1, e não da marca da plataforma. Um bloco por página; voltar com descarte do que sai do caminho; retomada com nome e senha, por decisão do orientando e com o motivo registrado. Verificado por execução: 2.802 combinações, cada uma em exatamente um caminho, e o diagrama renderizado. | Nenhuma pendência nova sem dono. **Não conferido:** nada na plataforma — cinco conferências para a E15. **Ampliadas:** E15 (conferências e dependências dinâmicas), E18, E20 (lembrete explica a retomada), E21 (estado sai de CON1), E22 (descartes na recusa), E23 (e-mail do salvamento; descartes na trilha), E25 (dez caminhos; retomada com senha), E26 (caminhos e recusa) e E28 (denominadores sem recusas; parciais órfãs). |
 | 03/10/2026 | E15 | **Fase 3 encerrada.** E15 concluída: instrumento implantado como questionário 202615 — onze grupos, 35 campos, inativo, para a E17 —, com a exportação da instância versionada em `infra/instrumento/instrumento.lss`. Tudo por linha de comando: gerador, importação pela API e exportação por comando de console próprio, porque a API não exporta. Unidades reais (57 campi e 3 antecessoras), cursos ilustrativos. Dois defeitos meus achados por conferência — Bloco VI sumindo sem `.NAOK` e equação sem chaves — e corrigidos. Conferência estrutural independente do gerador, 6 de 6, testada por mutação. Dez caminhos percorridos no navegador numa cópia descartável; cinco conferências da E14 respondidas. | Nenhuma pendência nova sem dono. **Não conferido:** preenchimento por pessoa, outros navegadores, janela de 60 dias, recusa por cota. **Ampliadas:** E16 (listas e nomes da `configuracao/`), E17 (sid, sequência de ativação, estrutura travada), E18 (nome do arquivo para código do instrumento), E20 (reabrir o link recomeça; recusa consome o convite), E21 (recusa marcada como concluída; duas respostas por participante), E22 (e-mail do salvamento fixo no tema; cota como alternativa), E23 (parcial guarda campos fora do caminho, inclusive dado sensível), E25 (conferência estrutural pronta), E26 (cópia de ensaio; `newtest=Y`), E28 (colunas `Q<qid>`, IDA4 decimal, contagem nativa inclui recusas) e E30 (Parte IV a partir do README; trocar as validações do ensaio e a lista de cursos). |
+| 03/10/2026 | E16 | **Fase 4 iniciada.** E16 concluída: `scripts/gerar_base_sintetica.py`, determinístico, gera 500 egressos sintéticos de 2016 a 2025 no leiaute da E11, em `dados/sinteticos/`, fora do versionamento. DDDs reconferidos no painel oficial da Anatel: os 67 em uso, nenhum terminado em zero. Nomes inventados, com recusa dos prenomes e sobrenomes frequentes — e correção registrada de uma afirmação minha forte demais sobre coincidência. Endereços nos três domínios do correio de ensaio; vias alternativas, ausência delas e pares compartilhados plantados. Conferência independente, 10 de 10, testada por mutação com sete defeitos, todos reprovados. | Nenhuma pendência nova sem dono. **Não conferido:** a recepção dos nomes e dos tamanhos pela plataforma → E17. **Ampliadas:** E17 (a base tem de passar inteira no validador, com os três alertas esperados), E19 (três pares plantados), E25 (sete defeitos como ponto de partida dos inválidos de propósito) e E26 (casos do P8 já presentes na base). |
