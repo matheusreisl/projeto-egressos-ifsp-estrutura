@@ -14,6 +14,7 @@ log() { printf '[correio] %s\n' "$*"; }
 : "${DOMINIO_INDISPONIVEL:=indisponivel.test}"
 : "${CAIXA_DEVOLUCOES:=devolucoes}"
 : "${CAIXA_ENTREGUES:=entregues}"
+: "${CAIXA_REMETENTE:=acompanhamento}"
 : "${SENHA_CAIXA:?SENHA_CAIXA nao definida}"
 
 # Endereco IP reservado para documentacao (RFC 5737, TEST-NET-1). Nao e
@@ -29,10 +30,13 @@ log "dominio indisponivel : ${DOMINIO_INDISPONIVEL}"
 # 1. Caixas
 # ---------------------------------------------------------------------------
 #
-# Duas caixas locais, e a separacao importa: a rotina de leitura precisa ver
-# SOMENTE devolucoes, sem as mensagens entregues no meio.
+# Tres caixas locais, e a separacao importa: a rotina de leitura precisa ver
+# SOMENTE devolucoes, sem as mensagens entregues no meio; e a resposta humana
+# ao remetente precisa de caixa propria, porque o parametro P7 veda remetente
+# sem retorno monitorado (E20) — sem ela, a resposta cairia junto das
+# mensagens entregues e ninguem a veria.
 
-for caixa in "$CAIXA_DEVOLUCOES" "$CAIXA_ENTREGUES"; do
+for caixa in "$CAIXA_DEVOLUCOES" "$CAIXA_ENTREGUES" "$CAIXA_REMETENTE"; do
     if id "$caixa" >/dev/null 2>&1; then
         log "caixa ${caixa} ja existe"
     else
@@ -52,10 +56,11 @@ done
 log "configurando o Postfix"
 
 # Mapa de reescrita. A ordem importa: a primeira expressao que casar vence.
-# A caixa de devolucoes vem antes do curinga, senao as devolucoes cairiam
-# junto com as mensagens entregues.
+# As caixas de devolucoes e do remetente vem antes do curinga, senao
+# devolucoes e respostas cairiam junto com as mensagens entregues.
 cat > /etc/postfix/reescrita.pcre <<PCRE
 /^${CAIXA_DEVOLUCOES}@${DOMINIO}\$/   ${CAIXA_DEVOLUCOES}
+/^${CAIXA_REMETENTE}@${DOMINIO}\$/   ${CAIXA_REMETENTE}
 /^[^@]+@${DOMINIO}\$/                 ${CAIXA_ENTREGUES}
 PCRE
 

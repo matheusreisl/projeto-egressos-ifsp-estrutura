@@ -282,9 +282,14 @@ Todos sob o TLD reservado `.test` (RFC 2606 / 6761), que não resolve na interne
 pública e não pode colidir com domínio de terceiro. É a segunda camada da mesma
 proteção: a primeira é o serviço não ter rota de saída.
 
-**Duas caixas, e a separação importa.** `devolucoes` recebe as devoluções e
+**Três caixas, e a separação importa.** `devolucoes` recebe as devoluções e
 `entregues` recebe as mensagens entregues. Sem separá-las, a rotina de leitura
-veria mensagens comuns no meio das devoluções.
+veria mensagens comuns no meio das devoluções. `acompanhamento` é a caixa do
+remetente e recebe as respostas humanas ao convite (E20): o parâmetro P7 veda
+remetente sem retorno monitorado, e sem caixa própria a resposta cairia junto das
+mensagens entregues. O remetente das mensagens aos egressos é propriedade do
+questionário, e não do sítio — ver
+[`docs/especificacao/modelos-mensagem.md`](../docs/especificacao/modelos-mensagem.md).
 
 ### Verificando as duas direções
 

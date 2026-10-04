@@ -1050,7 +1050,7 @@ Metas 4 e 5 · set–nov/26
 ## Fase 5 — Automação do contato e conformidade
 Metas 6 e 7 · out–nov/26
 
-### [ ] E20 — Configurar convites e modelos de mensagem
+### [x] E20 — Configurar convites e modelos de mensagem
 - **Objetivo:** preparar o disparo inicial.
 - **Entregável:** modelos de convite e lembrete, com remetente e assunto padronizados.
 - **Conclusão quando:** o convite de teste chegar corretamente formatado.
@@ -1071,6 +1071,50 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E18:** o endereço individual é `…/index.php/202615?token=<token>&lang=pt-BR`,
   e o 202615 já está ativo. O convite pode dizer que a identificação vem preenchida,
   para confirmar ou corrigir.
+- **Concluída em:** 04/10/2026 · `docs/especificacao/modelos-mensagem.md` ·
+  `infra/instrumento/mensagens.py` · subcomando `aplicar-mensagens` · comando de
+  console `completaratributos` · `infra/confere-mensagens.py`.
+- **Modelos como fonte única versionada.** Convite e lembrete, assuntos, remetente
+  e retorno em `mensagens.py`; o gerador os põe no `.lss`, o `aplicar-mensagens` os
+  grava no instrumento ativo e a conferência compara a instância com o arquivo. O
+  `instrumento.lss` foi reexportado. Assuntos estáveis, com a instituição e sem ano;
+  saudação neutra com o nome inteiro; identificação pré-preenchida; “Retomar mais
+  tarde” e “Carregar questionário não finalizado” com os rótulos conferidos na
+  tradução da instância; a contrapartida que o IFSP já anuncia; nenhuma imagem.
+- **Decisão 1** (confirmada com o orientando antes da execução): **o remetente de
+  ensaio deixou de ser `naoresponda@`**, que contrariava o P7 — no-reply vedado,
+  retorno monitorado. Passou a `acompanhamento@egressos.test`, com **caixa própria**
+  no correio (`CORREIO_CAIXA_REMETENTE`), para que a resposta humana não caia entre
+  as entregues. O remetente é **do questionário** (`adminemail`, `bounce_email`),
+  que tem precedência sobre o do sítio — conferido no código —, e por isso vai no
+  `.lss`. Imagem do correio passou a 1.1. Continua tudo sob `.test` (seção 9.1).
+- **Decisão 2** (confirmada com o orientando): **lembrete com dois ramos num modelo
+  só**, por `{if()}` do Expression Manager sobre o 7º atributo,
+  `variante_lembrete`, que a rotina grava antes de cada lembrete — assim o
+  `remind_participants` nativo e seus contadores continuam servindo. É parâmetro do
+  disparo, não estado.
+- **Recusa de contato pela lista de bloqueio da base central**
+  (`{GLOBALOPTOUTURL}`), e não pela recusa só deste questionário (`{OPTOUTURL}`).
+  Abrir o link só mostra a confirmação; a recusa exige POST — conferido no código.
+- **Critério verificado: 9 de 9**, com convite de teste real a um participante
+  sintético do 202615 e limpeza (decisão 3, confirmada: no próprio instrumento, como
+  na E18): remetente, retorno e assunto certos; HTML com alternativa em texto; nome
+  com acentos; nenhum marcador por resolver; endereço de acesso do participante,
+  que abre o termo; endereço de recusa, que abre a confirmação, não confirmada;
+  lembrete com o ramo certo para cada valor; resposta humana na caixa do
+  remetente. Mensagens lidas também renderizadas. Estado final: 500 participantes,
+  nada enviado, nenhuma resposta, nenhum bloqueio.
+- **Duas armadilhas achadas pela primeira execução, que falhou:** acrescentar
+  coluna de atributo a instrumento ativo exige comando de console (a API não o
+  faz) **e esvaziar o cache de esquema da web** — sem isso a API recusa gravar na
+  coluna por até uma hora; e o cache do console é `CDummyCache`, cujo `flush()` não
+  faz nada. A interrupção deixou `sent` e uma resposta parcial, desfeitos à mão; a
+  limpeza da conferência passou a executar cada passo de forma independente.
+- **Achado para a E21:** **abrir o endereço já cria resposta parcial** (`lastpage
+  = 0`), sem responder nada.
+- **Não verificado:** o efeito do bloqueio sobre disparos futuros (E22/E23); prazo
+  de 60 dias, que o texto não promete (E21); a URL pública, que no ensaio é a do
+  hospedeiro (E30).
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -1146,6 +1190,14 @@ Metas 6 e 7 · out–nov/26
   concluída; e as recusas interrompem a cadência.
 - **Vindo da E19:** `infra/confere-participantes.py` pode ser a guarda antes de cada
   disparo — dispara só se as conferências 1 a 7 passarem.
+- **Vindo da E20:** antes de cada lembrete, gravar `variante_lembrete`
+  (`attribute_7`) com `convidado` ou `em_preenchimento`; sem isso o lembrete sai
+  com o ramo de quem não iniciou. Disparar por `remind_participants` com lista
+  explícita de participantes — com `iMinDaysBetween` nulo ele não filtra por
+  intervalo, e a cadência D+*n* fica com a rotina. **Abrir o endereço já cria
+  resposta parcial com `lastpage = 0`**: decidir se isso é acesso iniciado (C3) ou
+  ainda `convidado`. O convite é `invite_participants` com lista explícita; e
+  `confere-mensagens.py` (leitura) serve de guarda junto com a da E19.
 - **Vindo da E18:** a janela de 60 dias da P5 é `validfrom` e `validuntil` do
   participante, ainda não configurados — são desta etapa, por ciclo. A âncora vem
   dos atributos, que a correção do egresso não altera (conferido).
@@ -1186,6 +1238,13 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E17:** o elo da recusa global nativa — o `participant_id` no
   participante do questionário — está gravado, mas a recusa pelo endereço
   individual não foi exercitada, porque exige questionário ativo. Exercitá-la aqui.
+- **Vindo da E20:** a mensagem leva `{GLOBALOPTOUTURL}`, que marca `OptOut` no
+  participante **e** põe na lista de bloqueio da base central (conferido no código,
+  não exercitado — a conferência só abre a confirmação). Exercitar a confirmação e
+  verificar que o bloqueio impede convite e lembrete seguintes, inclusive em outro
+  questionário, e qual configuração global da lista de bloqueio isso exige. O
+  texto hoje indica a revogação como "responder a esta mensagem", que chega à
+  caixa `acompanhamento`; a via definitiva é da E23.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -1427,6 +1486,12 @@ Metas 9 e 10 · out–dez/26
   no **hospedeiro**, porque chama o console da plataforma; explicar por quê. E as
   cinco armadilhas de `importacao-base.md`, seção 8, sobretudo a que apaga a
   recusa pela API.
+- **Vindo da E20:** o remetente institucional entra em `mensagens.py` (remetente,
+  nome e retorno do questionário), com caixa de retorno lida por pessoa; a URL das
+  mensagens é montada pelo host da requisição — configurar a URL pública da
+  instância; lembrete disparado pelo painel sai sem a gravação do ramo; e as duas
+  armadilhas de `modelos-mensagem.md`, seção 5.1 (coluna nova em instrumento ativo
+  e cache de esquema).
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1506,3 +1571,4 @@ Uma linha por sessão, mais recente ao final.
 | 04/10/2026 | E17 | E17 concluída: base persistente decidida na **ADR-0007** — base central do LimeSurvey, contra a opção do RAEG. Validador das seções 3 a 7 do leiaute, importador e três comandos de console; 500 pessoas na base central e 500 participantes no 202615, sem duplicidade, com acesso fechado e ativação adiada para a E18. Desenho corrigido no meio da etapa: a base central cifra nome e e-mail por padrão, e a precedência leria o cifrado — passou a ser feita dentro da plataforma, com todo contato cifrado. Armadilha da API que apagaria a recusa permanente encontrada e evitada. Verificado: idempotência, precedência nos dois sentidos, recusa preservada, 27 de 27 casos do validador, arquivo rejeitado sem efeito. | Nenhuma pendência nova sem dono. **Não conferido:** recusa global nativa em ação, cifragem da tabela do questionário, busca ativa real, retenção. **Ampliadas:** E18 (atributos já em código; ativação é dela), E19 (cifragem determinística; conferir identificador no participante), E21 (correção de contato grava nos dois lugares, na base central só por console), E22 (exercitar a recusa global nativa), E23 (cifrar o questionário, retenção, cifragem determinística), E25 (27 casos; idempotência e recusa preservada) e E30 (dois comandos, no hospedeiro; armadilhas). |
 | 04/10/2026 | E18 | E18 concluída: pré-preenchimento da identificação como estrutura — IDA1, IDA3, IDA4 e IDA5 com padrão no atributo do participante, ligação calculada num lugar só —, caminho completo refeito do zero (implantar, preparar, importar, ativar) e **questionário 202615 ativo**. Conferência estrutural 7 de 7, com a nova sétima falhando antes e passando depois. Três acessos de amostra, um por nível, abriram com os atributos do arquivo de origem; a correção de curso levou o nível junto, ficou na resposta e preservou o original; fila de revisão exercitada pela API; os 500 com atributos válidos; controle de acesso conferido; respostas de teste apagadas. | Nenhuma pendência nova sem dono. **Não conferido:** janela de validade do acesso → E21; fila de revisão como rotina → E28. **Ampliadas:** E19 (verificar sobre o estado reimplantado e ativo), E20 (forma do endereço individual), E21 (`validfrom`/`validuntil` por ciclo) e E28 (fila de revisão e taxa de correção). |
 | 04/10/2026 | E19 | **Fase 4 encerrada.** E19 concluída: conferência só de leitura `infra/confere-participantes.py`, com oito verificações — tokens, identificadores, elo com a base central pelo `participant_id` derivado, e e-mail compartilhado comparado em claro e pelo cifrado determinístico. **8 de 8, critério atendido**; os três grupos de e-mail compartilhado são exatamente os três pares plantados pela E16. "Token inválido" definido e verificado — o contador nativo conta token vazio, o que fecha o ponto aberto da E08. E-mail compartilhado é alerta para revisão humana, sem fusão automática. Conferência testada com quinze defeitos plantados, todos reprovados. | Nenhuma pendência nova sem dono. **Não detectável:** a mesma pessoa sob identificadores e endereços distintos. **Ampliadas:** E21 (conferência como guarda antes do disparo), E23 (procedimento de revisão humana), E25 (procedimento e casos negativos prontos) e E28 (não fundir os grupos na extração). |
+| 04/10/2026 | E20 | **Fase 5 iniciada.** E20 concluída: convite e lembrete em `infra/instrumento/mensagens.py`, fonte única que vai no `.lss` e é aplicada ao 202615 ativo pelo `aplicar-mensagens`. Remetente de ensaio trocado de `naoresponda@` para `acompanhamento@egressos.test`, com caixa própria, porque o P7 veda no-reply — remetente e retorno como propriedades do questionário. Lembrete com dois ramos num modelo só, pelo atributo `variante_lembrete` (7º, acrescentado por comando de console com esvaziamento do cache de esquema da web). Recusa de contato pela lista de bloqueio da base central. Convite de teste real a um participante sintético: **9 de 9**, mensagens lidas renderizadas, estado final limpo. Primeira execução falhou e deixou resíduo, desfeito à mão; limpeza tornada independente por passo. | Nenhuma pendência nova sem dono. **Não verificado:** efeito do bloqueio → E22/E23; prazo de 60 dias → E21; URL pública → E30. **Ampliadas:** E21 (gravar o ramo antes do lembrete; abrir o link cria resposta com `lastpage = 0`), E22 (exercitar `GLOBALOPTOUTURL`), E30 (remetente institucional, URL pública, armadilhas). |

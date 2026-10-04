@@ -23,11 +23,13 @@ de resposta são estrutura e entram completos.
 |---|---|
 | `instrumento.lss` | **a estrutura exportada da instância** — o artefato versionado |
 | `estrutura.py` | a especificação das E12 a E14 transcrita em dados: grupos, campos, domínios, regras de exibição |
+| `mensagens.py` | convite e lembrete, remetente, retorno e assuntos (E20) |
 | `instrumento.py` | gera o `.lss`, implanta, exporta, cria e remove cópias de ensaio, e prepara o acesso controlado (E17) |
 | `comandos/ExportarestruturaCommand.php` | comando de console que exporta o `.lss` |
 | `comandos/PrepararbasecentralCommand.php` | cria os atributos da base central, os de contato cifrados (E17) |
 | `comandos/ImportarbasecentralCommand.php` | grava a importação na base central, decifrando para aplicar a precedência (E17) |
 | `comandos/RegistrarimportacaoCommand.php` | registra cada importação na trilha `egressos_importacoes` (E17) |
+| `comandos/CompletaratributosCommand.php` | acrescenta coluna de atributo do participante a instrumento já ativo e esvazia o cache de esquema (E20) |
 | `configuracao/cursos.csv` | lista de cursos, com o nível de cada um |
 | `configuracao/unidades.csv` | lista de unidades, com as antecessoras |
 | `configuracao/faixas-rendimento.csv` | as cinco faixas do Anexo I |
@@ -120,6 +122,23 @@ fechado ou sem participantes. A ordem completa, do zero, é implantar,
 `preparar-participantes`, a importação (`scripts/importar_base.py`) e `ativar` —
 detalhada em
 [`docs/especificacao/pre-preenchimento.md`](../../docs/especificacao/pre-preenchimento.md).
+
+### Modelos de mensagem (E20)
+
+Convite e lembrete, remetente e retorno estão em `mensagens.py`, e vão no `.lss`
+gerado. Para o instrumento já ativo:
+
+```bash
+python3 instrumento/instrumento.py aplicar-mensagens
+python3 confere-mensagens.py            # só leitura
+python3 confere-mensagens.py --enviar   # convite e lembretes de teste, desfeitos
+```
+
+O lembrete tem dois ramos, escolhidos pelo atributo `variante_lembrete`
+(`attribute_7`), que a rotina grava antes de cada disparo. Num instrumento ativo,
+a coluna é acrescentada pelo comando de console `completaratributos`, que também
+esvazia o cache de esquema da web. Detalhes em
+[`docs/especificacao/modelos-mensagem.md`](../../docs/especificacao/modelos-mensagem.md).
 
 ## Da especificação para a plataforma
 

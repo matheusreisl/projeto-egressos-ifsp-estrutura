@@ -4867,8 +4867,8 @@
    <row>
     <sid><![CDATA[202615]]></sid>
     <gsid><![CDATA[1]]></gsid>
-    <admin/>
-    <adminemail/>
+    <admin><![CDATA[Acompanhamento de Egressos do IFSP (ensaio)]]></admin>
+    <adminemail><![CDATA[acompanhamento@egressos.test]]></adminemail>
     <anonymized><![CDATA[N]]></anonymized>
     <format><![CDATA[G]]></format>
     <savetimings><![CDATA[N]]></savetimings>
@@ -4899,6 +4899,8 @@
     <assessments><![CDATA[N]]></assessments>
     <usecaptcha><![CDATA[N]]></usecaptcha>
     <usetokens><![CDATA[N]]></usetokens>
+    <bounce_email><![CDATA[devolucoes@egressos.test]]></bounce_email>
+    <attributedescriptions><![CDATA[{"attribute_1": {"description": "identificador", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_2": {"description": "curso", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_3": {"description": "nivel", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_4": {"description": "campus", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_5": {"description": "ano_conclusao", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_6": {"description": "semestre_conclusao", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}, "attribute_7": {"description": "variante_lembrete", "mandatory": "N", "encrypted": "N", "show_register": "N", "cpdbmap": ""}}]]></attributedescriptions>
     <tokenlength><![CDATA[15]]></tokenlength>
     <showxquestions><![CDATA[N]]></showxquestions>
     <showgroupinfo><![CDATA[N]]></showgroupinfo>
@@ -4912,8 +4914,8 @@
     <navigationdelay><![CDATA[0]]></navigationdelay>
     <alloweditaftercompletion><![CDATA[N]]></alloweditaftercompletion>
     <tokenencryptionoptions/>
-    <access_mode><![CDATA[O]]></access_mode>
-    <lastmodified><![CDATA[2026-10-04 04:02:43]]></lastmodified>
+    <access_mode><![CDATA[C]]></access_mode>
+    <lastmodified><![CDATA[2026-10-04 04:35:56]]></lastmodified>
    </row>
   </rows>
  </surveys>
@@ -4952,53 +4954,32 @@
    <row>
     <surveyls_survey_id><![CDATA[202615]]></surveyls_survey_id>
     <surveyls_policy_error/>
-    <surveyls_email_invite_subj><![CDATA[Convite para participar de um questionário]]></surveyls_email_invite_subj>
-    <surveyls_email_invite><![CDATA[Caro(a), {FIRSTNAME},<br />
-<br />
-Você foi convidado(a) para participar de uma pesquisa.<br />
-<br />
-A pesquisa se chama:<br />
-"{SURVEYNAME}"<br />
-<br />
-"{SURVEYDESCRIPTION}"<br />
-<br />
-Para participar, clique no link abaixo.<br />
-<br />
-Atenciosamente,<br />
-<br />
-{ADMINNAME} ({ADMINEMAIL})<br />
-<br />
-----------------------------------------------<br />
-Clique aqui para fazer a pesquisa:<br />
-{SURVEYURL}<br />
-<br />
-Se você não deseja participar desta pesquisa e não deseja receber mais convites, por favor clique no seguinte link:<br />
-{OPTOUTURL}<br />
-<br />
-Se você está na lista de bloqueio mas deseja participar desta pesquisa e quer receber convites, por favor, clique no seguinte link:<br />
-{OPTINURL}]]></surveyls_email_invite>
-    <surveyls_email_remind_subj><![CDATA[Lembrete para participar da pesquisa]]></surveyls_email_remind_subj>
-    <surveyls_email_remind><![CDATA[Caro(a) {FIRSTNAME}<br />
-<br />
-Recentemente, nós lhe convidamos para participar de uma pesquisa. Notamos que ela ainda não foi finalizada e desejamos lembrar-lhe que o questionário ainda está disponível caso deseje completá-lo.<br />
-<br />
-O título da pesquisa é:<br />
-"{SURVEYNAME}"<br />
-<br />
-"{SURVEYDESCRIPTION}"<br />
-<br />
-Para participar, por favor utilize o link abaixo.<br />
-<br />
-Atenciosamente,<br />
-<br />
-{ADMINNAME} ({ADMINEMAIL})<br />
-<br />
-----------------------------------------------<br />
-Clique no link para responder o questionário:<br />
-{SURVEYURL}<br />
-<br />
-Se você não deseja participar desta pesquisa e não deseja receber mais convites, por favor clique no seguinte link:<br />
-{OPTOUTURL}]]></surveyls_email_remind>
+    <surveyls_email_invite_subj><![CDATA[IFSP — Acompanhamento de Egressos: convite para o questionário anual]]></surveyls_email_invite_subj>
+    <surveyls_email_invite><![CDATA[<p>Olá, {FIRSTNAME}.</p>
+<p>O Instituto Federal de São Paulo acompanha a trajetória de quem concluiu seus cursos. Convidamos você a responder ao questionário anual de acompanhamento de egressos. As respostas orientam a avaliação dos cursos e o planejamento da instituição.</p>
+<p>Este é o seu endereço de acesso. Ele é individual: por favor, não o repasse a outras pessoas.<br>
+{SURVEYURL}</p>
+<p>Os dados do seu curso, do campus e do ano e semestre de conclusão já vêm preenchidos. Basta confirmá-los ou, se houver erro, corrigi-los.</p>
+<p>A primeira página apresenta o termo de consentimento. Durante o preenchimento, você pode usar a opção “Retomar mais tarde” para salvar o que já respondeu e continuar depois.</p>
+<p>Quem concluiu um curso no IFSP pode também participar das ações que a instituição oferece aos egressos: educação continuada, integração acadêmica e colaboração voluntária.</p>
+<p>Se você não quiser mais receber mensagens do acompanhamento de egressos, use este endereço:<br>
+{GLOBALOPTOUTURL}<br>
+A recusa vale também para os próximos anos. Se mudar de ideia, basta responder a esta mensagem.</p>
+<p>Dúvidas podem ser enviadas em resposta a esta mensagem.</p>
+<p>Programa de Acompanhamento de Egressos<br>
+Instituto Federal de Educação, Ciência e Tecnologia de São Paulo (IFSP)</p>]]></surveyls_email_invite>
+    <surveyls_email_remind_subj><![CDATA[IFSP — Acompanhamento de Egressos: lembrete do questionário anual]]></surveyls_email_remind_subj>
+    <surveyls_email_remind><![CDATA[<p>Olá, {FIRSTNAME}.</p>
+{if(TOKEN:ATTRIBUTE_7 == "em_preenchimento", "<p>Você começou a responder ao questionário anual de acompanhamento de egressos do IFSP, e o preenchimento ainda não foi concluído.</p><p>Para continuar de onde parou, abra o endereço abaixo e use a opção “Carregar questionário não finalizado”, informando o nome e a senha que você escolheu ao salvar. Atenção: abrir o endereço e responder sem carregar o que foi salvo começa um novo preenchimento, desde o início.</p><p>Se você não salvou o preenchimento ou não se lembra da senha, não é possível recuperar as respostas anteriores: basta responder novamente, desde o início.</p>", "<p>Há alguns dias enviamos o convite para o questionário anual de acompanhamento de egressos do IFSP, e ainda não recebemos a sua resposta. A sua participação é importante para a avaliação dos cursos e o planejamento da instituição.</p>")}
+<p>Este é o seu endereço de acesso. Ele é individual: por favor, não o repasse a outras pessoas.<br>
+{SURVEYURL}</p>
+<p>Os dados do seu curso, do campus e do ano e semestre de conclusão já vêm preenchidos. Basta confirmá-los ou, se houver erro, corrigi-los.</p>
+<p>Se você não quiser mais receber mensagens do acompanhamento de egressos, use este endereço:<br>
+{GLOBALOPTOUTURL}<br>
+A recusa vale também para os próximos anos. Se mudar de ideia, basta responder a esta mensagem.</p>
+<p>Dúvidas podem ser enviadas em resposta a esta mensagem.</p>
+<p>Programa de Acompanhamento de Egressos<br>
+Instituto Federal de Educação, Ciência e Tecnologia de São Paulo (IFSP)</p>]]></surveyls_email_remind>
     <surveyls_email_register_subj><![CDATA[Confirmação de inscrição na pesquisa]]></surveyls_email_register_subj>
     <surveyls_email_register><![CDATA[Caro(a) {FIRSTNAME},<br />
 <br />

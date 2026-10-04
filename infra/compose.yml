@@ -100,7 +100,11 @@ services:
       LIMESURVEY_RPC: ${LIMESURVEY_RPC:-json}
       CORREIO_HOST: correio
       CORREIO_PORTA: "25"
-      REMETENTE: naoresponda@${CORREIO_DOMINIO:-egressos.test}
+      # Remetente do sitio (mensagens do sistema). O das mensagens aos egressos
+      # e propriedade do questionario (instrumento.py, E20) e nao depende deste
+      # valor — que, alem disso, so entra no config.php na primeira criacao do
+      # volume.
+      REMETENTE: ${CORREIO_CAIXA_REMETENTE:-acompanhamento}@${CORREIO_DOMINIO:-egressos.test}
       REMETENTE_NOME: ${REMETENTE_NOME:-Acompanhamento de Egressos (ensaio)}
       DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}@${CORREIO_DOMINIO:-egressos.test}
     volumes:
@@ -133,7 +137,7 @@ services:
     build:
       context: ./correio
       dockerfile: Dockerfile
-    image: egressos/correio:1.0
+    image: egressos/correio:1.1
     container_name: egressos-correio
     restart: unless-stopped
     environment:
@@ -142,6 +146,7 @@ services:
       DOMINIO_INDISPONIVEL: ${CORREIO_DOMINIO_INDISPONIVEL:-indisponivel.test}
       CAIXA_DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}
       CAIXA_ENTREGUES: ${CORREIO_CAIXA_ENTREGUES:-entregues}
+      CAIXA_REMETENTE: ${CORREIO_CAIXA_REMETENTE:-acompanhamento}
       SENHA_CAIXA: ${CORREIO_SENHA:?defina CORREIO_SENHA no .env}
     volumes:
       - filas-correio:/var/spool/postfix
@@ -173,6 +178,8 @@ services:
       CORREIO_IMAP_HOST: correio
       CORREIO_IMAP_PORTA: "143"
       CORREIO_CAIXA_DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}
+      CORREIO_CAIXA_ENTREGUES: ${CORREIO_CAIXA_ENTREGUES:-entregues}
+      CORREIO_CAIXA_REMETENTE: ${CORREIO_CAIXA_REMETENTE:-acompanhamento}
       CORREIO_SENHA: ${CORREIO_SENHA:?defina CORREIO_SENHA no .env}
       CORREIO_DOMINIO: ${CORREIO_DOMINIO:-egressos.test}
       LIMESURVEY_URL: http://limesurvey

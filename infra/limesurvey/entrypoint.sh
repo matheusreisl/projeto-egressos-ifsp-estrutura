@@ -48,7 +48,7 @@ log() { printf '[inicializacao] %s\n' "$*"; }
 # restricao, uso indevido de identidade institucional.
 : "${CORREIO_HOST:=correio}"
 : "${CORREIO_PORTA:=25}"
-: "${REMETENTE:=naoresponda@egressos.test}"
+: "${REMETENTE:=acompanhamento@egressos.test}"
 : "${REMETENTE_NOME:=Acompanhamento de Egressos (ensaio)}"
 : "${DEVOLUCOES:=devolucoes@egressos.test}"
 

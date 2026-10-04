@@ -38,8 +38,15 @@ Subcomandos, a partir da pasta infra/:
       ativa o instrumento (E18), depois da preparacao e da importacao. Recusa
       sem acesso fechado ou sem participantes. Depois disto a estrutura trava.
 
+  python3 instrumento/instrumento.py aplicar-mensagens
+      aplica ao instrumento os modelos de convite e lembrete, o remetente e o
+      retorno (E20, instrumento/mensagens.py), e garante a coluna do atributo
+      que escolhe o ramo do lembrete. Funciona com o questionario ativo.
+      Idempotente. Nao envia mensagem.
+
   Ordem completa, do zero: implantar, preparar-participantes, importacao
-  (scripts/importar_base.py) e ativar.
+  (scripts/importar_base.py) e ativar. Os modelos ja vao no .lss; o
+  aplicar-mensagens existe para o instrumento ja ativo.
 
 Requer a composicao de pe e o .env de infra/. Nao envia mensagem alguma e nao
 usa dado de pessoa real: os participantes da copia sao sinteticos e os
@@ -64,6 +71,7 @@ from limesurvey_api import API, ErroAPI  # noqa: E402
 from limesurvey_console import console  # noqa: E402
 
 import estrutura  # noqa: E402
+import mensagens  # noqa: E402
 
 # Sid fixo do instrumento, para que as etapas seguintes possam nomea-lo.
 # A tabela de respostas, quando ativado, sera lime_responses_<SID> — e NAO
@@ -352,11 +360,12 @@ def monta_lss(sid):
                                         "language"], atributos)
     secao(raiz, "surveys", list(CONFIG_QUESTIONARIO) + ["sid"],
           [dict(CONFIG_QUESTIONARIO, sid=sid)])
+    modelos = mensagens.propriedades_de_idioma(numero_da_variante())
     secao(raiz, "surveys_languagesettings",
           ["surveyls_survey_id", "surveyls_language", "surveyls_title",
            "surveyls_description", "surveyls_welcometext", "surveyls_endtext",
-           "surveyls_dateformat", "surveyls_numberformat"],
-          [{"surveyls_survey_id": sid, "surveyls_language": IDIOMA,
+           "surveyls_dateformat", "surveyls_numberformat"] + list(modelos),
+          [{**modelos, "surveyls_survey_id": sid, "surveyls_language": IDIOMA,
             "surveyls_title": "Acompanhamento de Egressos do IFSP — "
                               "instrumento (ensaio)",
             "surveyls_description": "",
@@ -374,8 +383,7 @@ def monta_lss(sid):
 # Configuracoes do questionario. Cada uma tem o motivo no README desta pasta.
 CONFIG_QUESTIONARIO = {
     "gsid": 1,
-    "admin": "",
-    "adminemail": "",
+    **mensagens.propriedades_do_questionario(),  # remetente e retorno (E20)
     "language": IDIOMA,
     "additional_languages": "",
     "template": "fruity_twentythree",
@@ -398,7 +406,7 @@ CONFIG_QUESTIONARIO = {
     "publicgraphs": "N",
     "listpublic": "N",
     "htmlemail": "Y",
-    "sendconfirmation": "N",        # mensagens sao da E20
+    "sendconfirmation": "N",        # sem confirmacao ao respondente (E20)
     "assessments": "N",
     "tokenlength": 15,
     "showxquestions": "N",
@@ -571,6 +579,9 @@ ATRIBUTOS_QUESTIONARIO = [
     ("campus", "sigla da unidade no instrumento (IDA3)"),
     ("ano_conclusao", "ano de conclusão (IDA4)"),
     ("semestre_conclusao", "semestre de conclusão (IDA5)"),
+    # Parametro do disparo, e nao estado: escolhe o ramo do lembrete e e
+    # gravado pela rotina imediatamente antes de cada lembrete (E20, E21).
+    (mensagens.ATRIBUTO_VARIANTE, "ramo do lembrete, gravado a cada disparo"),
 ]
 
 
@@ -582,6 +593,18 @@ def coluna_do_atributo(nome):
     if nome not in nomes:
         raise Erro(f"atributo do participante desconhecido: {nome}")
     return f"attribute_{nomes.index(nome) + 1}"
+
+
+def numero_da_variante():
+    """N de attribute_N do atributo que escolhe o ramo do lembrete."""
+    return coluna_do_atributo(mensagens.ATRIBUTO_VARIANTE).split("_")[1]
+
+
+def descricoes_dos_atributos():
+    return {f"attribute_{i}": {"description": nome, "mandatory": "N",
+                               "encrypted": "N", "show_register": "N",
+                               "cpdbmap": ""}
+            for i, (nome, _) in enumerate(ATRIBUTOS_QUESTIONARIO, start=1)}
 
 
 def cmd_preparar(args):
@@ -611,13 +634,9 @@ def cmd_preparar(args):
         sessao.chamar("activate_tokens", [SID_INSTRUMENTO, list(
             range(1, len(ATRIBUTOS_QUESTIONARIO) + 1))])
         print(f"tabela de participantes do {SID_INSTRUMENTO}: criada ou mantida")
-        descricoes = {
-            f"attribute_{i}": {"description": nome, "mandatory": "N",
-                               "encrypted": "N", "show_register": "N",
-                               "cpdbmap": ""}
-            for i, (nome, _) in enumerate(ATRIBUTOS_QUESTIONARIO, start=1)}
         sessao.chamar("set_survey_properties", [SID_INSTRUMENTO, {
-            "attributedescriptions": json.dumps(descricoes, ensure_ascii=False)}])
+            "attributedescriptions": json.dumps(descricoes_dos_atributos(),
+                                                ensure_ascii=False)}])
         propriedades = sessao.chamar("get_survey_properties", [
             SID_INSTRUMENTO, ["access_mode", "active", "attributedescriptions"]])
     print(f"acesso: {propriedades.get('access_mode')}; ativo: "
@@ -653,6 +672,41 @@ def cmd_ativar(args):
           f"{resumo.get('incomplete_responses')} incompletas")
 
 
+def cmd_mensagens(args):
+    """Aplica ao instrumento os modelos de mensagem, o remetente e o retorno
+    (E20), e garante a coluna do atributo que escolhe o ramo do lembrete.
+    Funciona com o questionario ATIVO: nada disso e estrutura travada pela
+    ativacao — modelos e remetente sao propriedades, e a tabela de
+    participantes recebe coluna nova como o painel faz. Idempotente. Nao
+    envia mensagem alguma."""
+    n = len(ATRIBUTOS_QUESTIONARIO)
+    r = console("completaratributos", SID_INSTRUMENTO, n)
+    if r.returncode != 0:
+        raise Erro(f"atributos do participante: {r.stderr.strip() or r.stdout}")
+    print(r.stdout.strip())
+    with api() as sessao:
+        if not existe(sessao, SID_INSTRUMENTO):
+            raise Erro(f"o questionario {SID_INSTRUMENTO} nao existe")
+        sessao.chamar("set_survey_properties", [SID_INSTRUMENTO, {
+            **mensagens.propriedades_do_questionario(),
+            "attributedescriptions": json.dumps(descricoes_dos_atributos(),
+                                                ensure_ascii=False)}])
+        sessao.chamar("set_language_properties", [
+            SID_INSTRUMENTO, mensagens.propriedades_de_idioma(
+                numero_da_variante()), IDIOMA])
+        props = sessao.chamar("get_survey_properties", [
+            SID_INSTRUMENTO, ["admin", "adminemail", "bounce_email"]])
+        idioma = sessao.chamar("get_language_properties", [
+            SID_INSTRUMENTO, ["surveyls_email_invite_subj",
+                              "surveyls_email_remind_subj"], IDIOMA])
+    print(f"remetente: {props.get('admin')} <{props.get('adminemail')}>; "
+          f"retorno: {props.get('bounce_email')}")
+    print(f"assunto do convite:  {idioma.get('surveyls_email_invite_subj')}")
+    print(f"assunto do lembrete: {idioma.get('surveyls_email_remind_subj')}")
+    print(f"ramo do lembrete: {coluna_do_atributo(mensagens.ATRIBUTO_VARIANTE)}"
+          f" ({mensagens.ATRIBUTO_VARIANTE})")
+
+
 def cmd_remover(args):
     if args.sid == SID_INSTRUMENTO:
         raise Erro("recusado: este e o sid do instrumento, nao de uma copia")
@@ -680,6 +734,8 @@ def main():
     pp.set_defaults(f=cmd_preparar)
     at = sub.add_parser("ativar")
     at.set_defaults(f=cmd_ativar)
+    me = sub.add_parser("aplicar-mensagens")
+    me.set_defaults(f=cmd_mensagens)
     r = sub.add_parser("remover")
     r.add_argument("--sid", type=int, required=True)
     r.set_defaults(f=cmd_remover)

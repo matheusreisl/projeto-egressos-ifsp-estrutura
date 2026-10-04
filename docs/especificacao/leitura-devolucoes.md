@@ -225,6 +225,9 @@ dessas duas coisas ocorre.
   `naoresponda@egressos.test` e o endereço de retorno é
   `devolucoes@egressos.test`. O remetente institucional é especificação de
   implantação real, conforme a seção 9.1 do P8, e não valor de ensaio.
+  *Nota da E20:* o remetente de ensaio passou a ser `acompanhamento@egressos.test`,
+  com caixa própria — `naoresponda` contrariava o P7, que veda remetente sem
+  retorno. Ver [`modelos-mensagem.md`](modelos-mensagem.md), seção 2.
 - **E21 (rotina agendada)** — três coisas. A rotina de leitura de devoluções
   precisa entrar no agendamento, e não só o disparo. A devolução temporária
   **não chega dentro do mesmo disparo que a originou**, de modo que a leitura tem

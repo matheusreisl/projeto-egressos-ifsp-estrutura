@@ -17,4 +17,6 @@ Artefatos técnicos que antecedem a implementação.
   fila de revisão e ativação (E18)
 - `unicidade-participantes.md` — verificação de tokens, identificadores, elo com a
   base central e e-mail compartilhado (E19)
+- `modelos-mensagem.md` — convite e lembrete com dois ramos, remetente, retorno e
+  assunto padronizados, e o convite de teste (E20)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)
