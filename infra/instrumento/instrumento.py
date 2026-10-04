@@ -34,6 +34,13 @@ Subcomandos, a partir da pasta infra/:
       base central, fecha o acesso e cria a tabela de participantes com os
       atributos nomeados. Nao ativa o questionario. Idempotente.
 
+  python3 instrumento/instrumento.py ativar
+      ativa o instrumento (E18), depois da preparacao e da importacao. Recusa
+      sem acesso fechado ou sem participantes. Depois disto a estrutura trava.
+
+  Ordem completa, do zero: implantar, preparar-participantes, importacao
+  (scripts/importar_base.py) e ativar.
+
 Requer a composicao de pe e o .env de infra/. Nao envia mensagem alguma e nao
 usa dado de pessoa real: os participantes da copia sao sinteticos e os
 enderecos estao sob o TLD reservado .test.
@@ -211,7 +218,8 @@ def monta_lss(sid):
     grupos, grupos_l10n = [], []
     questoes, subquestoes, questoes_l10n = [], [], []
     respostas, respostas_l10n, atributos = [], [], []
-    gid = qid = aid = lid = 0
+    padroes, padroes_l10n = [], []
+    gid = qid = aid = lid = dvid = 0
 
     for ordem_g, g in enumerate(estrutura.GRUPOS, start=1):
         gid += 1
@@ -244,6 +252,20 @@ def monta_lss(sid):
             lid += 1
             questoes_l10n.append({"id": lid, "qid": qid, "question": texto,
                                   "help": "", "script": "", "language": IDIOMA})
+
+            if c.get("pre_preenchido"):
+                # Valor padrao = atributo do participante (E18). A plataforma
+                # processa o padrao como expressao e so o aceita se for resposta
+                # valida — o codigo do curso ou da unidade, que a importacao da
+                # E17 ja grava no participante.
+                dvid += 1
+                padroes.append({"dvid": dvid, "qid": qid, "scale_id": 0,
+                                "sqid": 0, "specialtype": ""})
+                lid += 1
+                padroes_l10n.append({
+                    "id": lid, "dvid": dvid, "language": IDIOMA,
+                    "defaultvalue": "{TOKEN:%s}" % coluna_do_atributo(
+                        c["pre_preenchido"]).upper()})
 
             def atributo(nome, valor, idioma=""):
                 atributos.append({"qid": qid, "attribute": nome,
@@ -314,6 +336,10 @@ def monta_lss(sid):
                             "assessment_value", "scale_id"], respostas)
     secao(raiz, "answer_l10ns", ["id", "aid", "answer", "language"],
           respostas_l10n)
+    secao(raiz, "defaultvalues", ["dvid", "qid", "scale_id", "sqid",
+                                  "specialtype"], padroes)
+    secao(raiz, "defaultvalue_l10ns", ["id", "dvid", "language",
+                                       "defaultvalue"], padroes_l10n)
     secao(raiz, "groups", ["gid", "sid", "group_order", "randomization_group",
                            "grelevance"], grupos)
     secao(raiz, "group_l10ns", ["id", "gid", "group_name", "description",
@@ -548,6 +574,16 @@ ATRIBUTOS_QUESTIONARIO = [
 ]
 
 
+def coluna_do_atributo(nome):
+    """attribute_N do participante, pela ordem acima. E o unico lugar que liga
+    o nome do atributo ao numero: a preparacao (E17) cria as colunas nesta
+    ordem, e o pre-preenchimento (E18) as referencia pelo mesmo calculo."""
+    nomes = [n for n, _ in ATRIBUTOS_QUESTIONARIO]
+    if nome not in nomes:
+        raise Erro(f"atributo do participante desconhecido: {nome}")
+    return f"attribute_{nomes.index(nome) + 1}"
+
+
 def cmd_preparar(args):
     """Prepara o acesso controlado do instrumento (E17): atributos da base
     central, acesso fechado e tabela de participantes com atributos nomeados.
@@ -591,6 +627,32 @@ def cmd_preparar(args):
         print(f"  {chave} = {info.get('description')}")
 
 
+def cmd_ativar(args):
+    """Ativa o instrumento (E18): cria a tabela de respostas e abre o acesso
+    por endereco individual. Depois disto a estrutura fica travada — por isso
+    vem por ultimo, depois do pre-preenchimento, da preparacao e da importacao.
+    Recusa se o acesso nao estiver fechado ou se nao houver participantes."""
+    with api() as sessao:
+        atual = existe(sessao, SID_INSTRUMENTO)
+        if not atual:
+            raise Erro(f"o questionario {SID_INSTRUMENTO} nao existe")
+        if atual.get("active") == "Y":
+            print(f"questionario {SID_INSTRUMENTO}: ja ativo")
+            return
+        props = sessao.chamar("get_survey_properties",
+                              [SID_INSTRUMENTO, ["access_mode"]])
+        if props.get("access_mode") != "C":
+            raise Erro("o acesso nao esta fechado — rode preparar-participantes")
+        if not sessao.participantes(SID_INSTRUMENTO, limite=1):
+            raise Erro("o questionario nao tem participantes — importe a base")
+        resposta = sessao.chamar("activate_survey", [SID_INSTRUMENTO])
+        resumo = sessao.chamar("get_summary", [SID_INSTRUMENTO])
+    print(f"questionario {SID_INSTRUMENTO}: ativado ({resposta.get('status')})")
+    print(f"participantes: {resumo.get('token_count')}; respostas: "
+          f"{resumo.get('completed_responses')} completas, "
+          f"{resumo.get('incomplete_responses')} incompletas")
+
+
 def cmd_remover(args):
     if args.sid == SID_INSTRUMENTO:
         raise Erro("recusado: este e o sid do instrumento, nao de uma copia")
@@ -616,6 +678,8 @@ def main():
     c.set_defaults(f=cmd_copia)
     pp = sub.add_parser("preparar-participantes")
     pp.set_defaults(f=cmd_preparar)
+    at = sub.add_parser("ativar")
+    at.set_defaults(f=cmd_ativar)
     r = sub.add_parser("remover")
     r.add_argument("--sid", type=int, required=True)
     r.set_defaults(f=cmd_remover)

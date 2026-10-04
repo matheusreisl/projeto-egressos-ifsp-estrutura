@@ -103,6 +103,24 @@ preparação muda duas propriedades do questionário — o modo de acesso e a de
 dos atributos —, e não a estrutura de grupos e questões; reproduz-se pelo comando,
 e não pelo arquivo.
 
+### Pré-preenchimento e ativação (E18)
+
+IDA1, IDA3, IDA4 e IDA5 têm valor padrão igual ao atributo do participante
+(`{TOKEN:ATTRIBUTE_n}`), declarado em `estrutura.py` pelo campo `pre_preenchido`. O
+número do atributo sai da ordem de `ATRIBUTOS_QUESTIONARIO` — a mesma que a
+preparação usa para criar as colunas —, e a conferência 7 de
+`confere-instrumento.py` verifica a ligação pela descrição de cada atributo.
+
+```bash
+python3 instrumento/instrumento.py ativar
+```
+
+Ativa o instrumento, **por último**: a ativação trava a estrutura. Recusa sem acesso
+fechado ou sem participantes. A ordem completa, do zero, é implantar,
+`preparar-participantes`, a importação (`scripts/importar_base.py`) e `ativar` —
+detalhada em
+[`docs/especificacao/pre-preenchimento.md`](../../docs/especificacao/pre-preenchimento.md).
+
 ## Da especificação para a plataforma
 
 | Tipo da especificação | Tipo da plataforma | Onde |
@@ -232,7 +250,7 @@ Todas falham sem erro aparente.
 `confere-instrumento.py` lê a especificação **direto dos documentos** — a seção 12.3
 de `blocos-instrumento.md` e as seções 2 e 5 de `navegacao-condicional.md` — e não de
 `estrutura.py`, para que um erro de transcrição no gerador apareça como divergência
-em vez de se confirmar a si mesmo. Seis conferências:
+em vez de se confirmar a si mesmo. Sete conferências:
 
 1. os onze grupos, na ordem da E14;
 2. os 35 campos: código, grupo, tipo, obrigatoriedade e domínio, opção por opção
@@ -241,9 +259,13 @@ em vez de se confirmar a si mesmo. Seis conferências:
 4. o nível derivado de cada curso;
 5. as validações de contato contra vinte exemplos;
 6. os dez caminhos, **avaliando as expressões que estão na instância** sobre as
-   2.802 combinações da seção 8 da E14, com a regra do item 1 das armadilhas.
+   2.802 combinações da seção 8 da E14, com a regra do item 1 das armadilhas;
+7. o pré-preenchimento (E18): cada campo da identificação aponta para o atributo
+   do participante que tem o seu nome, derivado do texto da especificação.
 
-**Resultado: 6 de 6.** A conferência foi ela mesma testada por mutação, e reprova
+**Resultado: 6 de 6 na E15; 7 de 7 desde a E18** — a sétima falhou antes da
+reimplantação com os padrões, apontando os quatro que faltavam, e passou depois. A
+conferência foi ela mesma testada por mutação, e reprova
 as cinco versões defeituosas que lhe foram apresentadas: sem `.NAOK` (280
 combinações sem caminho), AP2 sempre exibido (5.042 combinações em vez de 2.802),
 domínio e obrigatoriedade alterados, telefone aceitando código de área real, e

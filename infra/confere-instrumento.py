@@ -18,7 +18,9 @@ O que confere:
   5. as expressoes de validacao de contato contra exemplos validos e invalidos;
   6. os dez caminhos da secao 5 da E14, avaliando as expressoes de exibicao QUE
      ESTAO NA INSTANCIA sobre todas as combinacoes das respostas que decidem o
-     caminho — a mesma enumeracao da secao 8 da E14, que deu 2.802.
+     caminho — a mesma enumeracao da secao 8 da E14, que deu 2.802;
+  7. o pre-preenchimento (E18): cada campo da identificacao aponta para o
+     atributo do participante que tem o seu nome, e o derivado nao tem padrao.
 
 Na avaliacao, reproduz a regra do Expression Manager conferida em
 em_core_helper.php: expressao de exibicao que cita questao OCULTA, sem o sufixo
@@ -35,9 +37,11 @@ Uso, a partir da pasta infra/:
 import argparse
 import csv
 import itertools
+import json
 import os
 import re
 import sys
+import unicodedata
 from collections import Counter
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -95,8 +99,8 @@ def le_campos_especificados():
         if not tabela:
             continue
         for c in linhas_de_tabela(tabela.group(0)):
-            campos.append({"grupo": grupo, "codigo": c[0], "tipo": c[2],
-                           "dominio": c[3], "obrig": c[4]})
+            campos.append({"grupo": grupo, "codigo": c[0], "dado": c[1],
+                           "tipo": c[2], "dominio": c[3], "obrig": c[4]})
     return campos
 
 
@@ -229,7 +233,8 @@ def le_instancia(sessao, sid):
             "gid": int(q["gid"]), "ordem": int(q["question_order"]),
             "obrigatorio": q["mandatory"], "relevancia": q["relevance"] or "1",
             "preg": q["preg"] or "", "opcoes": opcoes, "subq": subq,
-            "atributos": p.get("attributes") or {}}
+            "atributos": p.get("attributes") or {},
+            "padrao": p.get("defaultvalue") or ""}
     return grupos, questoes
 
 
@@ -388,6 +393,42 @@ def confere_validacoes(questoes):
     return erradas
 
 
+def nome_de_campo(dado):
+    """'ano de conclusão' -> 'ano_conclusao': o nome do campo no leiaute (E11),
+    derivado do texto da especificacao, e nao de estrutura.py."""
+    s ="".join(c for c in unicodedata.normalize("NFD", dado)
+                if unicodedata.category(c) != "Mn").lower()
+    return re.sub(r"\s+", "_", s.replace(" de ", " ").strip())
+
+
+def confere_pre_preenchimento(questoes, especificados, descricoes):
+    """Secao 12.3 da E13: os campos da identificacao vem pre-preenchidos com o
+    atributo do participante correspondente; IDA2 e derivado, e nao tem padrao.
+    Confere que cada padrao aponta para a coluna cuja descricao e o campo."""
+    erradas = []
+    if not descricoes:
+        return ["o questionario nao tem descricao de atributos do participante"
+                " — rode instrumento.py preparar-participantes"]
+    coluna_por_nome = {info.get("description"): col.upper()
+                       for col, info in descricoes.items()}
+    for c in especificados:
+        if c["grupo"] != "Identificação acadêmica":
+            continue
+        q = questoes[c["codigo"]]
+        if c["tipo"] == "derivado do curso":
+            if q["padrao"]:
+                erradas.append(f"{c['codigo']}: derivado nao deveria ter padrao")
+            continue
+        esperado = coluna_por_nome.get(nome_de_campo(c["dado"]))
+        if esperado is None:
+            erradas.append(f"{c['codigo']}: nenhum atributo do participante "
+                           f"descrito como {nome_de_campo(c['dado'])!r}")
+        elif q["padrao"].strip() != "{TOKEN:%s}" % esperado:
+            erradas.append(f"{c['codigo']}: padrao {q['padrao']!r}, esperado "
+                           f"{{TOKEN:{esperado}}}")
+    return erradas
+
+
 # Rotulo de bloco usado na tabela de caminhos da E14 -> nome do grupo
 BLOCO_DO_CAMINHO = {
     "Consentimento": "Consentimento",
@@ -542,6 +583,9 @@ def main():
     with API(url=f"http://127.0.0.1:{porta}", usuario=env["ADMIN_USUARIO"],
              senha=env["ADMIN_SENHA"]) as sessao:
         grupos, questoes = le_instancia(sessao, args.sid)
+        descricoes = json.loads(sessao.chamar("get_survey_properties", [
+            args.sid, ["attributedescriptions"]]).get(
+                "attributedescriptions") or "{}")
 
     print(f"Questionario {args.sid}: {len(grupos)} grupos, {len(questoes)} "
           f"campos na instancia; {len(especificados)} campos especificados.\n")
@@ -593,6 +637,10 @@ def main():
         detalhe += f"; {len(problemas)} sem caminho unico, ex.: {problemas[0]}"
     registra(6, "dez caminhos da secao 5 da E14, pelas expressoes da instancia",
              ok, detalhe)
+
+    erradas = confere_pre_preenchimento(questoes, especificados, descricoes)
+    registra(7, "pre-preenchimento da identificacao pelos atributos do "
+             "participante (E18)", not erradas, "; ".join(erradas))
 
     print(f"\n{sum(resultados)} de {len(resultados)} conferencias passaram.")
     return 0 if all(resultados) else 1

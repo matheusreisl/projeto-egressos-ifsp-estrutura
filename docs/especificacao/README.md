@@ -13,4 +13,6 @@ Artefatos técnicos que antecedem a implementação.
   plataforma (E15)
 - `importacao-base.md` — validação prévia, base central, precedência e trilha da
   importação (E17)
+- `pre-preenchimento.md` — acesso por token, pré-preenchimento da identificação,
+  fila de revisão e ativação (E18)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)

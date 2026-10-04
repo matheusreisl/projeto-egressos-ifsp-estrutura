@@ -939,7 +939,7 @@ Metas 4 e 5 · set–nov/26
   cifragem da tabela do questionário, que fica em claro por padrão; a busca ativa
   real; a saída de quem deixa de constar no arquivo (retenção).
 
-### [ ] E18 — Configurar acesso por token e pré-preenchimento
+### [x] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
 - **Entregável:** configuração aplicada e documentada.
 - **Conclusão quando:** um acesso de amostra abrir com os atributos corretos.
@@ -959,6 +959,44 @@ Metas 4 e 5 · set–nov/26
   identificador. **A ativação do questionário é desta etapa**, depois de
   configurar o pré-preenchimento — a E17 só fechou o acesso e criou a tabela de
   participantes, com 500 pessoas.
+- **Concluída em:** 04/10/2026 · `docs/especificacao/pre-preenchimento.md` ·
+  subcomando `ativar` · conferência 7 em `infra/confere-instrumento.py`.
+  **Questionário 202615 ativo.**
+- **Pré-preenchimento como estrutura, e não à mão.** IDA1, IDA3, IDA4 e IDA5 têm
+  valor padrão `{TOKEN:ATTRIBUTE_n}`, declarado em `estrutura.py` (`pre_preenchido`)
+  e com o número do atributo calculado da mesma lista que a preparação da E17 usa
+  para criar as colunas — a ligação vive num lugar só. IDA2 segue derivado do curso,
+  sem padrão.
+- **Conferido no código da plataforma:** o padrão é processado como expressão e só
+  aceito se for resposta válida — funciona nas listas porque o atributo já é o
+  código; e **um atributo inválido abre o campo vazio, sem erro para o
+  respondente**. Por isso a verificação cobriu os 500 participantes, e não só a
+  amostra.
+- **Decisão tomada** (confirmada com o orientando antes da execução): **acesso de
+  amostra no próprio instrumento**, com limpeza depois, e não em cópia.
+- **Caminho completo refeito do zero**, porque padrões são estrutura: implantar
+  (com `--substituir`, que descarta os participantes), preparar, reimportar — 500
+  pessoas reencontradas na base central, 500 participantes novos — e ativar. O
+  `.lss` versionado foi reexportado com os padrões. Nada havia sido enviado.
+- **Critério verificado:**
+  - **conferência estrutural 7 de 7** — a nova sétima deriva do texto da
+    especificação o atributo de cada campo e confere a ligação pela descrição;
+    **falhou antes da reimplantação**, apontando os quatro padrões que faltavam, e
+    passou depois;
+  - **três acessos de amostra**, um por nível, pelo endereço individual: a página 2
+    abriu com curso, nível, campus, ano e semestre **iguais ao arquivo de origem**,
+    traduzidos para código;
+  - **correção:** trocado o curso, o nível acompanhou na hora; a resposta guardou o
+    corrigido, o participante ficou com o original e sem marca de concluído; a fila
+    de revisão — consulta pela API, por código, e não pelas colunas `Q<qid>` —
+    apontou exatamente as duas divergências;
+  - **os 500** com curso e campus entre as opções, ano e semestre válidos e nível
+    coerente;
+  - **controle de acesso:** sem token, pede o código; token inexistente, recusa;
+  - **limpeza:** as três respostas de teste apagadas pela API; estado final com
+    500 participantes, nenhuma resposta, nada enviado.
+- **Não conferido:** a janela de validade do acesso (`validfrom` e `validuntil`,
+  60 dias da P5), que é da E21; a fila de revisão como rotina, que é da E28.
 
 ### [ ] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
@@ -975,6 +1013,9 @@ Metas 4 e 5 · set–nov/26
   sobre ele; no participante do questionário, em claro. O `participant_id` é
   derivado do identificador, o que torna o identificador repetido impossível na
   base central; conferir também no participante (`attribute_1`).
+- **Vindo da E18:** o 202615 foi reimplantado e está **ativo**, com 500
+  participantes e tokens novos, gerados na reimportação; a base central é a mesma
+  da E17. Verificar sobre esse estado.
 
 ---
 
@@ -999,6 +1040,9 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E15:** reabrir o link sem carregar o salvo **começa outro
   preenchimento**, conferido; o lembrete precisa dizer isso. E a recusa consome o
   convite do ciclo: quem recusou e reabre o link vê "Esse convite já foi utilizado".
+- **Vindo da E18:** o endereço individual é `…/index.php/202615?token=<token>&lang=pt-BR`,
+  e o 202615 já está ativo. O convite pode dizer que a identificação vem preenchida,
+  para confirmar ou corrigir.
 
 ### [ ] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
@@ -1072,6 +1116,9 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E14:** o estado do participante sai de CON1 e da conclusão, e **não**
   só da marca de "concluído" da plataforma — a recusa pode vir marcada como
   concluída; e as recusas interrompem a cadência.
+- **Vindo da E18:** a janela de 60 dias da P5 é `validfrom` e `validuntil` do
+  participante, ainda não configurados — são desta etapa, por ciclo. A âncora vem
+  dos atributos, que a correção do egresso não altera (conferido).
 - **Vindo da E17:** a correção de contato por busca ativa precisa gravar nos dois
   lugares — no participante do questionário, pela API, e na base central, onde o
   contato é cifrado, **só por comando de console**, como a importação. A regra de
@@ -1285,6 +1332,11 @@ Metas 9 e 10 · out–dez/26
   (`2020.0000000000`). EF4 e CT4 são subcolunas (`EF4_NEN`, `CT4_RECT` = `Y`). E a
   contagem nativa de completas inclui as recusas: 13 contra 10 respondentes na
   cópia de ensaio.
+- **Vindo da E18:** a **fila de revisão** — respostas com IDA1 a IDA5 diferentes do
+  atributo original do participante — já foi exercitada pela API (exportação por
+  código mais lista de participantes); falta torná-la rotina, com a taxa de
+  correção por atributo como indicador de qualidade da base
+  (`pre-preenchimento.md`, seção 4).
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1414,3 +1466,4 @@ Uma linha por sessão, mais recente ao final.
 | 03/10/2026 | E15 | **Fase 3 encerrada.** E15 concluída: instrumento implantado como questionário 202615 — onze grupos, 35 campos, inativo, para a E17 —, com a exportação da instância versionada em `infra/instrumento/instrumento.lss`. Tudo por linha de comando: gerador, importação pela API e exportação por comando de console próprio, porque a API não exporta. Unidades reais (57 campi e 3 antecessoras), cursos ilustrativos. Dois defeitos meus achados por conferência — Bloco VI sumindo sem `.NAOK` e equação sem chaves — e corrigidos. Conferência estrutural independente do gerador, 6 de 6, testada por mutação. Dez caminhos percorridos no navegador numa cópia descartável; cinco conferências da E14 respondidas. | Nenhuma pendência nova sem dono. **Não conferido:** preenchimento por pessoa, outros navegadores, janela de 60 dias, recusa por cota. **Ampliadas:** E16 (listas e nomes da `configuracao/`), E17 (sid, sequência de ativação, estrutura travada), E18 (nome do arquivo para código do instrumento), E20 (reabrir o link recomeça; recusa consome o convite), E21 (recusa marcada como concluída; duas respostas por participante), E22 (e-mail do salvamento fixo no tema; cota como alternativa), E23 (parcial guarda campos fora do caminho, inclusive dado sensível), E25 (conferência estrutural pronta), E26 (cópia de ensaio; `newtest=Y`), E28 (colunas `Q<qid>`, IDA4 decimal, contagem nativa inclui recusas) e E30 (Parte IV a partir do README; trocar as validações do ensaio e a lista de cursos). |
 | 03/10/2026 | E16 | **Fase 4 iniciada.** E16 concluída: `scripts/gerar_base_sintetica.py`, determinístico, gera 500 egressos sintéticos de 2016 a 2025 no leiaute da E11, em `dados/sinteticos/`, fora do versionamento. DDDs reconferidos no painel oficial da Anatel: os 67 em uso, nenhum terminado em zero. Nomes inventados, com recusa dos prenomes e sobrenomes frequentes — e correção registrada de uma afirmação minha forte demais sobre coincidência. Endereços nos três domínios do correio de ensaio; vias alternativas, ausência delas e pares compartilhados plantados. Conferência independente, 10 de 10, testada por mutação com sete defeitos, todos reprovados. | Nenhuma pendência nova sem dono. **Não conferido:** a recepção dos nomes e dos tamanhos pela plataforma → E17. **Ampliadas:** E17 (a base tem de passar inteira no validador, com os três alertas esperados), E19 (três pares plantados), E25 (sete defeitos como ponto de partida dos inválidos de propósito) e E26 (casos do P8 já presentes na base). |
 | 04/10/2026 | E17 | E17 concluída: base persistente decidida na **ADR-0007** — base central do LimeSurvey, contra a opção do RAEG. Validador das seções 3 a 7 do leiaute, importador e três comandos de console; 500 pessoas na base central e 500 participantes no 202615, sem duplicidade, com acesso fechado e ativação adiada para a E18. Desenho corrigido no meio da etapa: a base central cifra nome e e-mail por padrão, e a precedência leria o cifrado — passou a ser feita dentro da plataforma, com todo contato cifrado. Armadilha da API que apagaria a recusa permanente encontrada e evitada. Verificado: idempotência, precedência nos dois sentidos, recusa preservada, 27 de 27 casos do validador, arquivo rejeitado sem efeito. | Nenhuma pendência nova sem dono. **Não conferido:** recusa global nativa em ação, cifragem da tabela do questionário, busca ativa real, retenção. **Ampliadas:** E18 (atributos já em código; ativação é dela), E19 (cifragem determinística; conferir identificador no participante), E21 (correção de contato grava nos dois lugares, na base central só por console), E22 (exercitar a recusa global nativa), E23 (cifrar o questionário, retenção, cifragem determinística), E25 (27 casos; idempotência e recusa preservada) e E30 (dois comandos, no hospedeiro; armadilhas). |
+| 04/10/2026 | E18 | E18 concluída: pré-preenchimento da identificação como estrutura — IDA1, IDA3, IDA4 e IDA5 com padrão no atributo do participante, ligação calculada num lugar só —, caminho completo refeito do zero (implantar, preparar, importar, ativar) e **questionário 202615 ativo**. Conferência estrutural 7 de 7, com a nova sétima falhando antes e passando depois. Três acessos de amostra, um por nível, abriram com os atributos do arquivo de origem; a correção de curso levou o nível junto, ficou na resposta e preservou o original; fila de revisão exercitada pela API; os 500 com atributos válidos; controle de acesso conferido; respostas de teste apagadas. | Nenhuma pendência nova sem dono. **Não conferido:** janela de validade do acesso → E21; fila de revisão como rotina → E28. **Ampliadas:** E19 (verificar sobre o estado reimplantado e ativo), E20 (forma do endereço individual), E21 (`validfrom`/`validuntil` por ciclo) e E28 (fila de revisão e taxa de correção). |

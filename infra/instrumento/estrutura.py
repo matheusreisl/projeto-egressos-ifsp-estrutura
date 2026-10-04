@@ -115,9 +115,15 @@ GRUPOS = [
         "codigo": "IDA",
         "nome": "Identificação acadêmica",
         "relevancia": CONSENTIU,
+        # Pre-preenchimento (E18): "pre_preenchido" nomeia o atributo do
+        # participante que da o valor inicial. O respondente confirma ou corrige
+        # dentro do dominio; a resposta guarda o confirmado, e o atributo fica com
+        # o original (blocos-instrumento.md, secao 12.5). O numero do atributo
+        # (ATTRIBUTE_n) vem da ordem em instrumento.py, ATRIBUTOS_QUESTIONARIO.
         "campos": [
             {"codigo": "IDA1", "dado": "curso", "tipo": "suspensa",
-             "obrigatorio": True, "opcoes": "config:cursos"},
+             "obrigatorio": True, "opcoes": "config:cursos",
+             "pre_preenchido": "curso"},
             # IDA2 nao se edita: acompanha o curso, na propria pagina
             # (secao 12.3 e E18). O nivel vem do prefixo do codigo do curso,
             # que o gerador confere contra a coluna `nivel` da configuracao.
@@ -132,11 +138,13 @@ GRUPOS = [
                          "if(substr(IDA1, 0, 1) == 'G', 'graduacao', "
                          "if(substr(IDA1, 0, 1) == 'P', 'pos_graduacao', '')))}")},
             {"codigo": "IDA3", "dado": "campus", "tipo": "suspensa",
-             "obrigatorio": True, "opcoes": "config:unidades"},
+             "obrigatorio": True, "opcoes": "config:unidades",
+             "pre_preenchido": "campus"},
             {"codigo": "IDA4", "dado": "ano de conclusão", "tipo": "inteiro",
-             "obrigatorio": True},
+             "obrigatorio": True, "pre_preenchido": "ano_conclusao"},
             {"codigo": "IDA5", "dado": "semestre de conclusão", "tipo": "lista",
-             "obrigatorio": True, "opcoes": [("1", "1"), ("2", "2")]},
+             "obrigatorio": True, "opcoes": [("1", "1"), ("2", "2")],
+             "pre_preenchido": "semestre_conclusao"},
         ],
     },
     {

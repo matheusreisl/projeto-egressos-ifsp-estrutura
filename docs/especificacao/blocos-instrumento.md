@@ -902,7 +902,10 @@ O entregável da E13 pede, expressamente, este comportamento.
    reescreve o registro acadêmico por conta do que o respondente disse — o
    respondente pode errar, e a fonte é o sistema acadêmico. A correção entra na
    fila de revisão; se a extração seguinte trouxer o valor corrigido, a âncora muda
-   então, pela regra da ADR-0005.
+   então, pela regra da ADR-0005. *Atualizado na E18:* implementado e conferido no
+   navegador — o padrão de cada campo é o atributo do participante, a resposta
+   guarda o confirmado e o atributo fica com o original
+   ([`pre-preenchimento.md`](pre-preenchimento.md)).
 6. **A fila de revisão não é estrutura nova.** É a consulta dos registros em que o
    valor confirmado difere do original, por atributo — como a fila de correção de
    contato da E09. O que prevalece numa reimportação é a decisão que a E17 já tem
