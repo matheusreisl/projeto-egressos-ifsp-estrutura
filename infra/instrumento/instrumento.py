@@ -29,6 +29,11 @@ Subcomandos, a partir da pasta infra/:
   python3 instrumento/instrumento.py remover --sid N
       remove uma copia de ensaio. Recusa o sid do instrumento.
 
+  python3 instrumento/instrumento.py preparar-participantes
+      prepara o acesso controlado do instrumento (E17): cria os atributos da
+      base central, fecha o acesso e cria a tabela de participantes com os
+      atributos nomeados. Nao ativa o questionario. Idempotente.
+
 Requer a composicao de pe e o .env de infra/. Nao envia mensagem alguma e nao
 usa dado de pessoa real: os participantes da copia sao sinteticos e os
 enderecos estao sob o TLD reservado .test.
@@ -41,7 +46,6 @@ import json
 import os
 import random
 import re
-import subprocess
 import sys
 import xml.etree.ElementTree as ET
 
@@ -50,6 +54,7 @@ INFRA = os.path.dirname(AQUI)
 sys.path.insert(0, os.path.join(os.path.dirname(INFRA), "scripts"))
 
 from limesurvey_api import API, ErroAPI  # noqa: E402
+from limesurvey_console import console  # noqa: E402
 
 import estrutura  # noqa: E402
 
@@ -59,7 +64,6 @@ import estrutura  # noqa: E402
 SID_INSTRUMENTO = 202615
 IDIOMA = "pt-BR"
 SAIDA_PADRAO = os.path.join(AQUI, "instrumento.lss")
-COMANDO_PHP = os.path.join(AQUI, "comandos", "ExportarestruturaCommand.php")
 
 # Tipo da especificacao -> (tipo da plataforma, tema da questao)
 TIPOS = {
@@ -434,17 +438,7 @@ def importa(sessao, conteudo, sid):
 
 def exporta(sid):
     """Exporta pela funcao interna da plataforma, via console (comandos/)."""
-    destino = "/tmp/egressos-comandos"
-    subprocess.run(["docker", "compose", "exec", "-T", "limesurvey",
-                    "mkdir", "-p", destino], cwd=INFRA, check=True)
-    subprocess.run(["docker", "compose", "cp", COMANDO_PHP,
-                    f"limesurvey:{destino}/"], cwd=INFRA, check=True,
-                   stdout=subprocess.DEVNULL)
-    r = subprocess.run(
-        ["docker", "compose", "exec", "-T", "-e",
-         f"YII_CONSOLE_COMMANDS={destino}", "limesurvey", "php",
-         "application/commands/console.php", "exportarestrutura", str(sid)],
-        cwd=INFRA, capture_output=True, text=True)
+    r = console("exportarestrutura", sid)
     if r.returncode != 0 or not r.stdout.lstrip().startswith("<?xml"):
         raise Erro(f"exportacao falhou: {r.stderr.strip() or r.stdout[:300]}")
     return r.stdout
@@ -527,6 +521,76 @@ def cmd_copia(args):
               f"{sid}?token={p['token']}&lang={IDIOMA}")
 
 
+# Atributos da base central de participantes (E17). Os da origem sao os campos
+# do leiaute alem de nome e e-mail principal, que tem coluna propria; os
+# "_origem" guardam o ultimo valor de contato visto no arquivo, e e com eles que
+# a importacao decide se uma correcao feita pelo mecanismo prevalece
+# (docs/especificacao/importacao-base.md, secao 5). Os de contato sao cifrados,
+# como a plataforma ja cifra nome e e-mail da base central.
+ATRIBUTOS_BASE_CENTRAL = [
+    "identificador", "curso", "nivel", "campus", "ano_conclusao",
+    "semestre_conclusao", "email_alternativo:cifrado", "telefone:cifrado",
+    "email_principal_origem:cifrado", "email_alternativo_origem:cifrado",
+    "telefone_origem:cifrado",
+]
+
+# Atributos do participante do questionario, na ordem attribute_1, 2, ...
+# So o que o questionario usa: o identificador, para reencontro, e os cinco
+# atributos academicos do pre-preenchimento (E18). Via alternativa e telefone
+# ficam so na base central (leiaute, secao 11).
+ATRIBUTOS_QUESTIONARIO = [
+    ("identificador", "identificador da instituição (nunca o token)"),
+    ("curso", "código do curso no instrumento (IDA1)"),
+    ("nivel", "nível do curso (IDA2)"),
+    ("campus", "sigla da unidade no instrumento (IDA3)"),
+    ("ano_conclusao", "ano de conclusão (IDA4)"),
+    ("semestre_conclusao", "semestre de conclusão (IDA5)"),
+]
+
+
+def cmd_preparar(args):
+    """Prepara o acesso controlado do instrumento (E17): atributos da base
+    central, acesso fechado e tabela de participantes com atributos nomeados.
+    Nao ativa o questionario — a ativacao trava a estrutura, e a E18 ainda
+    configura o pre-preenchimento. Idempotente."""
+    r = console("prepararbasecentral", ",".join(ATRIBUTOS_BASE_CENTRAL))
+    if r.returncode != 0:
+        raise Erro(f"atributos da base central: {r.stderr.strip() or r.stdout}")
+    print("base central:")
+    for linha in r.stdout.strip().splitlines():
+        print("  " + linha)
+
+    with api() as sessao:
+        atual = existe(sessao, SID_INSTRUMENTO)
+        if not atual:
+            raise Erro(f"o questionario {SID_INSTRUMENTO} nao existe; implante antes")
+        if atual.get("active") == "Y":
+            raise Erro("o questionario ja esta ativo; a preparacao e anterior a "
+                       "ativacao")
+        sessao.chamar("set_survey_properties",
+                      [SID_INSTRUMENTO, {"access_mode": "C"}])
+        # A API responde "OK" tambem quando a tabela ja existe, e nesse caso
+        # NAO a recria: Token::createTable captura o erro de tabela existente
+        # e segue (conferido na E17). Rodar de novo nao apaga participantes.
+        sessao.chamar("activate_tokens", [SID_INSTRUMENTO, list(
+            range(1, len(ATRIBUTOS_QUESTIONARIO) + 1))])
+        print(f"tabela de participantes do {SID_INSTRUMENTO}: criada ou mantida")
+        descricoes = {
+            f"attribute_{i}": {"description": nome, "mandatory": "N",
+                               "encrypted": "N", "show_register": "N",
+                               "cpdbmap": ""}
+            for i, (nome, _) in enumerate(ATRIBUTOS_QUESTIONARIO, start=1)}
+        sessao.chamar("set_survey_properties", [SID_INSTRUMENTO, {
+            "attributedescriptions": json.dumps(descricoes, ensure_ascii=False)}])
+        propriedades = sessao.chamar("get_survey_properties", [
+            SID_INSTRUMENTO, ["access_mode", "active", "attributedescriptions"]])
+    print(f"acesso: {propriedades.get('access_mode')}; ativo: "
+          f"{propriedades.get('active')}")
+    for chave, info in sorted(json.loads(
+            propriedades.get("attributedescriptions") or "{}").items()):
+        print(f"  {chave} = {info.get('description')}")
+
+
 def cmd_remover(args):
     if args.sid == SID_INSTRUMENTO:
         raise Erro("recusado: este e o sid do instrumento, nao de uma copia")
@@ -550,6 +614,8 @@ def main():
     e.set_defaults(f=cmd_exportar)
     c = sub.add_parser("copia-de-ensaio")
     c.set_defaults(f=cmd_copia)
+    pp = sub.add_parser("preparar-participantes")
+    pp.set_defaults(f=cmd_preparar)
     r = sub.add_parser("remover")
     r.add_argument("--sid", type=int, required=True)
     r.set_defaults(f=cmd_remover)

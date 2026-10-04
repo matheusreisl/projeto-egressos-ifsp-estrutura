@@ -23,8 +23,11 @@ de resposta são estrutura e entram completos.
 |---|---|
 | `instrumento.lss` | **a estrutura exportada da instância** — o artefato versionado |
 | `estrutura.py` | a especificação das E12 a E14 transcrita em dados: grupos, campos, domínios, regras de exibição |
-| `instrumento.py` | gera o `.lss`, implanta, exporta, cria e remove cópias de ensaio |
+| `instrumento.py` | gera o `.lss`, implanta, exporta, cria e remove cópias de ensaio, e prepara o acesso controlado (E17) |
 | `comandos/ExportarestruturaCommand.php` | comando de console que exporta o `.lss` |
+| `comandos/PrepararbasecentralCommand.php` | cria os atributos da base central, os de contato cifrados (E17) |
+| `comandos/ImportarbasecentralCommand.php` | grava a importação na base central, decifrando para aplicar a precedência (E17) |
+| `comandos/RegistrarimportacaoCommand.php` | registra cada importação na trilha `egressos_importacoes` (E17) |
 | `configuracao/cursos.csv` | lista de cursos, com o nível de cada um |
 | `configuracao/unidades.csv` | lista de unidades, com as antecessoras |
 | `configuracao/faixas-rendimento.csv` | as cinco faixas do Anexo I |
@@ -79,6 +82,26 @@ python3 instrumento/instrumento.py remover --sid <sid da cópia>
 A cópia é o mesmo `.lss` com outro sid, com acesso fechado, ativada, e com doze
 participantes sintéticos sob `.test`. O comando imprime os endereços individuais.
 `remover` recusa o sid do instrumento.
+
+### Acesso controlado (E17)
+
+```bash
+python3 instrumento/instrumento.py preparar-participantes
+```
+
+Cria os atributos da base central — os de contato **cifrados**, como a plataforma
+já cifra nome e e-mail —, fecha o acesso do instrumento e cria a sua tabela de
+participantes, com seis atributos nomeados: identificador, curso, nível, campus,
+ano e semestre de conclusão. **Não ativa** o questionário: a ativação trava a
+estrutura, e a E18 ainda configura o pré-preenchimento. Idempotente; recusa trocar
+a marca de cifragem de um atributo que já tem valores. A importação que vem depois
+está em
+[`docs/especificacao/importacao-base.md`](../../docs/especificacao/importacao-base.md).
+
+**O `instrumento.lss` versionado é o de antes da preparação**, com acesso aberto. A
+preparação muda duas propriedades do questionário — o modo de acesso e a descrição
+dos atributos —, e não a estrutura de grupos e questões; reproduz-se pelo comando,
+e não pelo arquivo.
 
 ## Da especificação para a plataforma
 

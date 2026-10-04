@@ -13,14 +13,27 @@ cd infra
 docker compose exec rotinas python3 <script> [argumentos]
 ```
 
+**Exceções, que rodam no hospedeiro**, da raiz do repositório: os que gravam ou
+leem `dados/`, que o contêiner não monta, e os que chamam o console da plataforma
+(`docker compose exec`), que o contêiner não alcança — de propósito, ele não tem
+acesso ao Docker. Estão marcados na tabela.
+
 ## Existentes
 
-| Script | Papel | Etapa |
-|---|---|---|
-| `limesurvey_api.py` | cliente da API RemoteControl, compartilhado pelas rotinas | E09 |
-| `ler_devolucoes.py` | lê a caixa de devoluções, classifica e aplica a regra do P8 | E09 |
-| `verifica_correio.py` | verifica o correio nas duas direções, por SMTP direto | E09 |
-| `gerar_base_sintetica.py` | gera a base sintética de egressos no leiaute da E11 | E16 |
+| Script | Papel | Onde roda | Etapa |
+|---|---|---|---|
+| `limesurvey_api.py` | cliente da API RemoteControl, compartilhado pelas rotinas | — | E09 |
+| `ler_devolucoes.py` | lê a caixa de devoluções, classifica e aplica a regra do P8 | contêiner | E09 |
+| `verifica_correio.py` | verifica o correio nas duas direções, por SMTP direto | contêiner | E09 |
+| `gerar_base_sintetica.py` | gera a base sintética de egressos no leiaute da E11 | hospedeiro | E16 |
+| `valida_entrada.py` | valida o arquivo de entrada contra o leiaute, sem importar | hospedeiro | E17 |
+| `importar_base.py` | valida, grava na base central e no questionário, registra e elimina o arquivo | hospedeiro | E17 |
+| `limesurvey_console.py` | roda os comandos de console próprios no contêiner do LimeSurvey | — | E17 |
+
+A importação está especificada em
+[`docs/especificacao/importacao-base.md`](../docs/especificacao/importacao-base.md),
+e a decisão de manter base persistente, na
+[ADR-0007](../docs/decisoes/0007-base-persistente-de-participantes.md).
 
 A especificação do que `ler_devolucoes.py` implementa está em
 [`docs/especificacao/leitura-devolucoes.md`](../docs/especificacao/leitura-devolucoes.md).

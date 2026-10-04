@@ -496,7 +496,10 @@ campo; nenhum dado sensível; nenhum documento civil. **Critério atendido.**
 1. **Não se conferiu a compatibilidade com as colunas da plataforma.** Os limites
    de tamanho vêm das normas (RFC 5321, E.164) e de decisão do leiaute — o nome
    até 150 caracteres. A conferência contra o esquema da instância não foi feita
-   nesta etapa e passa à E17, em que a importação real a exercita.
+   nesta etapa e passa à E17, em que a importação real a exercita. *Atualizado na
+   E17:* conferida — a base central limita nome a 150 e e-mail a 254, os mesmos
+   limites do leiaute, e a tabela do questionário usa `text`; nenhum campo trunca
+   ([`importacao-base.md`](importacao-base.md), seção 3).
 2. **Não se verificou que o sistema de origem de alguma instituição tenha cada
    campo no formato exigido.** O leiaute especifica o que a extração precisa
    **entregar**, não o que o sistema acadêmico contém — não há acesso a sistema
@@ -560,6 +563,12 @@ E05.
   | `email_principal` | `email` |
   | `curso`, `nivel`, `campus`, `ano_conclusao`, `semestre_conclusao` | atributos do participante, para o pré-preenchimento (C9) |
   | `email_alternativo`, `telefone` | de preferência **só na base central**: o questionário não precisa deles, e o que não está na tabela do questionário não acompanha a exportação das respostas |
+
+  *Atualizado na E17:* verificada, com dois acréscimos — curso e campus vão ao
+  participante do questionário pelo **código** do instrumento, e todo contato da
+  base central fica **cifrado**, como a plataforma já cifra nome e e-mail. A
+  precedência decidida é a da correção até a origem mudar
+  ([`importacao-base.md`](importacao-base.md), seções 3 e 5).
 
 - **E18 (pré-preenchimento)** — os atributos exibidos são os cinco acadêmicos; o
   nome, quando exibido, é o de tratamento.

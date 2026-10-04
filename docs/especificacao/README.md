@@ -9,5 +9,8 @@ Artefatos técnicos que antecedem a implementação.
   de ensaio, classificação do retorno e onde cada estado é gravado (E09)
 - `leiaute-entrada.md` — arquivo que popula a base de participantes (E11)
 - `blocos-instrumento.md` — blocos estruturais e domínios de valores (E12, E13)
-- `navegacao-condicional.md` — regras de navegação (E14)
+- `navegacao-condicional.md` — regras de navegação (E14), com a conferência na
+  plataforma (E15)
+- `importacao-base.md` — validação prévia, base central, precedência e trilha da
+  importação (E17)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)

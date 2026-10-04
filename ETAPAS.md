@@ -847,7 +847,7 @@ Metas 4 e 5 · set–nov/26
 - **Não conferido:** como a plataforma recebe os nomes e os tamanhos — é a
   importação real, na E17.
 
-### [ ] E17 — Importar a base e ativar a tabela de participantes
+### [x] E17 — Importar a base e ativar a tabela de participantes
 - **Objetivo:** converter o questionário para acesso controlado.
 - **Entregável:** base importada; registro do procedimento.
 - **Conclusão quando:** todos os registros forem criados sem duplicidade.
@@ -885,6 +885,59 @@ Metas 4 e 5 · set–nov/26
   rejeitar algum registro, ou o validador ou o gerador está errado, e a
   divergência é achado. Nomes têm de 10 a 54 caracteres, com acentos, apóstrofo e
   hífen — o caso para conferir contra `firstname`.
+- **Concluída em:** 04/10/2026 · **ADR-0007** · `docs/especificacao/importacao-base.md`
+  · `scripts/valida_entrada.py`, `scripts/importar_base.py`,
+  `scripts/limesurvey_console.py` · três comandos de console em
+  `infra/instrumento/comandos/` · subcomando `preparar-participantes`.
+- **Base persistente decidida e registrada (ADR-0007).** Base central de
+  participantes do LimeSurvey, uma pessoa por identificador, contra a opção do RAEG
+  de não manter base fixa. A necessidade lida como "guardar o mínimo, protegido, e
+  eliminar o que cumpriu o papel", e não como "não guardar".
+- **Decisões tomadas** (confirmadas com o orientando antes da execução):
+  - **precedência de contato: prevalece a correção até a origem mudar** — guarda-se
+    o último valor visto na origem; arquivo igual mantém a correção, arquivo
+    diferente prevalece e a substituição vai para a trilha. Nome e acadêmicos:
+    origem (E13). Recusa: nunca tocada;
+  - **ativação adiada para depois da E18**: esta etapa fecha o acesso e cria a
+    tabela de participantes — o acesso controlado —, e a E18 ativa depois de
+    configurar o pré-preenchimento, porque ativar trava a estrutura;
+  - **código do instrumento no participante do questionário** (curso `T01`, campus
+    `SPO`) e o nome na base central — a tradução que a E15 deixara para a E18.
+- **O desenho mudou no meio da etapa, porque a instância o desmentiu.** A primeira
+  versão rodava no `rotinas`, gravava pela API e lia o estado por SQL. A primeira
+  carga funcionou — e a conferência mostrou que **a base central cifra nome,
+  sobrenome e e-mail por padrão**. A precedência leria o e-mail cifrado e, na
+  reimportação, regravaria o cifrado para ser cifrado de novo: corrupção do
+  contato. E os atributos de contato tinham sido criados em claro, ao lado de um
+  e-mail cifrado. **Corrigido:** todo contato da base central cifrado, e a
+  comparação feita num comando de console, com os modelos da plataforma, sem a
+  chave sair do contêiner; a importação passou a rodar no hospedeiro. A carga da
+  primeira versão foi apagada por SQL, como limpeza pontual de ensaio; a preparação
+  recusou trocar a cifragem com os dados presentes, como deve.
+- **Armadilhas encontradas**, todas silenciosas: a atualização da API
+  (`cpd_importParticipants`) **grava `blacklisted = 'N'`** quando o campo não vem —
+  apagaria a recusa permanente; a base central é cifrada por padrão; no console, a
+  decifração exige importar o Expression Manager (abortou a importação #2, que
+  ficou na trilha com o arquivo mantido); `activate_tokens` responde "OK" também
+  quando a tabela já existe, sem recriá-la; e a cifragem da plataforma é
+  **determinística**, o que revela igualdade.
+- **Tamanhos conferidos** contra a plataforma, que a E11 deixara em aberto: a base
+  central limita nome a 150 e e-mail a 254 — os mesmos limites do leiaute — e o
+  questionário usa `text`. Nenhum campo trunca.
+- **Elo com a base central:** `participant_id` derivado do identificador (UUID v5),
+  gravado no participante do questionário — o elo que a recusa global nativa usa.
+  `lime_survey_links` não é populada, e nenhuma etapa depende dela.
+- **Critério verificado por execução, com a trilha registrando cada passo (#1 a
+  #9):** 500 pessoas e 500 participantes, sem duplicidade de `participant_id`,
+  token ou identificador; **reimportação idempotente**, com os participantes
+  idênticos byte a byte — o que prova também a decifração; **precedência** nos dois
+  sentidos, com correção simulada por comando de teste não versionado; **recusa
+  preservada** e pessoa recusada não recolocada; **validador: 27 de 27** casos
+  plantados com o desfecho esperado, sem vazar dado no relatório; arquivo
+  rejeitado sem efeito na instância, registrado e eliminado.
+- **Não conferido:** a recusa global nativa em ação (exige questionário ativo); a
+  cifragem da tabela do questionário, que fica em claro por padrão; a busca ativa
+  real; a saída de quem deixa de constar no arquivo (retenção).
 
 ### [ ] E18 — Configurar acesso por token e pré-preenchimento
 - **Objetivo:** endereço individual por participante, com atributos pré-carregados.
@@ -900,6 +953,12 @@ Metas 4 e 5 · set–nov/26
   curso, conferida no navegador. O que falta é a tradução: o arquivo de entrada traz
   **nomes** de curso e de campus, e o instrumento usa **códigos** (`T01`…, a sigla
   do campus); o pré-preenchimento converte pela `configuracao/`.
+- **Vindo da E17:** a tradução já está feita — o participante do 202615 tem
+  `attribute_2` com o código de IDA1 e `attribute_4` com o de IDA3; `attribute_3`,
+  `attribute_5` e `attribute_6` são nível, ano e semestre; `attribute_1` é o
+  identificador. **A ativação do questionário é desta etapa**, depois de
+  configurar o pré-preenchimento — a E17 só fechou o acesso e criou a tabela de
+  participantes, com 500 pessoas.
 
 ### [ ] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
@@ -911,6 +970,11 @@ Metas 4 e 5 · set–nov/26
 - **Vindo da E16:** a base traz **três pares plantados** com o mesmo e-mail
   principal sob identificadores distintos. A verificação tem de achar exatamente
   esses três.
+- **Vindo da E17:** na base central o e-mail é **cifrado de forma determinística**
+  — os três pares aparecem como o mesmo cifrado, e a comparação pode ser feita
+  sobre ele; no participante do questionário, em claro. O `participant_id` é
+  derivado do identificador, o que torna o identificador repetido impossível na
+  base central; conferir também no participante (`attribute_1`).
 
 ---
 
@@ -1008,6 +1072,10 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E14:** o estado do participante sai de CON1 e da conclusão, e **não**
   só da marca de "concluído" da plataforma — a recusa pode vir marcada como
   concluída; e as recusas interrompem a cadência.
+- **Vindo da E17:** a correção de contato por busca ativa precisa gravar nos dois
+  lugares — no participante do questionário, pela API, e na base central, onde o
+  contato é cifrado, **só por comando de console**, como a importação. A regra de
+  precedência da E17 lê o contato atual da base central.
 - **Vindo da E15:** confirmado — a recusa sai com `completed` preenchido no
   participante e `submitdate` na resposta. E um participante pode ter **duas
   respostas** no ciclo, a concluída e uma parcial órfã; a rotina não decide pelo
@@ -1038,6 +1106,9 @@ Metas 6 e 7 · out–nov/26
   campo, tratando-o na E23. A recusa encerra pelo fim natural e marca o
   participante como concluído; o encerramento por cota, não testado, é a
   alternativa se isso atrapalhar.
+- **Vindo da E17:** o elo da recusa global nativa — o `participant_id` no
+  participante do questionário — está gravado, mas a recusa pelo endereço
+  individual não foi exercitada, porque exige questionário ativo. Exercitá-la aqui.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -1087,6 +1158,13 @@ Metas 6 e 7 · out–nov/26
   também os recortes de equidade de quem retirou CON2 e abandonou. Tratar a parcial
   com CON2 diferente de "concordo" como portadora de dado sensível sem
   consentimento.
+- **Vindo da E17:** a base central cifra nome, e-mail e contatos, mas a tabela do
+  questionário fica **em claro** por padrão — decidir a cifragem dos participantes
+  do questionário. Declarar que a cifragem da plataforma é **determinística**.
+  Definir a **retenção** da base central, que agora é persistente (ADR-0007), e o
+  que acontece com quem deixa de constar no arquivo. A trilha
+  `egressos_importacoes` é insumo de auditoria, e a recusa nunca é tocada pela
+  importação — conferido.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -1134,6 +1212,10 @@ Meta 8 · nov–dez/26
   para os arquivos inválidos de propósito, um por regra; faltam os de arquivo
   (codificação, separador, cabeçalho, aspas). Identificador com forma de CPF se
   constrói a partir de base fixa e dígitos calculados, nunca de número real.
+- **Vindo da E17:** os de arquivo já foram exercitados — **27 casos** contra
+  `valida_entrada.py`, um por regra de rejeição e de alerta (importacao-base.md,
+  seção 9.2). E dois requisitos verificáveis novos: a reimportação idempotente e a
+  recusa preservada na reimportação.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1250,6 +1332,11 @@ Metas 9 e 10 · out–dez/26
   ilustrativa de cursos. E as seis armadilhas daquele README, que falham sem erro.
   O `.gitattributes` trata `.lss` como binário: as versões do instrumento não
   mostram diferença no Git.
+- **Vindo da E17:** a carga é de dois comandos — `instrumento.py
+  preparar-participantes`, uma vez, e `importar_base.py`, a cada arquivo —, e roda
+  no **hospedeiro**, porque chama o console da plataforma; explicar por quê. E as
+  cinco armadilhas de `importacao-base.md`, seção 8, sobretudo a que apaga a
+  recusa pela API.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1326,3 +1413,4 @@ Uma linha por sessão, mais recente ao final.
 | 29/09/2026 | E14 | E14 concluída: `docs/especificacao/navegacao-condicional.md` com as regras de exibição consolidadas, as saídas e os estados, dez caminhos e o diagrama de fluxo. Achado: a recusa, enviada na primeira página, pode sair marcada como concluída — o estado do participante sai de CON1, e não da marca da plataforma. Um bloco por página; voltar com descarte do que sai do caminho; retomada com nome e senha, por decisão do orientando e com o motivo registrado. Verificado por execução: 2.802 combinações, cada uma em exatamente um caminho, e o diagrama renderizado. | Nenhuma pendência nova sem dono. **Não conferido:** nada na plataforma — cinco conferências para a E15. **Ampliadas:** E15 (conferências e dependências dinâmicas), E18, E20 (lembrete explica a retomada), E21 (estado sai de CON1), E22 (descartes na recusa), E23 (e-mail do salvamento; descartes na trilha), E25 (dez caminhos; retomada com senha), E26 (caminhos e recusa) e E28 (denominadores sem recusas; parciais órfãs). |
 | 03/10/2026 | E15 | **Fase 3 encerrada.** E15 concluída: instrumento implantado como questionário 202615 — onze grupos, 35 campos, inativo, para a E17 —, com a exportação da instância versionada em `infra/instrumento/instrumento.lss`. Tudo por linha de comando: gerador, importação pela API e exportação por comando de console próprio, porque a API não exporta. Unidades reais (57 campi e 3 antecessoras), cursos ilustrativos. Dois defeitos meus achados por conferência — Bloco VI sumindo sem `.NAOK` e equação sem chaves — e corrigidos. Conferência estrutural independente do gerador, 6 de 6, testada por mutação. Dez caminhos percorridos no navegador numa cópia descartável; cinco conferências da E14 respondidas. | Nenhuma pendência nova sem dono. **Não conferido:** preenchimento por pessoa, outros navegadores, janela de 60 dias, recusa por cota. **Ampliadas:** E16 (listas e nomes da `configuracao/`), E17 (sid, sequência de ativação, estrutura travada), E18 (nome do arquivo para código do instrumento), E20 (reabrir o link recomeça; recusa consome o convite), E21 (recusa marcada como concluída; duas respostas por participante), E22 (e-mail do salvamento fixo no tema; cota como alternativa), E23 (parcial guarda campos fora do caminho, inclusive dado sensível), E25 (conferência estrutural pronta), E26 (cópia de ensaio; `newtest=Y`), E28 (colunas `Q<qid>`, IDA4 decimal, contagem nativa inclui recusas) e E30 (Parte IV a partir do README; trocar as validações do ensaio e a lista de cursos). |
 | 03/10/2026 | E16 | **Fase 4 iniciada.** E16 concluída: `scripts/gerar_base_sintetica.py`, determinístico, gera 500 egressos sintéticos de 2016 a 2025 no leiaute da E11, em `dados/sinteticos/`, fora do versionamento. DDDs reconferidos no painel oficial da Anatel: os 67 em uso, nenhum terminado em zero. Nomes inventados, com recusa dos prenomes e sobrenomes frequentes — e correção registrada de uma afirmação minha forte demais sobre coincidência. Endereços nos três domínios do correio de ensaio; vias alternativas, ausência delas e pares compartilhados plantados. Conferência independente, 10 de 10, testada por mutação com sete defeitos, todos reprovados. | Nenhuma pendência nova sem dono. **Não conferido:** a recepção dos nomes e dos tamanhos pela plataforma → E17. **Ampliadas:** E17 (a base tem de passar inteira no validador, com os três alertas esperados), E19 (três pares plantados), E25 (sete defeitos como ponto de partida dos inválidos de propósito) e E26 (casos do P8 já presentes na base). |
+| 04/10/2026 | E17 | E17 concluída: base persistente decidida na **ADR-0007** — base central do LimeSurvey, contra a opção do RAEG. Validador das seções 3 a 7 do leiaute, importador e três comandos de console; 500 pessoas na base central e 500 participantes no 202615, sem duplicidade, com acesso fechado e ativação adiada para a E18. Desenho corrigido no meio da etapa: a base central cifra nome e e-mail por padrão, e a precedência leria o cifrado — passou a ser feita dentro da plataforma, com todo contato cifrado. Armadilha da API que apagaria a recusa permanente encontrada e evitada. Verificado: idempotência, precedência nos dois sentidos, recusa preservada, 27 de 27 casos do validador, arquivo rejeitado sem efeito. | Nenhuma pendência nova sem dono. **Não conferido:** recusa global nativa em ação, cifragem da tabela do questionário, busca ativa real, retenção. **Ampliadas:** E18 (atributos já em código; ativação é dela), E19 (cifragem determinística; conferir identificador no participante), E21 (correção de contato grava nos dois lugares, na base central só por console), E22 (exercitar a recusa global nativa), E23 (cifrar o questionário, retenção, cifragem determinística), E25 (27 casos; idempotência e recusa preservada) e E30 (dois comandos, no hospedeiro; armadilhas). |
