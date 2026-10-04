@@ -998,7 +998,7 @@ Metas 4 e 5 · set–nov/26
 - **Não conferido:** a janela de validade do acesso (`validfrom` e `validuntil`,
   60 dias da P5), que é da E21; a fila de revisão como rotina, que é da E28.
 
-### [ ] E19 — Validar unicidade e deduplicação
+### [x] E19 — Validar unicidade e deduplicação
 - **Objetivo:** garantir integridade da base de participantes.
 - **Entregável:** registro da verificação.
 - **Conclusão quando:** nenhum token repetido ou inválido for encontrado.
@@ -1016,6 +1016,34 @@ Metas 4 e 5 · set–nov/26
 - **Vindo da E18:** o 202615 foi reimplantado e está **ativo**, com 500
   participantes e tokens novos, gerados na reimportação; a base central é a mesma
   da E17. Verificar sobre esse estado.
+- **Concluída em:** 04/10/2026 · `docs/especificacao/unicidade-participantes.md` ·
+  `infra/confere-participantes.py`. **Fase 4 encerrada.**
+- **Decisão tomada** (confirmada com o orientando antes da execução): e-mail
+  principal compartilhado por identificadores distintos é **alerta para revisão
+  humana**, listado pelos identificadores, e o mecanismo **não funde pessoas** —
+  endereço compartilhado existe de verdade, e a fusão automática juntaria duas
+  pessoas reais quando errasse.
+- **"Token inválido" ganhou definição verificada, em três sentidos:** o da
+  plataforma — o contador `token_invalid` conta token **nulo ou vazio**, conferido
+  no código, o que fecha o ponto que a E08 deixou aberto e mostra que a suposição
+  registrada lá (validade ou usos) estava errada —; a forma (15 caracteres
+  alfanuméricos); e a confusão (tokens que só diferem na caixa, token igual a
+  identificador).
+- **Conferência só de leitura, reexecutável**, com oito verificações: tokens
+  presentes, bem formados e únicos, inclusive sem caixa; identificador presente,
+  único e diferente de todo token; `participant_id` único, presente na base central
+  e igual ao UUID v5 do identificador, recalculado de forma independente; base
+  central íntegra e coberta pelo questionário; e os grupos de e-mail compartilhado
+  **iguais no questionário, em claro, e na base central, pelo cifrado
+  determinístico**.
+- **Critério atendido: 8 de 8.** Nenhum token repetido ou inválido. Os três grupos
+  de e-mail compartilhado são **exatamente os três pares plantados pela E16**,
+  recalculados do gerador.
+- **A conferência foi testada por mutação:** quinze defeitos plantados numa cópia
+  em memória dos dados reais, sem tocar o banco, e os quinze reprovados pela
+  verificação certa.
+- **Não detectável, e declarado:** a mesma pessoa sob identificadores **e**
+  endereços distintos — exigiria heurística sobre nome, que o leiaute não sustenta.
 
 ---
 
@@ -1116,6 +1144,8 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E14:** o estado do participante sai de CON1 e da conclusão, e **não**
   só da marca de "concluído" da plataforma — a recusa pode vir marcada como
   concluída; e as recusas interrompem a cadência.
+- **Vindo da E19:** `infra/confere-participantes.py` pode ser a guarda antes de cada
+  disparo — dispara só se as conferências 1 a 7 passarem.
 - **Vindo da E18:** a janela de 60 dias da P5 é `validfrom` e `validuntil` do
   participante, ainda não configurados — são desta etapa, por ciclo. A âncora vem
   dos atributos, que a correção do egresso não altera (conferido).
@@ -1212,6 +1242,9 @@ Metas 6 e 7 · out–nov/26
   que acontece com quem deixa de constar no arquivo. A trilha
   `egressos_importacoes` é insumo de auditoria, e a recusa nunca é tocada pela
   importação — conferido.
+- **Vindo da E19:** descrever a **revisão humana** dos grupos de e-mail
+  compartilhado — quem revisa, e que a pessoa de fato duplicada se corrige na
+  origem, e não no mecanismo.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -1263,6 +1296,9 @@ Meta 8 · nov–dez/26
   `valida_entrada.py`, um por regra de rejeição e de alerta (importacao-base.md,
   seção 9.2). E dois requisitos verificáveis novos: a reimportação idempotente e a
   recusa preservada na reimportação.
+- **Vindo da E19:** o requisito de unicidade tem procedimento pronto —
+  `confere-participantes.py`, mais os quinze defeitos do teste de mutação como casos
+  negativos (`unicidade-participantes.md`, seção 5.1).
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1337,6 +1373,8 @@ Metas 9 e 10 · out–dez/26
   código mais lista de participantes); falta torná-la rotina, com a taxa de
   correção por atributo como indicador de qualidade da base
   (`pre-preenchimento.md`, seção 4).
+- **Vindo da E19:** os grupos de e-mail compartilhado são candidatos a pessoa
+  duplicada, e **não** devem ser fundidos na extração.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1467,3 +1505,4 @@ Uma linha por sessão, mais recente ao final.
 | 03/10/2026 | E16 | **Fase 4 iniciada.** E16 concluída: `scripts/gerar_base_sintetica.py`, determinístico, gera 500 egressos sintéticos de 2016 a 2025 no leiaute da E11, em `dados/sinteticos/`, fora do versionamento. DDDs reconferidos no painel oficial da Anatel: os 67 em uso, nenhum terminado em zero. Nomes inventados, com recusa dos prenomes e sobrenomes frequentes — e correção registrada de uma afirmação minha forte demais sobre coincidência. Endereços nos três domínios do correio de ensaio; vias alternativas, ausência delas e pares compartilhados plantados. Conferência independente, 10 de 10, testada por mutação com sete defeitos, todos reprovados. | Nenhuma pendência nova sem dono. **Não conferido:** a recepção dos nomes e dos tamanhos pela plataforma → E17. **Ampliadas:** E17 (a base tem de passar inteira no validador, com os três alertas esperados), E19 (três pares plantados), E25 (sete defeitos como ponto de partida dos inválidos de propósito) e E26 (casos do P8 já presentes na base). |
 | 04/10/2026 | E17 | E17 concluída: base persistente decidida na **ADR-0007** — base central do LimeSurvey, contra a opção do RAEG. Validador das seções 3 a 7 do leiaute, importador e três comandos de console; 500 pessoas na base central e 500 participantes no 202615, sem duplicidade, com acesso fechado e ativação adiada para a E18. Desenho corrigido no meio da etapa: a base central cifra nome e e-mail por padrão, e a precedência leria o cifrado — passou a ser feita dentro da plataforma, com todo contato cifrado. Armadilha da API que apagaria a recusa permanente encontrada e evitada. Verificado: idempotência, precedência nos dois sentidos, recusa preservada, 27 de 27 casos do validador, arquivo rejeitado sem efeito. | Nenhuma pendência nova sem dono. **Não conferido:** recusa global nativa em ação, cifragem da tabela do questionário, busca ativa real, retenção. **Ampliadas:** E18 (atributos já em código; ativação é dela), E19 (cifragem determinística; conferir identificador no participante), E21 (correção de contato grava nos dois lugares, na base central só por console), E22 (exercitar a recusa global nativa), E23 (cifrar o questionário, retenção, cifragem determinística), E25 (27 casos; idempotência e recusa preservada) e E30 (dois comandos, no hospedeiro; armadilhas). |
 | 04/10/2026 | E18 | E18 concluída: pré-preenchimento da identificação como estrutura — IDA1, IDA3, IDA4 e IDA5 com padrão no atributo do participante, ligação calculada num lugar só —, caminho completo refeito do zero (implantar, preparar, importar, ativar) e **questionário 202615 ativo**. Conferência estrutural 7 de 7, com a nova sétima falhando antes e passando depois. Três acessos de amostra, um por nível, abriram com os atributos do arquivo de origem; a correção de curso levou o nível junto, ficou na resposta e preservou o original; fila de revisão exercitada pela API; os 500 com atributos válidos; controle de acesso conferido; respostas de teste apagadas. | Nenhuma pendência nova sem dono. **Não conferido:** janela de validade do acesso → E21; fila de revisão como rotina → E28. **Ampliadas:** E19 (verificar sobre o estado reimplantado e ativo), E20 (forma do endereço individual), E21 (`validfrom`/`validuntil` por ciclo) e E28 (fila de revisão e taxa de correção). |
+| 04/10/2026 | E19 | **Fase 4 encerrada.** E19 concluída: conferência só de leitura `infra/confere-participantes.py`, com oito verificações — tokens, identificadores, elo com a base central pelo `participant_id` derivado, e e-mail compartilhado comparado em claro e pelo cifrado determinístico. **8 de 8, critério atendido**; os três grupos de e-mail compartilhado são exatamente os três pares plantados pela E16. "Token inválido" definido e verificado — o contador nativo conta token vazio, o que fecha o ponto aberto da E08. E-mail compartilhado é alerta para revisão humana, sem fusão automática. Conferência testada com quinze defeitos plantados, todos reprovados. | Nenhuma pendência nova sem dono. **Não detectável:** a mesma pessoa sob identificadores e endereços distintos. **Ampliadas:** E21 (conferência como guarda antes do disparo), E23 (procedimento de revisão humana), E25 (procedimento e casos negativos prontos) e E28 (não fundir os grupos na extração). |

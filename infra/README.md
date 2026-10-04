@@ -26,6 +26,7 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `confere-envio.py` | confere a integração: a instância dispara, a devolução volta, a regra se aplica |
 | `instrumento/` | a estrutura do questionário: exportação versionada, gerador e configuração (E15) — ver o [README](instrumento/README.md) |
 | `confere-instrumento.py` | confere o instrumento implantado contra a especificação das E13 e E14 |
+| `confere-participantes.py` | confere a unicidade dos tokens e identificadores e o elo com a base central (E19) |
 
 Os quatro serviços da composição:
 

@@ -174,7 +174,11 @@ não moveu o contador `token_invalid`. Não se determinou o que o move — prov�
 que seja validade temporal ou usos restantes, e não estado de entrega. Quem
 depende disso é a E09, e é lá que precisa ser resolvido: **não usar
 `token_invalid` como indicador de contato inválido sem antes verificar o que ele
-conta.**
+conta.** *Resolvido na E19:* conferido no código (`Token::summary`), o contador
+conta participantes com token **nulo ou vazio** — participante sem endereço
+individual. Nem validade temporal, nem usos restantes, nem estado de entrega: a
+suposição registrada acima estava errada, e a precaução estava certa
+([`unicidade-participantes.md`](unicidade-participantes.md), seção 3).
 
 ### C9 — atributos por participante · atende
 

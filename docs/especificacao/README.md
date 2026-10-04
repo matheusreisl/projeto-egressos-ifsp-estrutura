@@ -15,4 +15,6 @@ Artefatos técnicos que antecedem a implementação.
   importação (E17)
 - `pre-preenchimento.md` — acesso por token, pré-preenchimento da identificação,
   fila de revisão e ativação (E18)
+- `unicidade-participantes.md` — verificação de tokens, identificadores, elo com a
+  base central e e-mail compartilhado (E19)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)
