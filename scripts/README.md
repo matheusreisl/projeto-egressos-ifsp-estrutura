@@ -29,6 +29,10 @@ acesso ao Docker. Estão marcados na tabela.
 | `valida_entrada.py` | valida o arquivo de entrada contra o leiaute, sem importar | hospedeiro | E17 |
 | `importar_base.py` | valida, grava na base central e no questionário, registra e elimina o arquivo | hospedeiro | E17 |
 | `limesurvey_console.py` | roda os comandos de console próprios no contêiner do LimeSurvey | — | E17 |
+| `conferencia_participantes.py` | as conferências de unicidade e integridade da E19, usadas no hospedeiro e como guarda do disparo | — | E19, E21 |
+| `cadencia.py` | lógica pura da cadência: estado de cada participante e o que vence, sem falar com nada | — | E21 |
+| `disparar.py` | rotina de disparo: guarda, estado, convites e lembretes, registro próprio | contêiner | E21 |
+| `agendador.py` | processo principal do contêiner: disparo no horário fixo e devoluções a intervalos | contêiner | E21 |
 
 A importação está especificada em
 [`docs/especificacao/importacao-base.md`](../docs/especificacao/importacao-base.md),
@@ -37,6 +41,14 @@ e a decisão de manter base persistente, na
 
 A especificação do que `ler_devolucoes.py` implementa está em
 [`docs/especificacao/leitura-devolucoes.md`](../docs/especificacao/leitura-devolucoes.md).
+
+A rotina agendada — `cadencia.py`, `disparar.py` e `agendador.py` — está
+especificada em
+[`docs/especificacao/rotina-disparo.md`](../docs/especificacao/rotina-disparo.md);
+o procedimento de operação, em [`infra/README.md`](../infra/README.md), seção
+"Rotina agendada". A cadência fica separada do disparo de propósito: é lógica pura,
+conferida com casos construídos sem esperar dias de calendário
+(`infra/confere-rotina.py`).
 
 ### A base sintética
 
@@ -74,7 +86,7 @@ endereço nem telefone. O arquivo não é versionado; o que se versiona é o scr
 
 ## Previstos
 
-- rotina agendada de convites e lembretes (E21)
+- operação de reparo de contato, nos dois lugares (E26)
 - extração de resultados via API do LimeSurvey (E28)
 
 ## Regras
@@ -86,4 +98,5 @@ endereço nem telefone. O arquivo não é versionado; o que se versiona é o scr
 - **Nenhuma credencial no código.** Tudo por variável de ambiente, definida no
   `.env` da composição, que não é versionado.
 - **Dependência só quando a biblioteca padrão não resolve.** Hoje há uma:
-  `PyMySQL`, para a tabela própria de registro de devoluções.
+  `PyMySQL`, para as tabelas próprias de registro — devoluções (E09), execuções e
+  envios (E21). O agendador é laço da biblioteca padrão, sem `cron`.

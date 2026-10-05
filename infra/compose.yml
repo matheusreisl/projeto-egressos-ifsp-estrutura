@@ -164,17 +164,36 @@ services:
   # Os scripts sao montados a partir de scripts/, no repositorio, em modo
   # somente leitura. A imagem nao carrega copia dos scripts, para que nao haja
   # duas versoes do mesmo arquivo.
+  #
+  # Desde a E21 o processo principal e o agendador (scripts/agendador.py), com
+  # a agenda versionada em rotinas/configuracao/. Ver infra/README.md, secao
+  # "Rotina agendada", e a ADR-0008.
   rotinas:
     build:
       context: ./rotinas
       dockerfile: Dockerfile
-    image: egressos/rotinas:1.0
+    image: egressos/rotinas:1.1
     container_name: egressos-rotinas
     restart: unless-stopped
     depends_on:
       correio:
         condition: service_started
+      # Na subida pela composicao. Depois de um reinicio do hospedeiro o Docker
+      # religa os conteineres sem esta ordem — por isso o agendador tambem
+      # insiste no banco e na plataforma antes de desistir.
+      banco:
+        condition: service_healthy
+      limesurvey:
+        condition: service_healthy
     environment:
+      # Rotina de disparo (E21). `simulado` calcula e registra o plano sem
+      # enviar; `real` envia. Questionario e ano do ciclo corrente.
+      ROTINA_DISPARO: ${ROTINA_DISPARO:-simulado}
+      ROTINA_QUESTIONARIO: ${ROTINA_QUESTIONARIO:?defina ROTINA_QUESTIONARIO no .env}
+      ROTINA_CICLO: ${ROTINA_CICLO:?defina ROTINA_CICLO no .env}
+      # So para a verificacao: sobrescreve o horario da agenda.
+      ROTINA_HORARIO: ${ROTINA_HORARIO:-}
+      ROTINA_AGENDA: /configuracao/agenda.json
       CORREIO_IMAP_HOST: correio
       CORREIO_IMAP_PORTA: "143"
       CORREIO_CAIXA_DEVOLUCOES: ${CORREIO_CAIXA_DEVOLUCOES:-devolucoes}
@@ -193,6 +212,7 @@ services:
       BANCO_PREFIXO: lime_
     volumes:
       - ../scripts:/rotinas:ro
+      - ./rotinas/configuracao:/configuracao:ro
     networks:
       - interna
 

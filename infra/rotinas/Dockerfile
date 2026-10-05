@@ -16,8 +16,10 @@
 # repositorio. Assim se editam e versionam sem reconstruir imagem, e a imagem
 # nao carrega copia que possa divergir do que esta versionado.
 #
-# A E21 substitui o comando desta imagem pelo agendador. Ate lá ela fica de pe,
-# ociosa, servindo de ponto de execucao.
+# Desde a E21, o processo principal e o agendador (scripts/agendador.py): dispara
+# convites e lembretes no horario fixo da agenda e le devolucoes a intervalos,
+# separadamente. A agenda vem de infra/rotinas/configuracao/, montada em
+# /configuracao. O conteiner continua servindo de ponto de execucao manual.
 
 FROM python:3.13-slim@sha256:7c61056e61ac89e852de05f3dc6fa51a6dd2181797bceed46aa725dd7cb2cd3b
 
@@ -52,4 +54,9 @@ ENV TZ=America/Sao_Paulo \
 
 WORKDIR /rotinas
 
-CMD ["sleep", "infinity"]
+# Verificacao de saude: o agendador grava o batimento a cada passo de 20 s. Sem
+# batimento recente, o laco travou — o que o processo vivo nao revelaria.
+HEALTHCHECK --interval=60s --timeout=5s --start-period=60s --retries=3 \
+    CMD python3 -c "import os,sys,time; sys.exit(0 if time.time()-os.path.getmtime('/tmp/agendador-vivo') < 120 else 1)"
+
+CMD ["python3", "agendador.py"]

@@ -1116,7 +1116,7 @@ Metas 6 e 7 · out–nov/26
   de 60 dias, que o texto não promete (E21); a URL pública, que no ensaio é a do
   hospedeiro (E30).
 
-### [ ] E21 — Configurar a rotina agendada de lembretes
+### [x] E21 — Configurar a rotina agendada de lembretes
 - **Objetivo:** automatizar a cobrança conforme os parâmetros de E05.
 - **Entregável:** rotina agendada ativa; procedimento em `infra/`.
 - **Conclusão quando:** o disparo executar no horário e atingir só os não respondentes.
@@ -1209,6 +1209,65 @@ Metas 6 e 7 · out–nov/26
   participante e `submitdate` na resposta. E um participante pode ter **duas
   respostas** no ciclo, a concluída e uma parcial órfã; a rotina não decide pelo
   número de respostas.
+- **Concluída em:** 05/10/2026 · `docs/especificacao/rotina-disparo.md` · ADR-0008 ·
+  `scripts/cadencia.py`, `disparar.py`, `agendador.py` e
+  `conferencia_participantes.py` · `infra/rotinas/configuracao/agenda.json` ·
+  `infra/confere-rotina.py` · `infra/hospedeiro/liga-wsl-ao-entrar.ps1`.
+- **Ponto 13.1 respondido, no código da plataforma:** a rotina nativa é *intervalo
+  desde o último envio* mais *máximo de lembretes*, e não há agendador. **A cadência
+  ficou fora dela, e o P3 não mudou** (ADR-0008). `cadencia.py` calcula estado e
+  vencimento por participante, e a plataforma só recebe a lista explícita. Quatro
+  armadilhas tratadas: `sent` e `remindersent` estão em **UTC**, e `validuntil` em
+  hora local; cada chamada envia no máximo 50; sem `continueOnError` o lote para na
+  primeira falha; e o envio pela API não grava `date_invited`. Por isso a regra dos
+  doze meses sai do registro próprio. Também `list_participants` pagina por `tid`, e
+  não por deslocamento.
+- **Agendador:** laço próprio, processo principal do contêiner `rotinas`. O disparo
+  é às 10:00, de segunda a sexta, menos os feriados da agenda, com tolerância de
+  30 min; as devoluções são lidas a cada 30 min, separadas. Cada horário é reservado
+  com chave única. Horário vencido vira `perdida` e **não** roda fora da hora: a
+  cadência é por vencimento, e o que venceu sai no dia útil seguinte. Registro em
+  `egressos_execucoes` e `egressos_disparos`, sem token, nome nem endereço. A guarda
+  roda as conferências 1 a 7 da E19 — a lógica passou para `scripts/`, conferida 8
+  de 8 — e as condições da E20.
+- **Decisão sobre `lastpage = 0`:** abrir o endereço **não** é iniciar. `em
+  preenchimento` é resposta não enviada com CON1 gravado. Medido pelo caminho real:
+  abrir deixa `lastpage 0` com CON1 vazio; enviar a página 1 deixa `lastpage 1` com
+  `CONC`.
+- **Decisões confirmadas com o orientando:** modo **simulado** até a E26; a
+  operação de reparo de contato fica para a E26; a tarefa de logon do Windows foi
+  **criada por mim, com autorização**, e só liga a distribuição, conferida com a
+  distribuição encerrada e a tarefa disparada; disparo às 10:00, de segunda a
+  sexta, com feriados.
+- **Critério verificado:**
+  - **Execução real de hoje:** prevista para as 10:00:00, rodou às 10:00:08, em
+    simulado, com 255 convites planejados e nada enviado.
+  - **`confere-rotina.py --agendada`, 14 de 14:** disparo previsto para as 10:06:00
+    começou às 10:06:11. Os lembretes foram só para os quatro não respondentes
+    vencidos, com o ramo certo, e houve um reconvite. Nenhum dos outros 9 plantados
+    nem dos 486 de controle recebeu nada; chegaram 5 mensagens; a limpeza foi
+    completa.
+  - **Regras:** 7 de 7, com 16 de 16 mutações reprovadas.
+  - **`--perdida`:** 8 de 8.
+  - **Estado final:** 500 participantes, nada enviado, nenhuma resposta.
+- **A primeira execução de `--agendada` falhou na limpeza.** O relógio do WSL voltou
+  7,3 s, o IMAP recusou login e um `SystemExit` escapou da limpeza. Restaram uma
+  mensagem e o registro do ciclo de teste, desfeitos à mão. A conferência passou a
+  insistir na caixa, a capturar a falha em cada passo e a guardar o log do agendador
+  de teste. A segunda execução passou inteira. Outro furo foi achado pela mutação
+  e corrigido: os casos não distinguiam UTC de hora local.
+- **Achados:**
+  - **Relógio:** o da máquina virtual do WSL está **7,3 s atrás** do Windows e é
+    corrigido aos saltos para trás, sem suspensão. É o quinto sintoma da raiz da
+    E07.
+  - **Distribuição parada:** a distribuição estava parada depois do reinício do
+    Windows, e o `instanceIdleTimeout` não a liga.
+  - **Datas da resposta:** estão em UTC.
+  - **Envio sem JavaScript:** exige os campos `relevance<qid>`; sem eles, a
+    plataforma descarta a resposta em silêncio.
+- **Não verificado:** um reinício real do Windows; a cadência correndo em dias de
+  calendário, porque o tempo foi comprimido pela API; e a regra dos doze meses
+  entre ciclos, conferida só nas regras, porque há um questionário só.
 
 ### [ ] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
@@ -1245,6 +1304,10 @@ Metas 6 e 7 · out–nov/26
   questionário, e qual configuração global da lista de bloqueio isso exige. O
   texto hoje indica a revogação como "responder a esta mensagem", que chega à
   caixa `acompanhamento`; a via definitiva é da E23.
+- **Vindo da E21:** a rotina já lê como recusa de contato o bloqueio da base
+  central, `emailstatus = 'OptOut'` e CON1 = `RCONT`, e não dispara a quem a tem.
+  Exercitar a recusa pelo endereço e conferir que o plano a reflete, com
+  `disparar.py --simular` no contêiner.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -1304,6 +1367,10 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E19:** descrever a **revisão humana** dos grupos de e-mail
   compartilhado — quem revisa, e que a pessoa de fato duplicada se corrige na
   origem, e não no mecanismo.
+- **Vindo da E21:** `egressos_execucoes` e `egressos_disparos` são trilha, inclusive
+  da execução perdida. **Anonimizar as respostas quebra a rotina:** sem o token na
+  resposta, ela não distingue `convidado` de `em preenchimento` nem vê a conclusão.
+  Preservar o vínculo ou substituí-lo. As datas da resposta estão em UTC.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -1358,6 +1425,11 @@ Meta 8 · nov–dez/26
 - **Vindo da E19:** o requisito de unicidade tem procedimento pronto —
   `confere-participantes.py`, mais os quinze defeitos do teste de mutação como casos
   negativos (`unicidade-participantes.md`, seção 5.1).
+- **Vindo da E21:** "seletividade do lembrete" e "disparo no horário" têm
+  procedimento pronto — `confere-rotina.py --agendada`, catorze situações contra a
+  máquina de estados —, e a execução perdida, `--perdida`. Os dezesseis defeitos da
+  mutação de `cadencia.py` (`rotina-disparo.md`, seção 9.3) servem de casos
+  negativos.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1391,6 +1463,19 @@ Meta 8 · nov–dez/26
   cópia percorrível, e `remover` a desfaz. Duas sessões no mesmo navegador colidem
   ("código de acesso incompatível"); `&newtest=Y` abre sessão nova. O cenário de
   interrupção precisa conferir os campos fora do caminho, que a parcial guarda.
+- **Vindo da E21:**
+  - **Ligar o modo real:** `ROTINA_DISPARO=real` no `.env` e `docker compose up -d
+    rotinas`. A primeira execução convida todos cuja âncora já passou: 255 de 500 em
+    05/10/2026, os do 1º semestre; os do 2º vencem em 15/12. Exige o hospedeiro
+    ligado às 10:00.
+  - **Implementar a operação de reparo de contato** (decisão do orientando): trocar
+    para o `email_alternativo` no participante, pela API, e na base central, só por
+    console no hospedeiro. A rotina já reconvida uma vez no ciclo quem volta a
+    `pendente` e reinicia a contagem.
+  - **Correr a cadência em dias de calendário**, ou declarar a compressão. A E21
+    viu cada situação num disparo, com as datas postas no passado pela API.
+  - **Caminho real sem JavaScript:** `confere-rotina.py` mostra como responder a
+    página 1 por HTTP, com os campos `relevance<qid>`.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -1434,6 +1519,9 @@ Metas 9 e 10 · out–dez/26
   (`pre-preenchimento.md`, seção 4).
 - **Vindo da E19:** os grupos de e-mail compartilhado são candidatos a pessoa
   duplicada, e **não** devem ser fundidos na extração.
+- **Vindo da E21:** as datas da resposta (`startdate`, `submitdate`) estão em
+  **UTC**. `egressos_disparos` dá, por participante, quantas mensagens recebeu e
+  quando, e `cadencia.estado` dá o estado da seção 12 sem reimplementá-lo.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1492,6 +1580,16 @@ Metas 9 e 10 · out–dez/26
   instância; lembrete disparado pelo painel sai sem a gravação do ramo; e as duas
   armadilhas de `modelos-mensagem.md`, seção 5.1 (coluna nova em instrumento ativo
   e cache de esquema).
+- **Vindo da E21:**
+  - **Parte V do guia:** parte de `infra/README.md`, seção "Rotina agendada".
+  - **Tarefa de logon do Windows:** `hospedeiro/liga-wsl-ao-entrar.ps1` entra como
+    **opção de hospedeiro**, e não do mecanismo.
+  - **Valores de ensaio:** trocar feriados e calendário de `agenda.json` pelos da
+    instituição.
+  - **Relógio do WSL:** ele anda para trás.
+  - **Virada de ciclo:** o procedimento de abrir o questionário do ano seguinte
+    ainda não existe e precisa ser escrito. A rotina opera sobre o questionário
+    configurado, e `implantar` usa sid fixo.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1545,6 +1643,9 @@ Metas 9 e 10 · out–dez/26
   (2019 a 2023) não calcula a maior parte do Anexo I; declarar as adaptações do
   Ind13 (faixas, sem média rigorosa) e do Ind4 ("sim, totalmente"); e declarar que a
   série de sexo e a de gênero não são equivalentes.
+- **Vinda da E21:** a limitação da E06 ganha forma. O horário fixo depende do
+  hospedeiro ligado, e a execução perdida é **registrada, não evitada**. A rotina viu
+  cada situação num disparo, com o tempo comprimido pela API. Declarar assim.
 
 ---
 
@@ -1572,3 +1673,4 @@ Uma linha por sessão, mais recente ao final.
 | 04/10/2026 | E18 | E18 concluída: pré-preenchimento da identificação como estrutura — IDA1, IDA3, IDA4 e IDA5 com padrão no atributo do participante, ligação calculada num lugar só —, caminho completo refeito do zero (implantar, preparar, importar, ativar) e **questionário 202615 ativo**. Conferência estrutural 7 de 7, com a nova sétima falhando antes e passando depois. Três acessos de amostra, um por nível, abriram com os atributos do arquivo de origem; a correção de curso levou o nível junto, ficou na resposta e preservou o original; fila de revisão exercitada pela API; os 500 com atributos válidos; controle de acesso conferido; respostas de teste apagadas. | Nenhuma pendência nova sem dono. **Não conferido:** janela de validade do acesso → E21; fila de revisão como rotina → E28. **Ampliadas:** E19 (verificar sobre o estado reimplantado e ativo), E20 (forma do endereço individual), E21 (`validfrom`/`validuntil` por ciclo) e E28 (fila de revisão e taxa de correção). |
 | 04/10/2026 | E19 | **Fase 4 encerrada.** E19 concluída: conferência só de leitura `infra/confere-participantes.py`, com oito verificações — tokens, identificadores, elo com a base central pelo `participant_id` derivado, e e-mail compartilhado comparado em claro e pelo cifrado determinístico. **8 de 8, critério atendido**; os três grupos de e-mail compartilhado são exatamente os três pares plantados pela E16. "Token inválido" definido e verificado — o contador nativo conta token vazio, o que fecha o ponto aberto da E08. E-mail compartilhado é alerta para revisão humana, sem fusão automática. Conferência testada com quinze defeitos plantados, todos reprovados. | Nenhuma pendência nova sem dono. **Não detectável:** a mesma pessoa sob identificadores e endereços distintos. **Ampliadas:** E21 (conferência como guarda antes do disparo), E23 (procedimento de revisão humana), E25 (procedimento e casos negativos prontos) e E28 (não fundir os grupos na extração). |
 | 04/10/2026 | E20 | **Fase 5 iniciada.** E20 concluída: convite e lembrete em `infra/instrumento/mensagens.py`, fonte única que vai no `.lss` e é aplicada ao 202615 ativo pelo `aplicar-mensagens`. Remetente de ensaio trocado de `naoresponda@` para `acompanhamento@egressos.test`, com caixa própria, porque o P7 veda no-reply — remetente e retorno como propriedades do questionário. Lembrete com dois ramos num modelo só, pelo atributo `variante_lembrete` (7º, acrescentado por comando de console com esvaziamento do cache de esquema da web). Recusa de contato pela lista de bloqueio da base central. Convite de teste real a um participante sintético: **9 de 9**, mensagens lidas renderizadas, estado final limpo. Primeira execução falhou e deixou resíduo, desfeito à mão; limpeza tornada independente por passo. | Nenhuma pendência nova sem dono. **Não verificado:** efeito do bloqueio → E22/E23; prazo de 60 dias → E21; URL pública → E30. **Ampliadas:** E21 (gravar o ramo antes do lembrete; abrir o link cria resposta com `lastpage = 0`), E22 (exercitar `GLOBALOPTOUTURL`), E30 (remetente institucional, URL pública, armadilhas). |
+| 05/10/2026 | E21 | E21 concluída: **rotina agendada ativa** no contêiner `rotinas`, com disparo às 10:00 em dia útil e devoluções a cada 30 min, separadas, em **modo simulado** até a E26 (decisão do orientando). O ponto 13.1 foi respondido no código: a rotina nativa é intervalo mais máximo, sem agendador, e por isso a cadência D+*n* por participante ficou fora dela, sem alterar o P3 (ADR-0008). Também no código: datas de envio em UTC, lote de 50, lote que para na primeira falha e `date_invited` não gravado. `lastpage = 0` é `convidado`, medido pelo caminho real. Guarda E19 1–7 mais E20; execução perdida registrada. A distribuição do WSL foi achada parada depois de reinício, e a tarefa de logon que só a liga foi criada com autorização e conferida. Critério: execução real das 10:00 às 10:00:08; `--agendada` 14 de 14, com o disparo às 10:06:11 atingindo só os 4 não respondentes vencidos, com o ramo certo; regras 7 de 7, com 16 de 16 mutações reprovadas; `--perdida` 8 de 8. A primeira execução falhou na limpeza porque o relógio do WSL voltou 7,3 s; foi desfeita à mão e a conferência foi endurecida. | Nenhuma pendência nova sem dono. **Não verificado:** reinício real do Windows; cadência em dias de calendário; doze meses entre ciclos (um questionário só). **Ampliadas:** E22 (recusa já lida pela rotina), E23 (registro como trilha; anonimizar respostas quebra o estado; datas em UTC), E25 (procedimentos prontos e 16 mutações), E26 (ligar o modo real, 255 convites na primeira execução; **operação de reparo nos dois lugares**; dias de calendário), E28 (datas UTC; envios por participante), E30 (Parte V; tarefa de logon como opção de hospedeiro; feriados e calendário; relógio; **virada de ciclo**) e E31 (execução perdida registrada, não evitada). |

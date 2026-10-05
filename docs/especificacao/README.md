@@ -19,4 +19,6 @@ Artefatos técnicos que antecedem a implementação.
   base central e e-mail compartilhado (E19)
 - `modelos-mensagem.md` — convite e lembrete com dois ramos, remetente, retorno e
   assunto padronizados, e o convite de teste (E20)
+- `rotina-disparo.md` — cadência por participante, estado calculado, agendador,
+  guarda e registro da rotina agendada, com a verificação no horário (E21)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)

@@ -27,6 +27,9 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `instrumento/` | a estrutura do questionário: exportação versionada, gerador e configuração (E15) — ver o [README](instrumento/README.md) |
 | `confere-instrumento.py` | confere o instrumento implantado contra a especificação das E13 e E14 |
 | `confere-participantes.py` | confere a unicidade dos tokens e identificadores e o elo com a base central (E19) |
+| `rotinas/configuracao/agenda.json` | a agenda da rotina de disparo: cadência, horário, feriados, calendário (E21) |
+| `confere-rotina.py` | confere a rotina agendada: regras da cadência e o disparo real no horário (E21) |
+| `hospedeiro/liga-wsl-ao-entrar.ps1` | só Windows: liga a distribuição do WSL ao entrar na sessão (E21) |
 
 Os quatro serviços da composição:
 
@@ -35,7 +38,7 @@ Os quatro serviços da composição:
 | `banco` | MariaDB | só interna |
 | `limesurvey` | a instância | interna **e** externa (porta publicada) |
 | `correio` | MTA de ensaio, Postfix e Dovecot | **só interna** |
-| `rotinas` | ponto de execução das rotinas do projeto | **só interna** |
+| `rotinas` | o agendador do disparo e da leitura de devoluções (E21) | **só interna** |
 
 O `.env` real **não é versionado**. O repositório é público.
 
@@ -120,6 +123,37 @@ suspende de todo modo, e na retomada o relógio dela **salta**. Esse salto faz o
 servidor IMAP recusar conexões — ver a seção sobre o correio de ensaio. É por
 isso que o serviço de correio mantém supervisão própria: o ajuste reduz a causa
 mais frequente, não todas.
+
+**E o relógio salta mesmo sem suspensão.** Medido na E21: o relógio da máquina
+virtual, que os contêineres usam, estava 7,3 s atrás do Windows, e foi corrigido
+aos saltos de 7 a 8 s para trás, com a máquina acordada. Num desses saltos o IMAP
+recusou login por alguns segundos. As rotinas do projeto toleram isso — o
+agendador relê o relógio a cada passo e reserva o disparo pelo horário previsto —,
+mas quem escrever rotina nova precisa contar com um relógio que anda para trás.
+
+#### E um segundo ajuste, para a rotina agendada
+
+O ajuste acima impede que a distribuição **morra** ociosa. Ele não a **liga**:
+depois de reiniciar o Windows, ela fica parada até que algo a invoque — e, parada,
+o agendador da rotina não roda. Foi o estado em que a E21 encontrou a máquina. Para
+ligá-la ao entrar na sessão, no PowerShell do próprio usuário, sem administrador:
+
+```powershell
+.\hospedeiro\liga-wsl-ao-entrar.ps1
+```
+
+O script registra uma tarefa de logon que só executa `wsl -d Ubuntu-24.04 --exec
+/bin/true`. O `systemd` sobe o Docker, a política de reinício religa os
+contêineres, e o agendamento continua **dentro da composição** — a tarefa não
+agenda disparo nenhum ([ADR-0008](../docs/decisoes/0008-agendamento-da-cadencia.md)).
+É idempotente; para desfazer, `Unregister-ScheduledTask -TaskName "Egressos -
+ligar WSL ao entrar" -Confirm:$false`.
+
+**Conferido na E21:** distribuição encerrada com `wsl --terminate`, tarefa
+disparada, e 90 s depois, sem nenhuma sessão aberta, a distribuição estava de pé e
+os quatro contêineres saudáveis. O agendador subiu antes do banco, esperou e
+entrou. **Não conferido:** um reinício do Windows de fato, que dispara a tarefa
+pelo logon.
 
 Nada disso é necessário em hospedeiro Linux nativo.
 
@@ -345,8 +379,107 @@ docker compose exec rotinas python3 ler_devolucoes.py \
 
 `--simular` lê e classifica sem gravar, marcar nem consumir a caixa.
 
-A E21 substitui o comando desse contêiner pelo agendador. Até lá ele fica de pé,
-ocioso, servindo de ponto de execução.
+## Rotina agendada
+
+Desde a E21, o processo principal do contêiner `rotinas` é o **agendador**
+(`scripts/agendador.py`). Ele cuida de duas tarefas, independentes uma da outra:
+
+| Tarefa | Quando | O que roda |
+|---|---|---|
+| disparo | **10:00, segunda a sexta**, menos os feriados da agenda | `disparar.py`: guarda, estado de cada participante, convites e lembretes que venceram |
+| devoluções | a cada 30 minutos, todo dia | `ler_devolucoes.py`, da E09 |
+
+São separadas porque a devolução temporária chega depois do disparo que a
+originou (E09). A especificação está em
+[`rotina-disparo.md`](../docs/especificacao/rotina-disparo.md), e a decisão de
+agendar dentro da composição, e não pela rotina nativa da plataforma, na
+[ADR-0008](../docs/decisoes/0008-agendamento-da-cadencia.md).
+
+### Configuração
+
+O que é **parâmetro do projeto** fica versionado em
+`rotinas/configuracao/agenda.json`, montado no contêiner em `/configuracao`:
+lembretes em D+4, D+7 e D+14, intervalo mínimo de 3 dias, janela de 60 dias,
+horário, dias da semana, feriados, calendário de término de semestre (a âncora da
+turma), tolerância e intervalo das devoluções. A rotina **recusa** cadência fora da
+faixa admissível da seção 5.1 de
+[`parametros-contato.md`](../docs/especificacao/parametros-contato.md), a menos que
+`registro_fora_da_faixa` aponte o registro que a seção exige. Os feriados e o
+calendário são **valores de ensaio**, a substituir pelos da instituição.
+
+O que **muda de um ambiente para outro** fica no `.env`:
+
+| Variável | Valor no ensaio | Para quê |
+|---|---|---|
+| `ROTINA_DISPARO` | `simulado` | `simulado` roda no horário, confere a guarda, calcula e registra o plano, e **não envia**; `real` envia |
+| `ROTINA_QUESTIONARIO` | `202615` | questionário do ciclo corrente |
+| `ROTINA_CICLO` | `2026` | ano do ciclo, que transforma a âncora da turma em data |
+| `ROTINA_HORARIO` | vazio | sobrescreve o horário; **só para verificação** |
+
+Depois de mudar o `.env` ou a agenda, recrie o contêiner:
+
+```bash
+docker compose up -d rotinas
+```
+
+**Atenção ao ligar o modo real numa base recém-importada:** a primeira execução
+convida todos cuja âncora já passou no ciclo. No ensaio, em 05/10/2026, eram 255 dos
+500 — os de conclusão no 1º semestre; os do 2º têm âncora em 15/12.
+
+### Acompanhando
+
+O log do agendador diz o que fez, sem nome nem endereço:
+
+```bash
+docker compose logs -f rotinas
+```
+
+Cada execução fica em `egressos_execucoes`: tarefa, modo, horário **previsto** e
+**real**, situação e resumo. Cada envio tentado fica em `egressos_disparos`:
+participante (`tid` e `participant_id`), convite ou lembrete, número, ramo, estado de
+partida e resultado. Nenhuma das duas guarda token, nome ou endereço. Uma execução
+que não aconteceu no horário — máquina desligada, distribuição parada, hospedeiro
+suspenso — aparece como `perdida`:
+
+```sql
+SELECT previsto_para, iniciado_em, situacao, modo
+  FROM egressos_execucoes WHERE tarefa = 'disparo' ORDER BY id DESC LIMIT 10;
+```
+
+Para ver o plano de agora sem esperar o horário, e sem enviar nada:
+
+```bash
+docker compose exec rotinas python3 disparar.py --simular
+```
+
+O disparo manual em modo real (`python3 disparar.py`, sem `--simular`) existe para
+emergência, fica registrado como `manual` e é recusado fora de dia útil.
+
+### A guarda
+
+Antes de cada disparo, a rotina confere e **não dispara** se algo falhar: as
+conferências 1 a 7 da E19 (a mesma lógica de `confere-participantes.py`, que desde
+a E21 vive em `scripts/conferencia_participantes.py`), o questionário ativo e de
+acesso fechado, o remetente e o retorno nas caixas do `.env`, sob `.test`, e o
+lembrete escolhendo o ramo pelo atributo `variante_lembrete`. O resultado vai para o
+log e para `egressos_execucoes`, com a situação `bloqueada`.
+
+### Conferindo
+
+```bash
+python3 confere-rotina.py                 # regras da cadência, sem plataforma
+python3 confere-rotina.py --agendada      # o disparo real, no horário, e desfaz
+python3 confere-rotina.py --perdida       # o registro de execução perdida, e desfaz
+```
+
+`--agendada` planta catorze participantes do instrumento, um por situação, aponta o
+agendador para um **ciclo de teste** (2099, âncora no futuro, de modo que os outros
+486 não vencem convite) em modo real, com horário daqui a poucos minutos, e confere
+que a execução começou no horário e que receberam mensagem exatamente os que
+deviam. Desfaz tudo e devolve o agendador ao que o `.env` diz. Os valores de teste
+entram pelo ambiente do comando, que tem precedência sobre o arquivo: o `.env`
+**não é editado**. Precisa de dia útil e da rotina já ter feito ao menos uma
+execução agendada do ciclo corrente.
 
 ## Atualizando a versão do LimeSurvey
 
@@ -378,13 +511,13 @@ mesmo ambiente duas vezes.
 
 ## O que ainda não está aqui
 
-- **Serviço de correio** — entra na E09, **somente** na rede `interna`, com
-  domínio sob o TLD reservado `.test`. A E09 precisa verificar as duas direções:
-  envio e leitura de devolução. Capturador de SMTP que aceita tudo e nunca devolve
-  erro **não** atende ao parâmetro P8.
-- **Rotina de leitura de devoluções** — decidida na ADR-0004, é rotina própria do
-  projeto, e não o recurso nativo do LimeSurvey.
-- **Rotina agendada de lembretes** — entra na E21.
+- **A operação de reparo de contato** — trocar o endereço inválido pelo
+  alternativo, no participante do questionário e na base central, onde só se grava
+  por comando de console. A rotina já **respeita** o reparo: quem volta a
+  `pendente` depois de convidado é reconvidado uma vez no ciclo, com nova contagem.
+  A operação em si é da E26, onde o cenário a exige.
+- **A virada de ciclo** — o questionário do ano seguinte. A rotina opera sobre o
+  questionário configurado; o procedimento de abrir um ciclo novo é da E30.
 
 ## Regras que valem para tudo o que entrar aqui
 

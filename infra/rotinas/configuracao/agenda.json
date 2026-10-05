@@ -1,0 +1,40 @@
+{
+  "_sobre": "Agenda da rotina de disparo (E21). Lida por scripts/cadencia.py, que recusa valor fora da faixa admissivel da secao 5.1 de docs/especificacao/parametros-contato.md sem registro_fora_da_faixa. Especificacao em docs/especificacao/rotina-disparo.md. Montada no conteiner rotinas em /configuracao, somente leitura.",
+
+  "fuso": "America/Sao_Paulo",
+
+  "_sobre_cadencia": "P3: lembretes em D+4, D+7 e D+14 do envio efetivo do convite a cada participante, com pelo menos 3 dias entre dois disparos. P5: janela de 60 dias do convite. Decisao de projeto, sem fonte que a sustente (secao 1.1 do P5).",
+  "lembretes_dias": [4, 7, 14],
+  "intervalo_minimo_dias": 3,
+  "janela_dias": 60,
+  "registro_fora_da_faixa": null,
+
+  "_sobre_horario": "Secao 5.3: horario fixo e unico, em dia util. 0 = segunda, 4 = sexta. Uma execucao que comece ate tolerancia_minutos depois do horario ainda vale; depois disso e registrada como perdida, e o que venceu sai no proximo dia util, no horario.",
+  "horario": "10:00",
+  "dias_da_semana": [0, 1, 2, 3, 4],
+  "tolerancia_minutos": 30,
+
+  "_sobre_feriados": "Valores de ENSAIO: feriados nacionais de data fixa (Lei n. 662/1949, Lei n. 6.802/1980 e Lei n. 14.759/2023) e a Sexta-feira da Paixao, de 2026 e 2027. Em implantacao real, substituir pelo calendario da instituicao, que tem tambem os feriados locais, e manter a lista adiante do ano corrente.",
+  "feriados": [
+    "2026-01-01", "2026-04-03", "2026-04-21", "2026-05-01", "2026-09-07",
+    "2026-10-12", "2026-11-02", "2026-11-15", "2026-11-20", "2026-12-25",
+    "2027-01-01", "2027-03-26", "2027-04-21", "2027-05-01", "2027-09-07",
+    "2027-10-12", "2027-11-02", "2027-11-15", "2027-11-20", "2027-12-25"
+  ],
+
+  "_sobre_calendario": "Secao 7.2 do P5 e secao 4.5 do leiaute: o D0 do ciclo de cada egresso e o termino do seu semestre de conclusao, no calendario. 'padrao' vale para todo ano (MM-DD); 'excecoes' fixa a data de um ano-semestre (AAAA-S: AAAA-MM-DD). Valores de ENSAIO, a substituir pelo calendario academico da instituicao.",
+  "calendario": {
+    "padrao": {"1": "07-15", "2": "12-15"},
+    "excecoes": {}
+  },
+
+  "_sobre_reparo": "Secao 6.1 do P4: o reparo de contato abre nova contagem dentro do ciclo, uma vez so. Secao 7.2 do P5: nenhum convite a menos de doze meses do anterior.",
+  "reconvites_por_ciclo": 1,
+  "meses_entre_convites": 12,
+
+  "_sobre_devolucoes": "A leitura de devolucoes roda separada do disparo, a cada tantos minutos e em qualquer dia: a devolucao temporaria chega depois do disparo que a originou (E09).",
+  "devolucoes_intervalo_minutos": 30,
+
+  "_sobre_lote": "Quantos participantes por chamada da API. A plataforma envia no maximo maxemails (50, padrao do LimeSurvey 7) por chamada e ignora o resto da lista.",
+  "lote": 50
+}
