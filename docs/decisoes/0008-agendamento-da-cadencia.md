@@ -22,9 +22,12 @@ de console correspondente só repassa o evento a plugins.
 
 A conferência do código achou mais quatro coisas que pesam na decisão:
 
-- `sent` e `remindersent` são gravados em **UTC** (`gmdate`); `validuntil` é lido no
-  fuso do PHP. O intervalo mínimo nativo compara `sent` com um instante em UTC —
-  coerente consigo, mas não com a janela;
+- toda data da plataforma está em **UTC** — `sent` e `remindersent` (`gmdate`),
+  `validuntil` e as datas da resposta —, porque o LimeSurvey fixa o fuso do PHP em
+  UTC na própria configuração. *Corrigido na E22:* a primeira redação dizia que
+  `validuntil` era lido no fuso do PHP da imagem, America/Sao_Paulo, e a rotina o
+  gravava em hora local ([`rotina-disparo.md`](../especificacao/rotina-disparo.md),
+  seção 4.3);
 - cada chamada envia **no máximo 50** (`maxemails`) e ignora o resto da lista;
 - sem `continueOnError`, o lote **para na primeira falha**;
 - o envio pela API **não grava `date_invited`** na base central. Só o painel o faz.

@@ -13,9 +13,12 @@ O instrumento é o questionário **202615** da instância: onze grupos, um por b
 
 **Estrutura, e não conteúdo.** Cada enunciado é um marcador que nomeia o campo e o
 dado — `[AF1] satisfação com a formação recebida no IFSP` — seguido de "Enunciado a
-definir pelo projeto correlato". O texto das perguntas, o do termo de consentimento
-e o de encerramento não são deste projeto (CLAUDE.md, decisão 5; E22). Os domínios
-de resposta são estrutura e entram completos.
+definir pelo projeto correlato". O texto das perguntas não é deste projeto
+(CLAUDE.md, decisão 5). Os domínios de resposta são estrutura e entram completos.
+
+**O termo de consentimento e o encerramento são** (E22): texto informativo da LGPD,
+e não conteúdo temático. Estão em `termo.py`, numa **versão de ensaio** sujeita à
+validação do encarregado de dados do IFSP — decisão confirmada com o orientando.
 
 ## O que há aqui
 
@@ -24,6 +27,8 @@ de resposta são estrutura e entram completos.
 | `instrumento.lss` | **a estrutura exportada da instância** — o artefato versionado |
 | `estrutura.py` | a especificação das E12 a E14 transcrita em dados: grupos, campos, domínios, regras de exibição |
 | `mensagens.py` | convite e lembrete, remetente, retorno e assuntos (E20) |
+| `termo.py` | termo de consentimento, consentimento específico, encerramento e a versão gravada em cada resposta (E22) |
+| `termos/<versão>.html` | o documento da página 1 de cada versão do termo, **imutável** — a prova do texto que cada resposta aceitou (E22) |
 | `instrumento.py` | gera o `.lss`, implanta, exporta, cria e remove cópias de ensaio, e prepara o acesso controlado (E17) |
 | `comandos/ExportarestruturaCommand.php` | comando de console que exporta o `.lss` |
 | `comandos/PrepararbasecentralCommand.php` | cria os atributos da base central, os de contato cifrados (E17) |
@@ -50,7 +55,19 @@ python3 confere-instrumento.py
 O primeiro gera o `.lss` a partir de `estrutura.py` e de `configuracao/`, importa-o
 pela API com o sid fixo 202615 e exporta de volta o que a instância guardou para
 `instrumento/instrumento.lss`. Recusa se o questionário já existir; com
-`--substituir`, recria — mas só se estiver **inativo**, porque ativo tem respostas.
+`--substituir`, recria o **inativo** — ou o **ativo que não tenha nenhuma resposta
+nem envio** (E22).
+
+**Mudar a estrutura de um instrumento ativo é recriá-lo.** A plataforma recusa
+acrescentar ou remover questão e grupo em questionário ativo ("Survey is active and
+not editable" — conferido no código da API). Recriar apaga a tabela de
+participantes junto, e por isso só se admite quando não há nada a perder: o
+`implantar` confere, antes, que não há resposta — completa, incompleta ou salva — nem
+participante com envio ou conclusão. Depois, a ordem é a de sempre: `preparar-
+participantes`, a importação — que reencontra cada pessoa na base central e cria
+participantes com tokens novos — e `ativar`. A base sintética é regenerada pelo
+gerador, com a mesma semente, porque a importação elimina o arquivo. Feito assim na
+E22, para acrescentar os metadados do consentimento.
 
 O segundo confere o instrumento contra a especificação (seção "Verificação").
 
@@ -140,6 +157,32 @@ a coluna é acrescentada pelo comando de console `completaratributos`, que tamb�
 esvazia o cache de esquema da web. Detalhes em
 [`docs/especificacao/modelos-mensagem.md`](../../docs/especificacao/modelos-mensagem.md).
 
+### Consentimento (E22)
+
+A página 1 leva o termo (enunciado de CON1), o consentimento específico do dado
+sensível (enunciado de CON2) e duas **equações ocultas**, que ninguém preenche e que
+a plataforma calcula ao receber a página:
+
+| Metadado | Grava |
+|---|---|
+| `CONV` | `ensaio-1 sha256:<resumo>` — a versão e o resumo do documento da página 1 |
+| `CONDH` | o momento da manifestação, `date('c')`, em UTC com `+00:00` explícito |
+
+Ao gerar o `.lss`, o documento da página 1 — termo, opções de CON1, texto e opções
+de CON2 — é **arquivado** em `termos/<versão>.html`. Se o arquivo da versão já
+existir com outro texto, o gerador **recusa**: mudar o termo exige versão nova em
+`termo.py`, e o arquivo de uma versão não se reescreve. O `.gitattributes` fixa LF
+nesses arquivos, para que o resumo confira em qualquer cópia.
+
+```bash
+python3 confere-consentimento.py                  # termo e versão na instância
+python3 confere-consentimento.py --exercitar      # aceite, recusas e recusa pela mensagem, desfeitos
+python3 consulta-consentimento.py --identificador SIN-000001
+```
+
+Especificação em
+[`docs/especificacao/consentimento.md`](../../docs/especificacao/consentimento.md).
+
 ## Da especificação para a plataforma
 
 | Tipo da especificação | Tipo da plataforma | Onde |
@@ -153,6 +196,7 @@ esvazia o cache de esquema da web. Detalhes em
 | texto livre | texto longo (`T`), até 1.000 caracteres | AF4 |
 | texto com validação | texto curto (`S`) com expressão regular | CT1 a CT3 |
 | derivado do curso | equação (`*`) | IDA2 |
+| metadado do consentimento | equação oculta (`*`, `hidden`), sempre relevante | CONV, CONDH (E22) |
 
 **Códigos.** Os 35 códigos de campo da E13 foram aceitos como estão. Os códigos de
 opção têm **no máximo cinco caracteres** — é o tamanho de `lime_answers.code` na
@@ -263,13 +307,26 @@ Todas falham sem erro aparente.
    com o preenchimento de outro em curso dá "código de acesso incompatível". No
    ensaio, `&newtest=Y` inicia sessão nova. Para o egresso, que usa o próprio
    navegador, não se aplica.
+7. **Sem JavaScript, o envio precisa dos campos de relevância** (E21, E22).
+   `relevance<qid>` e `relevanceG<n>` vêm no formulário com aspas simples, e o script
+   da página os atualiza conforme as respostas. Ausentes, a plataforma descarta a
+   resposta em silêncio; com CON2 marcado como irrelevante, a página não avança.
+   Quem conduzir o preenchimento por HTTP precisa enviá-los como o navegador faria.
+8. **Os qids mudam a cada reimplantação** (E22). Toda referência a `Q<qid>` em
+   script tem de ser lida da instância pelo código da questão. A conferência da E21,
+   com `Q676` escrito, quebrou na primeira execução depois da reimplantação; e
+   `add_response` descarta **em silêncio** a chave que não é coluna.
+9. **A plataforma roda em UTC** (E22). O LimeSurvey fixa o fuso do PHP em UTC em
+   `application/config/internal.php`, qualquer que seja o `date.timezone` da imagem
+   — que o `php -r` mostra, mas a aplicação não usa. Toda data da plataforma está em
+   UTC: envio, lembrete, `validuntil`, datas da resposta e o `date()` das equações.
 
 ## Verificação
 
 `confere-instrumento.py` lê a especificação **direto dos documentos** — a seção 12.3
 de `blocos-instrumento.md` e as seções 2 e 5 de `navegacao-condicional.md` — e não de
 `estrutura.py`, para que um erro de transcrição no gerador apareça como divergência
-em vez de se confirmar a si mesmo. Sete conferências:
+em vez de se confirmar a si mesmo. Oito conferências:
 
 1. os onze grupos, na ordem da E14;
 2. os 35 campos: código, grupo, tipo, obrigatoriedade e domínio, opção por opção
@@ -280,10 +337,14 @@ em vez de se confirmar a si mesmo. Sete conferências:
 6. os dez caminhos, **avaliando as expressões que estão na instância** sobre as
    2.802 combinações da seção 8 da E14, com a regra do item 1 das armadilhas;
 7. o pré-preenchimento (E18): cada campo da identificação aponta para o atributo
-   do participante que tem o seu nome, derivado do texto da especificação.
+   do participante que tem o seu nome, derivado do texto da especificação;
+8. os metadados do consentimento (E22), lidos da tabela "Metadado" da seção 12.3:
+   equações ocultas do grupo do consentimento, sempre relevantes e não obrigatórias.
 
-**Resultado: 6 de 6 na E15; 7 de 7 desde a E18** — a sétima falhou antes da
-reimplantação com os padrões, apontando os quatro que faltavam, e passou depois. A
+**Resultado: 6 de 6 na E15; 7 de 7 desde a E18; 8 de 8 desde a E22** — a sétima
+falhou antes da reimplantação com os padrões, apontando os quatro que faltavam, e
+passou depois; a oitava, do mesmo modo, falhou antes da reimplantação da E22
+("CONV: ausente; CONDH: ausente") e passou depois. A
 conferência foi ela mesma testada por mutação, e reprova
 as cinco versões defeituosas que lhe foram apresentadas: sem `.NAOK` (280
 combinações sem caminho), AP2 sempre exibido (5.042 combinações em vez de 2.802),

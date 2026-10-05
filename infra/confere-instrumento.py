@@ -20,7 +20,10 @@ O que confere:
      ESTAO NA INSTANCIA sobre todas as combinacoes das respostas que decidem o
      caminho — a mesma enumeracao da secao 8 da E14, que deu 2.802;
   7. o pre-preenchimento (E18): cada campo da identificacao aponta para o
-     atributo do participante que tem o seu nome, e o derivado nao tem padrao.
+     atributo do participante que tem o seu nome, e o derivado nao tem padrao;
+  8. os metadados do consentimento (E22), lidos da tabela "Metadado" da secao
+     12.3: equacoes ocultas do grupo do consentimento, sempre relevantes e nao
+     obrigatorias — para que a recusa, que descarta o resto, as mantenha.
 
 Na avaliacao, reproduz a regra do Expression Manager conferida em
 em_core_helper.php: expressao de exibicao que cita questao OCULTA, sem o sufixo
@@ -102,6 +105,17 @@ def le_campos_especificados():
             campos.append({"grupo": grupo, "codigo": c[0], "dado": c[1],
                            "tipo": c[2], "dominio": c[3], "obrig": c[4]})
     return campos
+
+
+def le_metadados_especificados():
+    """Secao 12.3, tabela "Metadado" do consentimento (E22): os codigos das
+    equacoes que a plataforma calcula e ninguem preenche."""
+    texto = open(ESPEC_BLOCOS, encoding="utf-8").read()
+    s = secao(texto, "### 12.3 Campos por bloco", "### 12.4")
+    tabela = re.search(r"\| Metadado \|.*?(?:\n\n|\Z)", s, re.S)
+    if not tabela:
+        return []
+    return [c[0] for c in linhas_de_tabela(tabela.group(0))]
 
 
 def le_ordem_dos_grupos():
@@ -523,6 +537,27 @@ def percorre(grupos, questoes):
         yield valores, relevantes, tuple(blocos)
 
 
+def confere_metadados(questoes, metadados):
+    divergencias = []
+    for cod in metadados:
+        q = questoes.get(cod)
+        if q is None:
+            divergencias.append(f"{cod}: ausente")
+            continue
+        if q["grupo"] != "Consentimento":
+            divergencias.append(f"{cod}: no grupo {q['grupo']!r}")
+        if q["tipo"] != "*":
+            divergencias.append(f"{cod}: tipo {q['tipo']}, esperado equacao")
+        if q["relevancia"] != "1" or q["obrigatorio"] != "N":
+            divergencias.append(f"{cod}: relevancia {q['relevancia']!r} ou "
+                                f"obrigatoriedade {q['obrigatorio']}")
+        if str(q["atributos"].get("hidden")) != "1":
+            divergencias.append(f"{cod}: nao esta oculto")
+        if not (q["atributos"].get("equation") or "").strip():
+            divergencias.append(f"{cod}: sem equacao")
+    return divergencias
+
+
 def confere_caminhos(grupos, questoes):
     caminhos, contagens = le_caminhos()
     con1 = questoes["CON1"]["opcoes"]
@@ -578,6 +613,7 @@ def main():
     porta = env.get("PORTA_HTTP", "8080")
 
     especificados = le_campos_especificados()
+    metadados = le_metadados_especificados()
     ordem_esperada = le_ordem_dos_grupos()
 
     with API(url=f"http://127.0.0.1:{porta}", usuario=env["ADMIN_USUARIO"],
@@ -598,7 +634,8 @@ def main():
              obtida == esperada and len(obtida) == 11,
              "" if obtida == esperada else f"{obtida} != {esperada}")
 
-    sobra = sorted(set(questoes) - {c["codigo"] for c in especificados})
+    sobra = sorted(set(questoes) - {c["codigo"] for c in especificados}
+                   - set(metadados))
     div = confere_campos(questoes, especificados, ordem_esperada)
     registra(2, f"{len(especificados)} campos da secao 12.3 da E13 — codigo, "
              "grupo, tipo, obrigatoriedade e dominio",
@@ -641,6 +678,11 @@ def main():
     erradas = confere_pre_preenchimento(questoes, especificados, descricoes)
     registra(7, "pre-preenchimento da identificacao pelos atributos do "
              "participante (E18)", not erradas, "; ".join(erradas))
+
+    erradas = confere_metadados(questoes, metadados)
+    registra(8, f"metadados do consentimento ({', '.join(metadados) or 'nenhum'})"
+             " — equacoes ocultas, sempre relevantes (E22)",
+             bool(metadados) and not erradas, "; ".join(erradas))
 
     print(f"\n{sum(resultados)} de {len(resultados)} conferencias passaram.")
     return 0 if all(resultados) else 1

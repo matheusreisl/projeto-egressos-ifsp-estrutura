@@ -15,8 +15,10 @@ Subcomandos, a partir da pasta infra/:
   python3 instrumento/instrumento.py implantar [--substituir]
       gera, importa com o sid fixo do instrumento e exporta a estrutura que a
       instancia guardou para instrumento/instrumento.lss — o artefato versionado.
-      Recusa se o sid ja existir, salvo --substituir, que so remove questionario
-      INATIVO.
+      Recusa se o sid ja existir, salvo --substituir, que remove o questionario
+      INATIVO, ou o ATIVO que nao tenha nenhuma resposta nem envio (E22) — a
+      plataforma nao muda estrutura de questionario ativo. Remover o ativo leva
+      os participantes; a importacao os traz de volta.
 
   python3 instrumento/instrumento.py exportar --sid N [--saida F]
       exporta a estrutura de um questionario da instancia.
@@ -72,6 +74,7 @@ from limesurvey_console import console  # noqa: E402
 
 import estrutura  # noqa: E402
 import mensagens  # noqa: E402
+import termo  # noqa: E402
 
 # Sid fixo do instrumento, para que as etapas seguintes possam nomea-lo.
 # A tabela de respostas, quando ativado, sera lime_responses_<SID> — e NAO
@@ -151,7 +154,10 @@ def resolve_opcoes(campo):
 
 
 def confere_estrutura():
-    vistos = set()
+    """Confere codigos, tipos e opcoes. Devolve (campos, metadados): os
+    metadados do consentimento (E22) sao equacoes ocultas, e nao campos que o
+    respondente preenche."""
+    vistos, metadados = set(), 0
     for g in estrutura.GRUPOS:
         for c in g["campos"]:
             cod = c["codigo"]
@@ -172,7 +178,40 @@ def confere_estrutura():
                 raise Erro(f"{cod}: codigo de opcao repetido")
             if c["tipo"] in ("lista", "suspensa", "multipla") and not opcoes:
                 raise Erro(f"{cod}: sem opcoes")
-    return len(vistos)
+            if c.get("metadado"):
+                metadados += 1
+                if c["tipo"] != "equacao" or c.get("obrigatorio") or \
+                        c.get("relevancia", "1") != "1":
+                    raise Erro(f"{cod}: metadado precisa ser equacao, nao "
+                               "obrigatoria e sempre relevante")
+    return len(vistos) - metadados, metadados
+
+
+def campo(codigo):
+    for g in estrutura.GRUPOS:
+        for c in g["campos"]:
+            if c["codigo"] == codigo:
+                return c
+    raise Erro(f"campo inexistente: {codigo}")
+
+
+def documento_do_termo():
+    """O documento da pagina 1 (termo.py), com as opcoes de CON1 e CON2 como
+    estao na estrutura — e o que se arquiva e se resume."""
+    return termo.documento(resolve_opcoes(campo("CON1")),
+                           resolve_opcoes(campo("CON2")))
+
+
+def equacao(c):
+    """A expressao de uma equacao. "termo:<nome>" vem de termo.py (E22)."""
+    valor = c["equacao"]
+    if valor == "termo:versao":
+        return termo.identificacao(documento_do_termo())
+    if valor == "termo:momento":
+        return termo.EQUACAO_CONDH
+    if valor.startswith("termo:"):
+        raise Erro(f"{c['codigo']}: equacao de termo desconhecida {valor}")
+    return valor
 
 
 # ---------------------------------------------------------------------------
@@ -186,10 +225,12 @@ def enunciado(campo):
             "<p><em>Enunciado a definir pelo projeto correlato.</em></p>")
 
 
-def enunciado_consentimento():
-    return ("<p><strong>[CON1]</strong> manifestação sobre o termo</p>"
-            "<p><em>Texto do termo de consentimento e enunciado a definir na "
-            "E22 e pelo projeto correlato.</em></p>")
+def enunciado_metadado(campo):
+    """Texto de uma equacao oculta: nao e exibido, e so identifica o metadado
+    para quem le a estrutura."""
+    return (f"<p><strong>[{campo['codigo']}]</strong> {campo['dado']} — "
+            "metadado do consentimento, calculado pela plataforma e oculto "
+            "(E22)</p>")
 
 
 def enunciado_nivel():
@@ -222,6 +263,13 @@ CAMPOS_QUESTAO = ["qid", "parent_qid", "sid", "gid", "type", "title", "preg",
 def monta_lss(sid):
     confere_estrutura()
     parametros = le_parametros()
+    # O documento da pagina 1 fica arquivado por versao antes de ir para a
+    # instancia: e o que torna recuperavel o texto que cada resposta aceitou.
+    # Recusa a mesma versao com texto diferente (termo.py).
+    try:
+        termo.arquiva(documento_do_termo())
+    except ValueError as e:
+        raise Erro(str(e))
 
     grupos, grupos_l10n = [], []
     questoes, subquestoes, questoes_l10n = [], [], []
@@ -252,7 +300,11 @@ def monta_lss(sid):
                 "question_theme_name": tema, "modulename": "",
                 "same_script": 0})
             if c["codigo"] == "CON1":
-                texto = enunciado_consentimento()
+                texto = termo.TEXTO_TERMO
+            elif c["codigo"] == "CON2":
+                texto = termo.TEXTO_CON2
+            elif c.get("metadado"):
+                texto = enunciado_metadado(c)
             elif c["codigo"] == "IDA2":
                 texto = enunciado_nivel()
             else:
@@ -313,7 +365,9 @@ def monta_lss(sid):
                                        "answer": rotulo, "language": IDIOMA})
 
             if tipo == "*":
-                atributo("equation", c["equacao"])
+                atributo("equation", equacao(c))
+            if c.get("metadado"):
+                atributo("hidden", "1")
             if tipo == "N" and c["codigo"] == "IDA4":
                 # Do limite configurado ao ano corrente (secao 12.3). O maximo
                 # e expressao, avaliada no preenchimento: o ano corrente nao
@@ -370,8 +424,8 @@ def monta_lss(sid):
                               "instrumento (ensaio)",
             "surveyls_description": "",
             "surveyls_welcometext": "",
-            "surveyls_endtext": "<p><em>Texto de encerramento a definir na "
-                                "E22 e pelo projeto correlato.</em></p>",
+            # Tres ramos pelo CON1: concluiu, recusou o termo, recusou contato.
+            "surveyls_endtext": termo.ENCERRAMENTO,
             # 5 = dd/mm/aaaa; 1 = virgula decimal.
             "surveyls_dateformat": 5, "surveyls_numberformat": 1}])
 
@@ -486,8 +540,29 @@ def cmd_gerar(args):
     conteudo = monta_lss(SID_INSTRUMENTO)
     with open(args.saida, "w", encoding="utf-8") as fh:
         fh.write(conteudo)
-    n = confere_estrutura()
-    print(f"gerado: {args.saida} ({len(estrutura.GRUPOS)} grupos, {n} campos)")
+    n, m = confere_estrutura()
+    print(f"gerado: {args.saida} ({len(estrutura.GRUPOS)} grupos, {n} campos "
+          f"e {m} metadados do consentimento)")
+    print(f"termo: {termo.identificacao(documento_do_termo())}")
+
+
+def nada_a_perder(sessao):
+    """None se o instrumento ativo nao tem resposta alguma — completa,
+    incompleta ou salva — nem participante com convite ou lembrete enviado.
+    Senao, o motivo."""
+    resumo = sessao.chamar("get_summary", [SID_INSTRUMENTO])
+    respostas = sum(int(resumo.get(k) or 0) for k in (
+        "completed_responses", "incomplete_responses"))
+    if respostas:
+        return f"tem {respostas} resposta(s)"
+    enviados = [p for p in sessao.participantes(
+        SID_INSTRUMENTO, limite=100000,
+        atributos=["sent", "remindersent", "completed"])
+        if str(p.get("sent", "N")).strip() not in ("N", "")
+        or str(p.get("completed", "N")).strip() not in ("N", "")]
+    if enviados:
+        return f"tem {len(enviados)} participante(s) com envio ou conclusao"
+    return None
 
 
 def cmd_implantar(args):
@@ -499,8 +574,19 @@ def cmd_implantar(args):
                 raise Erro(f"o questionario {SID_INSTRUMENTO} ja existe; use "
                            "--substituir para recria-lo")
             if atual.get("active") == "Y":
-                raise Erro(f"o questionario {SID_INSTRUMENTO} esta ATIVO; "
-                           "recusado — ativo tem respostas")
+                # A plataforma recusa mudar a estrutura de questionario ativo
+                # (import_question, add_group: "Survey is active and not
+                # editable"). Recriar e a unica via — e so e admissivel quando
+                # nao ha nada a perder: nenhuma resposta e nenhum envio. Os
+                # participantes se perdem com a tabela e voltam pela
+                # importacao, que reencontra cada pessoa na base central (E22).
+                motivo = nada_a_perder(sessao)
+                if motivo:
+                    raise Erro(f"o questionario {SID_INSTRUMENTO} esta ATIVO e "
+                               f"{motivo}; recusado")
+                print(f"questionario {SID_INSTRUMENTO} ativo, sem resposta nem "
+                      "envio: sera recriado, e os participantes precisam ser "
+                      "reimportados")
             sessao.chamar("delete_survey", [SID_INSTRUMENTO])
         sid = importa(sessao, conteudo, SID_INSTRUMENTO)
     if sid != SID_INSTRUMENTO:

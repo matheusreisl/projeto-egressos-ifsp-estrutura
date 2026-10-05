@@ -46,7 +46,7 @@ no código):
 
 | Achado | Consequência na rotina |
 |---|---|
-| `sent` e `remindersent` gravados em **UTC** (`gmdate`), `validuntil` lido no fuso do PHP (America/Sao_Paulo) | a cadência converte `sent` de UTC antes de contar os dias; a janela é gravada em hora local |
+| toda data da plataforma está em **UTC**: `sent` e `remindersent` (`gmdate`), `validuntil` e as datas da resposta — o LimeSurvey fixa o fuso do PHP em UTC na própria configuração (`internal.php`) | a cadência lê e grava em UTC; o fuso da agenda só conta o dia do D+*n*, o horário e o dia útil. *Corrigido na E22*: a primeira versão gravava `validuntil` em hora local, e a janela acabaria 3 horas antes (seção 4.3) |
 | cada chamada envia **no máximo 50** (`maxemails`) e ignora o resto da lista | lotes de até 50 (`lote` na agenda) |
 | sem `continueOnError`, o lote **para na primeira falha** | sempre `continueOnError`, e o resultado é lido participante a participante |
 | "N left to send" conta todos os candidatos do questionário, e não os da lista | não serve para saber se a lista acabou; não é usado |
@@ -150,10 +150,22 @@ limita a configuração, não garante o calendário de uma máquina parada.
 ### 4.3 Janela
 
 Logo depois do convite, a rotina lê o `sent` que a plataforma gravou e grava
-`validuntil` = `sent` + 60 dias, em hora local. Convidado sem janela gravada — por
+`validuntil` = `sent` + 60 dias, **em UTC**. Convidado sem janela gravada — por
 exemplo, convidado pelo painel — ganha a janela na execução seguinte, a partir do
 envio. A janela não é aplicada antes do convite: o endereço não é conhecido de
 ninguém antes dele.
+
+**Correção feita na E22, registrada porque engana.** A primeira versão desta rotina
+gravava `validuntil` em hora local. A premissa era que a plataforma lê a data no
+fuso do PHP, America/Sao_Paulo — e era o que `php -r` mostrava. Mas o LimeSurvey
+fixa o fuso em UTC na própria configuração (`application/config/internal.php`), e
+o `php -r` não a carrega. A janela acabaria 3 horas antes do previsto, e a rotina
+julgaria `expirado` com 3 horas de diferença da plataforma. Conferido por
+comportamento: com `validuntil` 30 minutos no passado em UTC — 2h30 no futuro se
+lido como hora local —, a plataforma recusou o convite por acesso vencido. A
+verificação da E21 não pegou o erro porque a esperada era calculada pela mesma
+premissa; a conferência ganhou um caso que distingue as duas leituras, e o teste de
+mutação, as duas mutações de fuso (18 de 18 reprovadas).
 
 ## 5. O agendador
 

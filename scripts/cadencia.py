@@ -27,14 +27,18 @@ intervalos nao sao uniformes, que e o caso (secao 13.1). Por isso a cadencia e
 calculada aqui, e a plataforma so recebe a lista de quem vence
 (docs/especificacao/rotina-disparo.md; ADR-0008).
 
-Duas convencoes de data da plataforma, conferidas no codigo do LimeSurvey 7 e
-observadas, que esta logica respeita e que enganam, porque nao coincidem:
+Toda data da plataforma esta em UTC: o LimeSurvey fixa o fuso do PHP em UTC na
+propria configuracao (application/config/internal.php), qualquer que seja o
+date.timezone da imagem. Vale para sent e remindersent (gravados com gmdate, na
+forma AAAA-MM-DD HH:MM), para validuntil — lido em UTC quando a plataforma decide
+se o acesso ainda vale — e para as datas da resposta. O fuso da agenda serve so
+ao que e do calendario de quem recebe: o dia do D+n, o horario, o dia util.
 
-  sent, remindersent   gravados em UTC (gmdate), na forma AAAA-MM-DD HH:MM
-  validuntil           lido no fuso do PHP (America/Sao_Paulo), o da agenda
-
-As datas da resposta (startdate, submitdate) tambem sairam em UTC na E21, mas
-esta logica nao as usa: decide pela presenca de submitdate e pelo CON1.
+Corrigido na E22, e registrado porque engana: a E21 gravava validuntil em hora
+local, com base no fuso que o `php -r` mostra — que nao carrega a configuracao
+do LimeSurvey. A janela acabaria 3 horas antes do previsto. Conferido por
+comportamento: validuntil 30 minutos no passado em UTC, e 2h30 no futuro se
+lido como hora local, fez a plataforma recusar o convite por acesso vencido.
 """
 
 import json
@@ -241,7 +245,8 @@ class Participante:
 
 
 def instante_utc(texto):
-    """`sent` e `remindersent`: 'N' ou vazio quando nao houve; senao UTC."""
+    """Data da plataforma, sempre UTC: `sent`, `remindersent` ('N' ou vazio
+    quando nao houve) e `validuntil` (vazio quando nao ha)."""
     texto = (texto or "").strip()
     if texto in ("", "N"):
         return None
@@ -250,19 +255,12 @@ def instante_utc(texto):
             return datetime.strptime(texto, formato).replace(tzinfo=UTC)
         except ValueError:
             continue
-    raise ValueError(f"data de envio ilegivel: {texto!r}")
-
-
-def _instante_local(texto, fuso):
-    texto = (texto or "").strip()
-    if not texto:
-        return None
-    for formato in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d %H:%M"):
-        try:
-            return datetime.strptime(texto, formato).replace(tzinfo=fuso)
-        except ValueError:
-            continue
     raise ValueError(f"data ilegivel: {texto!r}")
+
+
+def texto_utc(instante):
+    """Data na forma que a plataforma grava e le: UTC, sem fuso no texto."""
+    return instante.astimezone(UTC).strftime("%Y-%m-%d %H:%M:%S")
 
 
 def enviado_em(p):
@@ -273,13 +271,13 @@ def validade(p, agenda):
     """Fim da janela do participante. O gravado na plataforma, se houver; se
     nao, o que a janela da P5 da a partir do envio — para que um convite feito
     fora da rotina, sem janela gravada, tambem expire."""
-    gravado = _instante_local(p.validuntil, agenda.fuso)
+    gravado = instante_utc(p.validuntil)
     if gravado is not None:
         return gravado
     envio = enviado_em(p)
     if envio is None:
         return None
-    return envio.astimezone(agenda.fuso) + timedelta(days=agenda.janela_dias)
+    return envio + timedelta(days=agenda.janela_dias)
 
 
 def estado(p, agora, agenda):
@@ -369,10 +367,6 @@ def soma_meses(dia, meses):
     raise ValueError(dia)
 
 
-def _texto_local(instante):
-    return instante.strftime("%Y-%m-%d %H:%M:%S")
-
-
 def plano(participantes, agenda, ciclo_ano, agora,
           convites_no_ciclo=None, ultimo_convite_fora=None):
     """O que vence em `agora`, participante por participante.
@@ -438,12 +432,14 @@ def plano(participantes, agenda, ciclo_ano, agora,
             r.sem_envio[e] += 1
             continue
 
-        envio = enviado_em(p).astimezone(agenda.fuso)
+        # A janela e instante, e vai em UTC, como a plataforma a le. O D+n e
+        # dia do calendario de quem recebe, e se conta no fuso da agenda.
         if not (p.validuntil or "").strip():
             r.janelas.append(Acao(
                 p.tid, p.participant_id, "janela", motivo="janela", estado=e,
-                validuntil=_texto_local(envio + timedelta(
+                validuntil=texto_utc(enviado_em(p) + timedelta(
                     days=agenda.janela_dias))))
+        envio = enviado_em(p).astimezone(agenda.fuso)
 
         k = int(p.remindercount or 0)
         if k >= len(agenda.lembretes_dias):

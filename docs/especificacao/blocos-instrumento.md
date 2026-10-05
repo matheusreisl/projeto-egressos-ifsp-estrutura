@@ -682,6 +682,15 @@ ar não foi percorrida, porque percorrê-la criaria registros na base real.
 CON2 só é exibido se CON1 for "concordo". Data, hora e versão do termo são
 metadados registrados pela plataforma, e não campos — é a E22 que os implementa.
 
+*Implementado na E22* ([`consentimento.md`](consentimento.md)): os metadados são
+duas equações ocultas da página 1, que a plataforma calcula ao receber a página.
+Ninguém as preenche, e por isso não entram na contagem dos 35 campos.
+
+| Metadado | O que guarda | Forma | Exibido |
+|---|---|---|---|
+| CONV | versão do termo e resumo SHA-256 do documento da página 1 | equação, sempre relevante | não |
+| CONDH | data e hora da manifestação em CON1, em ISO 8601 com o deslocamento (UTC, `+00:00`) | equação, sempre relevante | não |
+
 **Identificação acadêmica** — público: todos. Os cinco campos vêm pré-preenchidos
 (seção 12.5).
 

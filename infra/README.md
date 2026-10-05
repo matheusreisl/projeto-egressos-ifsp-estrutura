@@ -27,6 +27,8 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `instrumento/` | a estrutura do questionário: exportação versionada, gerador e configuração (E15) — ver o [README](instrumento/README.md) |
 | `confere-instrumento.py` | confere o instrumento implantado contra a especificação das E13 e E14 |
 | `confere-participantes.py` | confere a unicidade dos tokens e identificadores e o elo com a base central (E19) |
+| `confere-consentimento.py` | confere o termo e a versão na instância e, com `--exercitar`, aceite, recusas e recusa pela mensagem (E22) |
+| `consulta-consentimento.py` | recupera, por identificador, cada manifestação sobre o termo, com data e versão, e confere o texto arquivado (E22) |
 | `rotinas/configuracao/agenda.json` | a agenda da rotina de disparo: cadência, horário, feriados, calendário (E21) |
 | `confere-rotina.py` | confere a rotina agendada: regras da cadência e o disparo real no horário (E21) |
 | `hospedeiro/liga-wsl-ao-entrar.ps1` | só Windows: liga a distribuição do WSL ao entrar na sessão (E21) |

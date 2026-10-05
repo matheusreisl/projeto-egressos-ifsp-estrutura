@@ -27,6 +27,12 @@ Makefile    text eol=lf
 .gitattributes text eol=lf
 .gitignore  text eol=lf
 
+# Termos de consentimento arquivados (E22). Cada resposta grava o SHA-256 do
+# documento da versao que o respondente viu, e o arquivo e a prova: precisa ser
+# o mesmo byte a byte em qualquer copia. Sem esta linha, um checkout no Windows
+# o traria com CRLF e o resumo deixaria de conferir.
+infra/instrumento/termos/*.html text eol=lf
+
 # Arquivos de linha de comando do Windows, que exigem CRLF.
 *.bat       text eol=crlf
 *.cmd       text eol=crlf

@@ -21,4 +21,7 @@ Artefatos técnicos que antecedem a implementação.
   assunto padronizados, e o convite de teste (E20)
 - `rotina-disparo.md` — cadência por participante, estado calculado, agendador,
   guarda e registro da rotina agendada, com a verificação no horário (E21)
+- `consentimento.md` — termo versionado, metadados de data e versão na resposta,
+  recuperação, recusas na tela e pela mensagem, e a reimplantação do instrumento
+  (E22)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)

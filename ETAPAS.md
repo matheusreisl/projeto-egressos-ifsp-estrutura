@@ -1217,8 +1217,9 @@ Metas 6 e 7 · out–nov/26
   desde o último envio* mais *máximo de lembretes*, e não há agendador. **A cadência
   ficou fora dela, e o P3 não mudou** (ADR-0008). `cadencia.py` calcula estado e
   vencimento por participante, e a plataforma só recebe a lista explícita. Quatro
-  armadilhas tratadas: `sent` e `remindersent` estão em **UTC**, e `validuntil` em
-  hora local; cada chamada envia no máximo 50; sem `continueOnError` o lote para na
+  armadilhas tratadas: `sent` e `remindersent` estão em **UTC** — e `validuntil`
+  também, o que a E21 errou e a E22 corrigiu (gravava em hora local; ver a E22);
+  cada chamada envia no máximo 50; sem `continueOnError` o lote para na
   primeira falha; e o envio pela API não grava `date_invited`. Por isso a regra dos
   doze meses sai do registro próprio. Também `list_participants` pagina por `tid`, e
   não por deslocamento.
@@ -1269,7 +1270,7 @@ Metas 6 e 7 · out–nov/26
   calendário, porque o tempo foi comprimido pela API; e a regra dos doze meses
   entre ciclos, conferida só nas regras, porque há um questionário só.
 
-### [ ] E22 — Implementar consentimento eletrônico
+### [x] E22 — Implementar consentimento eletrônico
 - **Objetivo:** registrar aceite conforme a LGPD.
 - **Entregável:** tela inicial de consentimento com registro de aceite, data e versão do termo.
 - **Conclusão quando:** o aceite for persistido e recuperável.
@@ -1308,6 +1309,52 @@ Metas 6 e 7 · out–nov/26
   central, `emailstatus = 'OptOut'` e CON1 = `RCONT`, e não dispara a quem a tem.
   Exercitar a recusa pelo endereço e conferir que o plano a reflete, com
   `disparar.py --simular` no contêiner.
+- **Concluída em:** 05/10/2026 · `docs/especificacao/consentimento.md` · ADR-0009 ·
+  `infra/instrumento/termo.py` e `termos/ensaio-1.html` ·
+  `infra/consulta-consentimento.py` · `infra/confere-consentimento.py`.
+- **Termo** redigido como **modelo de ensaio** (decisão do orientando): elementos
+  do art. 9º com os fatos das especificações; encarregado e prazo de guarda como
+  marcadores declarados; o art. 9º, VI parcial; sujeito à validação do encarregado do
+  IFSP. CON2 com texto próprio, específico e destacado (art. 11, I). Encerramento em
+  três ramos pelo CON1.
+- **Data e versão na própria resposta:** duas equações ocultas da página 1, sempre
+  relevantes — `CONV` (versão e SHA-256 do documento da página 1) e `CONDH`
+  (`date('c')`). Conferido no código: o servidor as recalcula a cada envio, com ou
+  sem JavaScript, e avançar valida só a página corrente. Cada versão é arquivada,
+  imutável, em `termos/`; o gerador recusa a mesma versão com texto diferente
+  (conferido); `.gitattributes` fixa LF.
+- **Reimplantação do 202615** (autorizada): a plataforma recusa mudar estrutura de
+  questionário ativo. `implantar --substituir` passou a aceitar ativo só sem
+  resposta nem envio; base regenerada com a mesma semente; 500 reencontrados na base
+  central, tokens novos. A conferência estrutural ganhou a 8ª (metadados), que
+  **falhou antes e passou depois**.
+- **Recusa pela mensagem exercitada:** abrir não grava; confirmar (POST) marca o
+  participante e a base central; convite e lembrete recusados pela plataforma, neste
+  e em **outro** questionário. Nenhuma configuração global além dos padrões; manter
+  `deleteblacklisted = N`; `allowunblacklist` é a revogação (E23).
+- **Critério verificado:** `confere-consentimento.py --exercitar` **11 de 11**:
+  aceite com e sem o dado sensível; momento estável na página 2; as duas recusas
+  encerradas com manifestação, versão e momento; recuperado por identificador pela
+  exportação da plataforma, com o texto conferido pelo resumo (5 de 5); recusa pela
+  mensagem; bloqueio em dois questionários; estados lidos pela rotina; limpeza.
+  Conferências anteriores intactas: 8/8, 8/8, 4/4, 7/7 e 14/14.
+- **Achado que corrigiu a E21:** o LimeSurvey roda em **UTC** (`internal.php`);
+  `php -r` mostra o fuso da imagem, que a aplicação não usa. A E21 gravava
+  `validuntil` em hora local, e a janela acabaria 3 horas antes — conferido por
+  comportamento. Corrigidos `cadencia.py`, `disparar.py`, a conferência (caso que
+  distingue as leituras) e a mutação (18 de 18); verificação real da E21 refeita, 14
+  de 14. `CONDH` sai com `+00:00`.
+- **Três execuções falharam antes de passar, registradas:** a conferência esperava
+  `-03:00` (era ela que estava errada); o relógio do WSL voltou 7,3 s duas vezes em
+  25 s e o IMAP recusou login na limpeza — a caixa da E20 passou a insistir; e a
+  conferência da E21 quebrou no `Q676` fixo (qids mudam na reimplantação) e deu falso
+  alarme ao devolver o agendador. Essa quebra **exibiu a senha do banco local** no
+  terminal; os auxiliares de consulta passaram a não repetir a linha de comando.
+- **Achados:** a página de confirmação da recusa aparece **em inglês**;
+  `add_response` descarta em silêncio chave que não é coluna; sem JavaScript, o
+  envio precisa de `relevance<qid>`.
+- **Não verificado:** conclusão das onze páginas (E26); aplicar versão nova do termo
+  a instrumento ativo pela API.
 
 ### [ ] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
@@ -1371,6 +1418,18 @@ Metas 6 e 7 · out–nov/26
   da execução perdida. **Anonimizar as respostas quebra a rotina:** sem o token na
   resposta, ela não distingue `convidado` de `em preenchimento` nem vê a conclusão.
   Preservar o vínculo ou substituí-lo. As datas da resposta estão em UTC.
+- **Vindo da E22** (`consentimento.md`, seções 6 e 11):
+  - **CON1 = `RCONT` e CT4 marcarem a base central**, como a recusa pela mensagem já
+    faz. O termo e o encerramento já prometem "neste nem nos próximos anos", e é o
+    critério desta etapa.
+  - **Registro da recusa** com data, hora, ciclo, versão e via, inclusive a da
+    mensagem: a plataforma marca o bloqueio sem data.
+  - **Revogação:** `allowunblacklist` e a via, hoje "responder à mensagem".
+  - **E-mail do formulário de salvamento:** mantido por decisão do orientando, e
+    tratado aqui.
+  - **Prazo de guarda no termo:** preenchê-lo exige **versão nova** (`termo.py`).
+  - **Página de confirmação da recusa:** traduzir a frase que aparece em inglês.
+  - **Lista de bloqueio:** manter `deleteblacklisted = N`.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -1429,7 +1488,11 @@ Meta 8 · nov–dez/26
   procedimento pronto — `confere-rotina.py --agendada`, catorze situações contra a
   máquina de estados —, e a execução perdida, `--perdida`. Os dezesseis defeitos da
   mutação de `cadencia.py` (`rotina-disparo.md`, seção 9.3) servem de casos
-  negativos.
+  negativos — dezoito desde a E22, com as duas de fuso.
+- **Vindo da E22:** "registro do consentimento" tem procedimento pronto —
+  `confere-consentimento.py --exercitar`, onze conferências, e
+  `consulta-consentimento.py` para a recuperação. A conferência estrutural tem oito
+  verificações, a oitava dos metadados.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1476,6 +1539,14 @@ Meta 8 · nov–dez/26
     viu cada situação num disparo, com as datas postas no passado pela API.
   - **Caminho real sem JavaScript:** `confere-rotina.py` mostra como responder a
     página 1 por HTTP, com os campos `relevance<qid>`.
+- **Vindo da E22:**
+  - **Concluir as onze páginas pelo caminho real** e conferir que `CONDH` continua o
+    momento do aceite. A E22 o conferiu até a página 2 e, para o envio final, pela
+    leitura do código.
+  - **Ponto de partida:** `Formulario` e `Respondente`, em `confere-consentimento.py`,
+    preenchem por HTTP como o navegador sem JavaScript.
+  - **Tokens novos:** o 202615 foi reimplantado, e os qids e tokens mudaram. Nenhum
+    script pode fixar `Q<qid>`.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -1522,6 +1593,10 @@ Metas 9 e 10 · out–dez/26
 - **Vindo da E21:** as datas da resposta (`startdate`, `submitdate`) estão em
   **UTC**. `egressos_disparos` dá, por participante, quantas mensagens recebeu e
   quando, e `cadencia.estado` dá o estado da seção 12 sem reimplementá-lo.
+- **Vindo da E22:** `CONV` e `CONDH` são colunas da resposta, mas metadados, e não
+  campos; toda data da plataforma está em UTC; e os nomes `Q<qid>` mudam a cada
+  reimplantação — a exportação por código, que `consulta-consentimento.py` usa, evita
+  o problema.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1590,6 +1665,14 @@ Metas 9 e 10 · out–dez/26
   - **Virada de ciclo:** o procedimento de abrir o questionário do ano seguinte
     ainda não existe e precisa ser escrito. A rotina opera sobre o questionário
     configurado, e `implantar` usa sid fixo.
+- **Vindo da E22:**
+  - **Termo:** precisa da validação do encarregado de dados, com os marcadores
+    preenchidos e versão nova.
+  - **Reimplantação:** o procedimento de reimplantar instrumento ativo sem nada a
+    perder.
+  - **Lista de bloqueio:** a configuração e o que cada padrão significa.
+  - **Página de confirmação da recusa:** aparece em inglês.
+  - **UTC:** a plataforma roda em UTC, e o `php -r` engana.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1646,6 +1729,10 @@ Metas 9 e 10 · out–dez/26
 - **Vinda da E21:** a limitação da E06 ganha forma. O horário fixo depende do
   hospedeiro ligado, e a execução perdida é **registrada, não evitada**. A rotina viu
   cada situação num disparo, com o tempo comprimido pela API. Declarar assim.
+- **Vinda da E22:** declarar o consentimento como base legal **escolhida pelo
+  projeto** (o art. 7º, IV seria outro caminho) e o termo como **modelo de ensaio**,
+  não validado. Registrar também a correção de fuso da E21 como exemplo do limite de
+  uma conferência que reproduz a premissa do código.
 
 ---
 
@@ -1674,3 +1761,4 @@ Uma linha por sessão, mais recente ao final.
 | 04/10/2026 | E19 | **Fase 4 encerrada.** E19 concluída: conferência só de leitura `infra/confere-participantes.py`, com oito verificações — tokens, identificadores, elo com a base central pelo `participant_id` derivado, e e-mail compartilhado comparado em claro e pelo cifrado determinístico. **8 de 8, critério atendido**; os três grupos de e-mail compartilhado são exatamente os três pares plantados pela E16. "Token inválido" definido e verificado — o contador nativo conta token vazio, o que fecha o ponto aberto da E08. E-mail compartilhado é alerta para revisão humana, sem fusão automática. Conferência testada com quinze defeitos plantados, todos reprovados. | Nenhuma pendência nova sem dono. **Não detectável:** a mesma pessoa sob identificadores e endereços distintos. **Ampliadas:** E21 (conferência como guarda antes do disparo), E23 (procedimento de revisão humana), E25 (procedimento e casos negativos prontos) e E28 (não fundir os grupos na extração). |
 | 04/10/2026 | E20 | **Fase 5 iniciada.** E20 concluída: convite e lembrete em `infra/instrumento/mensagens.py`, fonte única que vai no `.lss` e é aplicada ao 202615 ativo pelo `aplicar-mensagens`. Remetente de ensaio trocado de `naoresponda@` para `acompanhamento@egressos.test`, com caixa própria, porque o P7 veda no-reply — remetente e retorno como propriedades do questionário. Lembrete com dois ramos num modelo só, pelo atributo `variante_lembrete` (7º, acrescentado por comando de console com esvaziamento do cache de esquema da web). Recusa de contato pela lista de bloqueio da base central. Convite de teste real a um participante sintético: **9 de 9**, mensagens lidas renderizadas, estado final limpo. Primeira execução falhou e deixou resíduo, desfeito à mão; limpeza tornada independente por passo. | Nenhuma pendência nova sem dono. **Não verificado:** efeito do bloqueio → E22/E23; prazo de 60 dias → E21; URL pública → E30. **Ampliadas:** E21 (gravar o ramo antes do lembrete; abrir o link cria resposta com `lastpage = 0`), E22 (exercitar `GLOBALOPTOUTURL`), E30 (remetente institucional, URL pública, armadilhas). |
 | 05/10/2026 | E21 | E21 concluída: **rotina agendada ativa** no contêiner `rotinas`, com disparo às 10:00 em dia útil e devoluções a cada 30 min, separadas, em **modo simulado** até a E26 (decisão do orientando). O ponto 13.1 foi respondido no código: a rotina nativa é intervalo mais máximo, sem agendador, e por isso a cadência D+*n* por participante ficou fora dela, sem alterar o P3 (ADR-0008). Também no código: datas de envio em UTC, lote de 50, lote que para na primeira falha e `date_invited` não gravado. `lastpage = 0` é `convidado`, medido pelo caminho real. Guarda E19 1–7 mais E20; execução perdida registrada. A distribuição do WSL foi achada parada depois de reinício, e a tarefa de logon que só a liga foi criada com autorização e conferida. Critério: execução real das 10:00 às 10:00:08; `--agendada` 14 de 14, com o disparo às 10:06:11 atingindo só os 4 não respondentes vencidos, com o ramo certo; regras 7 de 7, com 16 de 16 mutações reprovadas; `--perdida` 8 de 8. A primeira execução falhou na limpeza porque o relógio do WSL voltou 7,3 s; foi desfeita à mão e a conferência foi endurecida. | Nenhuma pendência nova sem dono. **Não verificado:** reinício real do Windows; cadência em dias de calendário; doze meses entre ciclos (um questionário só). **Ampliadas:** E22 (recusa já lida pela rotina), E23 (registro como trilha; anonimizar respostas quebra o estado; datas em UTC), E25 (procedimentos prontos e 16 mutações), E26 (ligar o modo real, 255 convites na primeira execução; **operação de reparo nos dois lugares**; dias de calendário), E28 (datas UTC; envios por participante), E30 (Parte V; tarefa de logon como opção de hospedeiro; feriados e calendário; relógio; **virada de ciclo**) e E31 (execução perdida registrada, não evitada). |
+| 05/10/2026 | E22 | E22 concluída: tela de consentimento com o termo como **modelo de ensaio** (elementos do art. 9º; encarregado e prazo de guarda como marcadores; validação do encarregado do IFSP pendente), CON2 específico e encerramento em três ramos. Data e versão gravadas **na própria resposta** por duas equações ocultas (`CONV` com o SHA-256 do documento da página 1, `CONDH` com o momento), e cada versão arquivada, imutável, em `termos/` (ADR-0009). O 202615 foi **reimplantado** (autorizado; a plataforma recusa mudar estrutura de ativo), com 500 reencontrados na base central e tokens novos. Recusa pela mensagem exercitada: bloqueia convite e lembrete neste e em outro questionário, só com os padrões. Critério: `confere-consentimento.py --exercitar` 11 de 11, recuperação por identificador pela exportação da plataforma; anteriores intactas (8/8, 8/8, 4/4, 7/7, 14/14). **Achado que corrigiu a E21:** o LimeSurvey roda em UTC, e `validuntil` era gravado em hora local (janela 3 h mais curta), corrigido e reverificado, com mutação 18 de 18. | Nenhuma pendência nova sem dono. **Não verificado:** conclusão das onze páginas (E26); aplicar termo novo a instrumento ativo pela API. **Ampliadas:** E23 (RCONT e CT4 na base central; registro da recusa com data e via; revogação; e-mail do salvamento; prazo de guarda em versão nova; página de confirmação em inglês; `deleteblacklisted = N`), E25 (procedimentos prontos), E26 (onze páginas; `Formulario`/`Respondente`; tokens e qids novos), E28 (metadados; UTC; nomes `Q<qid>` instáveis), E30 (validação do termo; reimplantação; lista de bloqueio; UTC) e E31 (base legal escolhida; termo de ensaio; limite da conferência que reproduz a premissa). A senha do banco local apareceu num erro no terminal; corrigido para não repetir; troca opcional. |

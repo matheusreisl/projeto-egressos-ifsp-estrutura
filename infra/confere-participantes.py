@@ -36,13 +36,17 @@ def carrega_env():
 
 
 def sql(consulta):
-    """Consulta so de leitura, pelo cliente do proprio conteiner do banco."""
+    """Consulta so de leitura, pelo cliente do proprio conteiner do banco. Na
+    falha, so o que o banco respondeu — e nao a linha de comando, que tem a
+    senha."""
     env = carrega_env()
     r = subprocess.run(
         ["docker", "compose", "exec", "-T", "banco", "mariadb", "--skip-ssl",
          "-B", f"-u{env['BANCO_USUARIO']}", f"-p{env['BANCO_SENHA']}",
          env["BANCO_NOME"], "-e", consulta],
-        cwd=AQUI, capture_output=True, text=True, check=True)
+        cwd=AQUI, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(f"consulta ao banco falhou: {r.stderr.strip()}")
     linhas = [l.split("\t") for l in r.stdout.rstrip("\n").split("\n") if l]
     if not linhas:
         return []

@@ -97,12 +97,17 @@ def registra(numero, rotulo, falhas, evidencia=""):
 
 
 def sql(consulta):
-    """Consulta pelo cliente do proprio conteiner do banco."""
+    """Consulta pelo cliente do proprio conteiner do banco.
+
+    Na falha, a mensagem leva so o que o banco respondeu: o erro padrao do
+    subprocess repete a linha de comando, e com ela a senha (visto na E22)."""
     r = subprocess.run(
         ["docker", "compose", "exec", "-T", "banco", "mariadb", "--skip-ssl",
          "-B", f"-u{ENV['BANCO_USUARIO']}", f"-p{ENV['BANCO_SENHA']}",
          ENV["BANCO_NOME"], "-e", consulta],
-        cwd=AQUI, capture_output=True, text=True, check=True)
+        cwd=AQUI, capture_output=True, text=True)
+    if r.returncode != 0:
+        raise RuntimeError(f"consulta ao banco falhou: {r.stderr.strip()}")
     linhas = [l.split("\t") for l in r.stdout.rstrip("\n").split("\n") if l]
     if not linhas:
         return []
@@ -112,20 +117,29 @@ def sql(consulta):
 
 # --- Caixas: so alcancaveis de dentro da rede interna ------------------------
 
-def imap(caixa, codigo):
+def imap(caixa, codigo, tentativas=6, pausa=5):
     """Roda `codigo` no conteiner rotinas com `m` logado em `caixa`; devolve o
-    que o codigo imprimir em JSON."""
+    que o codigo imprimir em JSON.
+
+    Insiste antes de desistir. Num hospedeiro WSL o relogio da maquina virtual
+    salta para tras, de 7 a 8 s, mesmo sem suspensao, e o Dovecot recusa login
+    durante o intervalo do salto — observado varias vezes na E21 e na E22, com o
+    correio saudavel. O codigo daqui so le ou apaga, e repeti-lo nao muda o
+    resultado."""
     programa = (
         "import imaplib, json, os, base64\n"
         "m = imaplib.IMAP4(os.environ['CORREIO_IMAP_HOST'], 143)\n"
         f"m.login({caixa!r}, os.environ['CORREIO_SENHA'])\n"
         "m.select('INBOX')\n" + codigo + "\nm.expunge(); m.logout()\n")
-    r = subprocess.run(["docker", "compose", "exec", "-T", "rotinas",
-                        "python3", "-"], cwd=AQUI, input=programa,
-                       capture_output=True, text=True)
-    if r.returncode != 0:
-        raise SystemExit(f"caixa {caixa}: {r.stderr.strip()}")
-    return json.loads(r.stdout.strip().splitlines()[-1])
+    for i in range(tentativas):
+        r = subprocess.run(["docker", "compose", "exec", "-T", "rotinas",
+                            "python3", "-"], cwd=AQUI, input=programa,
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            return json.loads(r.stdout.strip().splitlines()[-1])
+        if i < tentativas - 1:
+            time.sleep(pausa)
+    raise SystemExit(f"caixa {caixa}: {r.stderr.strip()}")
 
 
 def mensagens_do_token(caixa, token):

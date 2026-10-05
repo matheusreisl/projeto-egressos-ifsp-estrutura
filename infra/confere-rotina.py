@@ -79,27 +79,8 @@ _spec = importlib.util.spec_from_file_location(
     "confere_mensagens", os.path.join(AQUI, "confere-mensagens.py"))
 cm = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(cm)
-
-
-def _insistente(funcao, tentativas=6, pausa=5):
-    """A caixa, com insistencia. Num hospedeiro WSL o relogio da maquina
-    virtual salta, e o Dovecot recusa login por alguns segundos depois do
-    salto — observado na primeira execucao desta conferencia, com o relogio
-    voltando 7 s, sem suspensao alguma. O auxiliar da E20 sai com SystemExit
-    nessa recusa; aqui se tenta de novo."""
-    def chamada(*args, **kwargs):
-        for i in range(tentativas):
-            try:
-                return funcao(*args, **kwargs)
-            except SystemExit:
-                if i == tentativas - 1:
-                    raise
-                time.sleep(pausa)
-    return chamada
-
-
-for _nome in ("imap", "mensagens_do_token", "apaga"):
-    setattr(cm, _nome, _insistente(getattr(cm, _nome)))
+# A caixa insiste sozinha quando o Dovecot recusa login por salto de relogio
+# (confere-mensagens.imap, desde a E22).
 
 SID = instrumento.SID_INSTRUMENTO
 ENV = carrega_env()
@@ -190,8 +171,15 @@ def confere_regras():
          P(12, sent=enviado(5), emailstatus="invalido", completed="Y",
            respostas=[R(True, "CONC")]), C.RESPONDENTE),
         ("janela encerrada", P(13, sent=enviado(61),
-                               validuntil=(AGORA - timedelta(days=1)).strftime(
-                                   "%Y-%m-%d %H:%M:%S")), C.EXPIRADO),
+                               validuntil=(AGORA - timedelta(days=1)).astimezone(
+                                   UTC).strftime("%Y-%m-%d %H:%M:%S")),
+         C.EXPIRADO),
+        # A plataforma le validuntil em UTC (corrigido na E22). Vencida ha 30
+        # minutos em UTC, a janela estaria 2h30 no futuro se lida como hora
+        # local — e e esse o caso que distingue as duas leituras.
+        ("janela vencida em UTC, que seria futura em hora local",
+         P(17, sent=enviado(30), validuntil=(AGORA - timedelta(minutes=30))
+           .astimezone(UTC).strftime("%Y-%m-%d %H:%M:%S")), C.EXPIRADO),
         ("janela encerrada sem validuntil gravado (convite de fora da rotina)",
          P(14, sent=enviado(61)), C.EXPIRADO),
         ("em preenchimento com a janela encerrada",
@@ -297,12 +285,12 @@ def confere_regras():
     # que se confere — senao a conferencia concordaria com o proprio erro.
     p = P(41, sent=enviado(1))
     r = C.plano([p], AGENDA, 2026, AGORA)
-    esperado = (AGORA - timedelta(days=1) + timedelta(days=60)).strftime(
-        "%Y-%m-%d %H:%M:%S")
+    esperado = (AGORA - timedelta(days=1) + timedelta(days=60)).astimezone(
+        UTC).strftime("%Y-%m-%d %H:%M:%S")
     falhas = [] if [a.validuntil for a in r.janelas] == [esperado] else \
         [f"janela {[a.validuntil for a in r.janelas]}, esperado {esperado}"]
-    registra("convidado sem janela recebe validuntil = envio + 60 dias",
-             falhas, esperado)
+    registra("convidado sem janela recebe validuntil = envio + 60 dias, em UTC",
+             falhas, f"{esperado} UTC")
 
     # --- dia util e horario ---------------------------------------------------
     falhas = []
@@ -387,12 +375,21 @@ def abre(token):
     return abridor, o.campos
 
 
+def coluna(codigo):
+    """Q<qid> do campo: o formulario e a tabela de respostas levam o qid, e nao
+    o codigo (E15). Lido da instancia a cada vez — a reimplantacao da E22 mudou
+    os qids, e a primeira versao desta conferencia, com Q676 escrito, quebrou."""
+    return "Q" + cm.sql(f"SELECT qid FROM lime_questions WHERE sid={SID} AND "
+                        f"title='{codigo}' AND parent_qid=0")[0]["qid"]
+
+
 def envia_pagina_1(token, con1):
     """Responde a pagina 1 como o respondente: CON1, e CON2 quando concorda."""
     abridor, campos = abre(token)
-    campos = dict(campos, Q676=con1, move="movenext")
+    campos = dict(campos, move="movenext", **{coluna("CON1"): con1})
     if con1 == C.CON1_CONCORDO:
-        campos.update(Q677="CONC", relevance677="1")
+        con2 = coluna("CON2")
+        campos.update({con2: "CONC", "relevance" + con2[1:]: "1"})
     abridor.open(urllib.request.Request(
         f"http://127.0.0.1:{PORTA}/index.php/{SID}",
         data=urllib.parse.urlencode(campos).encode()), timeout=60).read()
@@ -412,18 +409,33 @@ def compose(*args, rotina=None):
 
 
 def sobe_agendador(rotina=None, limite=120):
-    """Recria o conteiner rotinas e espera o agendador anunciar o ciclo.
-    Devolve o instante da subida (para ler o log dali em diante), ou None."""
+    """Leva o conteiner rotinas a configuracao pedida — a do comando, ou a do
+    .env — e espera o agendador de pe nela. Devolve o instante do pedido (para
+    ler o log dali em diante), ou None.
+
+    Confere o estado, e nao a recriacao: se o conteiner ja estiver como se pede,
+    `up -d` nao o recria e nao ha linha nova de log — e esperar por ela daria
+    falso alarme, como deu na E22."""
     desde = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
     r = compose("up", "-d", "rotinas", rotina=rotina)
     if r.returncode != 0:
         return None
-    ciclo = (rotina or {}).get("ROTINA_CICLO", ENV.get("ROTINA_CICLO"))
+    querido = {"ROTINA_DISPARO": ENV.get("ROTINA_DISPARO", "simulado"),
+               "ROTINA_CICLO": ENV.get("ROTINA_CICLO"),
+               "ROTINA_HORARIO": ENV.get("ROTINA_HORARIO", "")}
+    querido.update(rotina or {})
     inicio = time.time()
     while time.time() - inicio < limite:
-        log = compose("logs", "--no-log-prefix", "--since", desde,
-                      "rotinas").stdout
-        if f"agendador de pe · modo" in log and f"ciclo {ciclo}" in log:
+        env = compose("exec", "-T", "rotinas", "sh", "-c",
+                      'printf "%s|%s|%s" "$ROTINA_DISPARO" "$ROTINA_CICLO" '
+                      '"$ROTINA_HORARIO"').stdout.strip()
+        partidas = [l for l in compose("logs", "--no-log-prefix",
+                                       "rotinas").stdout.splitlines()
+                    if "agendador de pe · modo" in l]
+        if env == "|".join((querido["ROTINA_DISPARO"], querido["ROTINA_CICLO"],
+                            querido["ROTINA_HORARIO"] or "")) and partidas \
+                and f"modo {querido['ROTINA_DISPARO']}" in partidas[-1] \
+                and f"ciclo {querido['ROTINA_CICLO']}" in partidas[-1]:
             return desde
         time.sleep(3)
     return None
@@ -565,9 +577,11 @@ def confere_agendada():
                    remindersent=utc_texto(agora - timedelta(days=6)))
             ajusta("H", sent=utc_texto(agora - timedelta(days=5)),
                    completed=utc_texto(agora - timedelta(days=1)))
+            # add_response descarta em silencio a chave que nao for coluna: o
+            # nome tem de ser o Q<qid> da instancia.
             api.chamar("add_response", [SID, {
-                "token": por["H"]["token"], "Q676": "CONC", "Q677": "CONC",
-                "lastpage": 10}])
+                "token": por["H"]["token"], coluna("CON1"): "CONC",
+                coluna("CON2"): "CONC", "lastpage": 10}])
             for letra, con1 in (("I", C.CON1_RECUSA_CONSENTIMENTO),
                                 ("J", C.CON1_RECUSA_CONTATO)):
                 ajusta(letra, sent=utc_texto(agora - timedelta(days=5)))
@@ -575,8 +589,8 @@ def confere_agendada():
             ajusta("K", sent=utc_texto(agora - timedelta(days=4)),
                    emailstatus="invalido")
             ajusta("L", sent=utc_texto(agora - timedelta(days=61)),
-                   validuntil=(agora - timedelta(days=1)).strftime(
-                       "%Y-%m-%d %H:%M:%S"))
+                   validuntil=(agora - timedelta(days=1)).astimezone(
+                       UTC).strftime("%Y-%m-%d %H:%M:%S"))
             # Reparo: o convite anterior do ciclo esta no registro da rotina.
             for letra, quantos in (("M", 1), ("N", 2)):
                 for _ in range(quantos):
@@ -591,18 +605,20 @@ def confere_agendada():
             # O caminho real produziu o que a rotina le?
             falhas = []
             resp = {l["token"]: l for l in sql(
-                f"SELECT token, lastpage, Q676, submitdate FROM "
-                f"lime_responses_{SID}")}
-            b, c_, i, j = (resp.get(por[x]["token"], {}) for x in "BCIJ")
-            if not (b and b["Q676"] is None and b["submitdate"] is None):
+                f"SELECT token, lastpage, {coluna('CON1')} con1, submitdate "
+                f"FROM lime_responses_{SID}")}
+            b, c_, h, i, j = (resp.get(por[x]["token"], {}) for x in "BCHIJ")
+            if not (b and b["con1"] is None and b["submitdate"] is None):
                 falhas.append(f"B: abrir nao deixou parcial sem CON1 ({b})")
-            if not (c_ and c_["Q676"] == "CONC" and c_["submitdate"] is None
+            if not (c_ and c_["con1"] == "CONC" and c_["submitdate"] is None
                     and c_["lastpage"] == "1"):
                 falhas.append(f"C: pagina 1 nao deixou parcial com CON1 ({c_})")
+            if not (h and h["con1"] == "CONC" and h["submitdate"]):
+                falhas.append(f"H: resposta concluida sem CON1 ({h})")
             for letra, linha, con1 in (("I", i, "RCONS"), ("J", j, "RCONT")):
                 tok = sql(f"SELECT completed FROM lime_tokens_{SID} WHERE "
                           f"tid={por[letra]['tid']}")[0]
-                if not (linha and linha["Q676"] == con1 and linha["submitdate"]
+                if not (linha and linha["con1"] == con1 and linha["submitdate"]
                         and tok["completed"] not in ("N", None)):
                     falhas.append(f"{letra}: recusa nao encerrou como a E15 "
                                   f"observou ({linha}, {tok})")
@@ -720,7 +736,8 @@ def confere_agendada():
                 if l["sent"] in ("N", None):
                     falhas.append(f"{letra}: sem convite gravado")
                     continue
-                janela = (C.instante_utc(l["sent"]).astimezone(FUSO)
+                # Calculada aqui, e em UTC, como a plataforma a le.
+                janela = (datetime.strptime(l["sent"], "%Y-%m-%d %H:%M")
                           + timedelta(days=60)).strftime("%Y-%m-%d %H:%M:%S")
                 if l["validuntil"] != janela:
                     falhas.append(f"{letra}: validuntil {l['validuntil']}, "

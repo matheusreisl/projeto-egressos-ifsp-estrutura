@@ -109,6 +109,15 @@ GRUPOS = [
              "dado": "consentimento específico para os recortes de equidade",
              "tipo": "lista", "obrigatorio": True, "relevancia": CONSENTIU,
              "opcoes": [("CONC", "Concordo"), ("NCONC", "Não concordo")]},
+            # Metadados do consentimento (E22): equacoes ocultas que a
+            # plataforma calcula ao receber a pagina. Nao sao campos que o
+            # respondente preenche (blocos-instrumento.md, secao 12.3). Sempre
+            # relevantes, para que a recusa, que descarta o resto, as mantenha.
+            # O valor vem de termo.py; "termo:<nome>" e resolvido no gerador.
+            {"codigo": "CONV", "dado": "versão do termo", "tipo": "equacao",
+             "metadado": True, "equacao": "termo:versao"},
+            {"codigo": "CONDH", "dado": "data e hora da manifestação",
+             "tipo": "equacao", "metadado": True, "equacao": "termo:momento"},
         ],
     },
     {

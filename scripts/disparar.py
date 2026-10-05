@@ -455,10 +455,10 @@ def executa(agenda, simular, origem, execucao=None, previsto=None):
                     print(f"  ATENCAO: tid {a.tid} convidado sem envio "
                           "gravado; janela nao aplicada", flush=True)
                     continue
-                fim = envio.astimezone(agenda.fuso) + timedelta(
-                    days=agenda.janela_dias)
+                # Em UTC: a plataforma le validuntil em UTC (corrigido na E22).
+                fim = envio + timedelta(days=agenda.janela_dias)
                 api.chamar("set_participant_properties",
-                           [sid, a.tid, {"validuntil": local(fim)}])
+                           [sid, a.tid, {"validuntil": cadencia.texto_utc(fim)}])
 
             # 2. Janelas que faltavam (convite feito sem a janela gravada).
             for a in p.janelas:
