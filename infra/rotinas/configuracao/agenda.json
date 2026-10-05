@@ -35,6 +35,9 @@
   "_sobre_devolucoes": "A leitura de devolucoes roda separada do disparo, a cada tantos minutos e em qualquer dia: a devolucao temporaria chega depois do disparo que a originou (E09).",
   "devolucoes_intervalo_minutos": 30,
 
+  "_sobre_conformidade": "E23: a rotina de conformidade registra cada recusa, leva a recusa de contato a base central e apaga dado sensivel guardado sem consentimento. Roda a cada tantos minutos, em qualquer dia, e sempre de verdade: nao contata ninguem, so protege.",
+  "conformidade_intervalo_minutos": 30,
+
   "_sobre_lote": "Quantos participantes por chamada da API. A plataforma envia no maximo maxemails (50, padrao do LimeSurvey 7) por chamada e ignora o resto da lista.",
   "lote": 50
 }

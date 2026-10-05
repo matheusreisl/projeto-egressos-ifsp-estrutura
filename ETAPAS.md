@@ -1356,7 +1356,7 @@ Metas 6 e 7 · out–nov/26
 - **Não verificado:** conclusão das onze páginas (E26); aplicar versão nova do termo
   a instrumento ativo pela API.
 
-### [ ] E23 — Configurar anonimização e trilha de auditoria
+### [x] E23 — Configurar anonimização e trilha de auditoria
 - **Objetivo:** completar os controles de conformidade.
 - **Entregável:** parametrização aplicada e documentada, incluindo tratamento da recusa.
 - **Conclusão quando:** a recusa **de contato** interromper novos disparos em todos
@@ -1430,6 +1430,49 @@ Metas 6 e 7 · out–nov/26
   - **Prazo de guarda no termo:** preenchê-lo exige **versão nova** (`termo.py`).
   - **Página de confirmação da recusa:** traduzir a frase que aparece em inglês.
   - **Lista de bloqueio:** manter `deleteblacklisted = N`.
+- **Concluída em:** 05/10/2026 · `docs/especificacao/conformidade.md` · ADR-0010 ·
+  `scripts/conformidade.py` · `infra/conformidade.py` (`aplicar`, `revogar`) ·
+  comandos `ativarauditoria` e `revogarrecusa` · `infra/limesurvey/traducoes/` ·
+  `infra/confere-conformidade.py`.
+- **Recusa em todos os ciclos:** a rotina de conformidade, terceira tarefa do
+  agendador (a cada 30 min, sempre de verdade), registra cada recusa em
+  `egressos_recusas` e leva a de contato da **tela** e de **CT4** à base central
+  **pela via da plataforma** — a mesma página de confirmação da mensagem, por POST —,
+  com trilha. A de consentimento só se registra. Contato inválido não é recusa.
+  Conferido num **ciclo seguinte de verdade** (questionário novo, mesmas pessoas): a
+  plataforma recusou convidar quem recusou contato pelas três vias e convidou quem
+  recusou consentimento e quem tinha contato inválido.
+- **Decisões confirmadas com o orientando:** revogação **pelo operador**, a pedido do
+  egresso por resposta, com `allowunblacklist = N` (com ele ligado, quem tivesse o
+  endereço individual desfaria a recusa); cifragem de EQ1–EQ3, AF4 e CT1–CT3, com
+  nome e e-mail do questionário em claro no ensaio; guarda **por princípio** no
+  termo, com os anos da instituição; tradução corrigida **na imagem**.
+- **Trilha:** `AuditLog` ativado **por comando de console**, que faz o que o painel
+  faz — o K7 fica preservado. Dá a data da recusa pela mensagem, que a plataforma não
+  guarda. **Defeito da plataforma achado e corrigido:** oito registros leem o usuário
+  sem conferir; no console é erro fatal, e com a trilha ativa a importação da E17 e a
+  revogação quebravam. Correção na construção da imagem (Dockerfile, 4.2), que para se
+  o padrão sobrar. A trilha guarda só o que muda, mas a criação de participante
+  registra todos os campos — dado pessoal na trilha, a guardar como a base.
+- **Página de recusa em português:** sete traduções que faltavam no pt-BR,
+  acrescentadas por script que nunca substitui as existentes (5.625 intactas). Imagem
+  `egressos/limesurvey:7.2.0-1`.
+- **Cifragem e termo `ensaio-2`** exigiram a **segunda reimplantação** do 202615 (0
+  respostas, nada enviado). Conferência estrutural 9 de 9 — a nona, da cifragem,
+  **falhou antes e passou depois**. No banco o valor cifrado; na exportação, o valor.
+- **Dado sensível sem consentimento** em resposta interrompida é apagado pela rotina,
+  por gravação direta — a API recusa alterar resposta com edição pós-conclusão
+  desligada — e registrado em `egressos_higienizacoes`.
+- **Políticas escritas para outras etapas:** anonimização **na extração**, e não na
+  resposta (a nativa quebraria a rotina da E21) — E28; retenção por evento — E30;
+  revisão humana do e-mail compartilhado — procedimento escrito.
+- **Critério verificado:** `confere-conformidade.py --exercitar` **12 de 12 na
+  primeira execução**: cifragem, registro das três vias e do consentimento, base
+  central com trilha, ciclo seguinte, ciclo corrente, higienização, idempotência,
+  revogação sem novo bloqueio, recuperação e limpeza. Regressão: E22 11 de 11, E21 14
+  de 14, estrutura 9 de 9.
+- **Não verificado:** CT4 pela conclusão real das onze páginas (E26); eliminação por
+  prazo, que não roda (E30); a trilha não é inviolável contra quem administra o banco.
 
 ### [ ] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
@@ -1493,6 +1536,10 @@ Meta 8 · nov–dez/26
   `confere-consentimento.py --exercitar`, onze conferências, e
   `consulta-consentimento.py` para a recuperação. A conferência estrutural tem oito
   verificações, a oitava dos metadados.
+- **Vindo da E23:** "tratamento da recusa", "trilha de auditoria" e "cifragem" têm
+  procedimento pronto — `confere-conformidade.py --exercitar`, doze conferências,
+  inclusive o **ciclo seguinte** num questionário novo. A conferência estrutural tem
+  nove verificações, a nona da cifragem.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1547,6 +1594,16 @@ Meta 8 · nov–dez/26
     preenchem por HTTP como o navegador sem JavaScript.
   - **Tokens novos:** o 202615 foi reimplantado, e os qids e tokens mudaram. Nenhum
     script pode fixar `Q<qid>`.
+- **Vindo da E23:**
+  - **CT4 pela conclusão real** e a recusa levada à base central pela rotina de
+    conformidade.
+  - **Revogação pedida de verdade**, por resposta na caixa `acompanhamento`, e
+    feita por `conformidade.py revogar`.
+  - **Rotina de conformidade:** roda a cada 30 min e age sobre recusas plantadas.
+    As conferências esperam a virada do intervalo e desfazem o bloqueio que ela
+    aplicar.
+  - **Reimplantado de novo:** o 202615 foi reimplantado outra vez (tokens e qids
+    novos).
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -1597,6 +1654,17 @@ Metas 9 e 10 · out–dez/26
   campos; toda data da plataforma está em UTC; e os nomes `Q<qid>` mudam a cada
   reimplantação — a exportação por código, que `consulta-consentimento.py` usa, evita
   o problema.
+- **Vindo da E23:** aplicar a **política de anonimização** da seção 7 de
+  `conformidade.md`:
+  - **nunca saem:** token, nome, e-mail e telefone;
+  - **identificador:** só pseudonimizado, por resumo com chave;
+  - **AF4:** só com revisão humana;
+  - **EQ1 a EQ3:** só agregados, com célula mínima a fixar aqui, e só de quem deu
+    CON2;
+  - **renda:** só a faixa.
+
+  EQ1–EQ3, AF4 e CT1–CT3 estão **cifrados** no banco; ler pela exportação da
+  plataforma, que decifra.
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1673,6 +1741,17 @@ Metas 9 e 10 · out–dez/26
   - **Lista de bloqueio:** a configuração e o que cada padrão significa.
   - **Página de confirmação da recusa:** aparece em inglês.
   - **UTC:** a plataforma roda em UTC, e o `php -r` engana.
+- **Vindo da E23:**
+  - **Instalação:** `conformidade.py aplicar` entra na sequência de instalação do
+    zero, porque a trilha nasce desativada.
+  - **Imagem 7.2.0-1:** inclui as traduções e a correção do `AuditLog`.
+  - **Retenção:** os anos da tabela de temporalidade vão no termo, com versão nova,
+    e a **rotina de eliminação por prazo**, da política da seção 8 de
+    `conformidade.md`, precisa ser escrita.
+  - **Cifragem:** de nome e e-mail do participante do questionário.
+  - **Revisão humana do e-mail compartilhado:** procedimento da seção 9.
+  - **Trilha:** guarda dado pessoal na criação de participantes, é MyISAM e não é
+    inviolável.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1733,6 +1812,10 @@ Metas 9 e 10 · out–dez/26
   projeto** (o art. 7º, IV seria outro caminho) e o termo como **modelo de ensaio**,
   não validado. Registrar também a correção de fuso da E21 como exemplo do limite de
   uma conferência que reproduz a premissa do código.
+- **Vinda da E23:** declarar que a revogação é pelo operador, por decisão, e por
+  quê; que a trilha registra também dado pessoal e não é inviolável; e que o
+  mecanismo corrigiu um defeito da plataforma (`AuditLog` sem usuário) e completou a
+  tradução pt-BR — achados com valor para outras instalações do LimeSurvey.
 
 ---
 
@@ -1762,3 +1845,4 @@ Uma linha por sessão, mais recente ao final.
 | 04/10/2026 | E20 | **Fase 5 iniciada.** E20 concluída: convite e lembrete em `infra/instrumento/mensagens.py`, fonte única que vai no `.lss` e é aplicada ao 202615 ativo pelo `aplicar-mensagens`. Remetente de ensaio trocado de `naoresponda@` para `acompanhamento@egressos.test`, com caixa própria, porque o P7 veda no-reply — remetente e retorno como propriedades do questionário. Lembrete com dois ramos num modelo só, pelo atributo `variante_lembrete` (7º, acrescentado por comando de console com esvaziamento do cache de esquema da web). Recusa de contato pela lista de bloqueio da base central. Convite de teste real a um participante sintético: **9 de 9**, mensagens lidas renderizadas, estado final limpo. Primeira execução falhou e deixou resíduo, desfeito à mão; limpeza tornada independente por passo. | Nenhuma pendência nova sem dono. **Não verificado:** efeito do bloqueio → E22/E23; prazo de 60 dias → E21; URL pública → E30. **Ampliadas:** E21 (gravar o ramo antes do lembrete; abrir o link cria resposta com `lastpage = 0`), E22 (exercitar `GLOBALOPTOUTURL`), E30 (remetente institucional, URL pública, armadilhas). |
 | 05/10/2026 | E21 | E21 concluída: **rotina agendada ativa** no contêiner `rotinas`, com disparo às 10:00 em dia útil e devoluções a cada 30 min, separadas, em **modo simulado** até a E26 (decisão do orientando). O ponto 13.1 foi respondido no código: a rotina nativa é intervalo mais máximo, sem agendador, e por isso a cadência D+*n* por participante ficou fora dela, sem alterar o P3 (ADR-0008). Também no código: datas de envio em UTC, lote de 50, lote que para na primeira falha e `date_invited` não gravado. `lastpage = 0` é `convidado`, medido pelo caminho real. Guarda E19 1–7 mais E20; execução perdida registrada. A distribuição do WSL foi achada parada depois de reinício, e a tarefa de logon que só a liga foi criada com autorização e conferida. Critério: execução real das 10:00 às 10:00:08; `--agendada` 14 de 14, com o disparo às 10:06:11 atingindo só os 4 não respondentes vencidos, com o ramo certo; regras 7 de 7, com 16 de 16 mutações reprovadas; `--perdida` 8 de 8. A primeira execução falhou na limpeza porque o relógio do WSL voltou 7,3 s; foi desfeita à mão e a conferência foi endurecida. | Nenhuma pendência nova sem dono. **Não verificado:** reinício real do Windows; cadência em dias de calendário; doze meses entre ciclos (um questionário só). **Ampliadas:** E22 (recusa já lida pela rotina), E23 (registro como trilha; anonimizar respostas quebra o estado; datas em UTC), E25 (procedimentos prontos e 16 mutações), E26 (ligar o modo real, 255 convites na primeira execução; **operação de reparo nos dois lugares**; dias de calendário), E28 (datas UTC; envios por participante), E30 (Parte V; tarefa de logon como opção de hospedeiro; feriados e calendário; relógio; **virada de ciclo**) e E31 (execução perdida registrada, não evitada). |
 | 05/10/2026 | E22 | E22 concluída: tela de consentimento com o termo como **modelo de ensaio** (elementos do art. 9º; encarregado e prazo de guarda como marcadores; validação do encarregado do IFSP pendente), CON2 específico e encerramento em três ramos. Data e versão gravadas **na própria resposta** por duas equações ocultas (`CONV` com o SHA-256 do documento da página 1, `CONDH` com o momento), e cada versão arquivada, imutável, em `termos/` (ADR-0009). O 202615 foi **reimplantado** (autorizado; a plataforma recusa mudar estrutura de ativo), com 500 reencontrados na base central e tokens novos. Recusa pela mensagem exercitada: bloqueia convite e lembrete neste e em outro questionário, só com os padrões. Critério: `confere-consentimento.py --exercitar` 11 de 11, recuperação por identificador pela exportação da plataforma; anteriores intactas (8/8, 8/8, 4/4, 7/7, 14/14). **Achado que corrigiu a E21:** o LimeSurvey roda em UTC, e `validuntil` era gravado em hora local (janela 3 h mais curta), corrigido e reverificado, com mutação 18 de 18. | Nenhuma pendência nova sem dono. **Não verificado:** conclusão das onze páginas (E26); aplicar termo novo a instrumento ativo pela API. **Ampliadas:** E23 (RCONT e CT4 na base central; registro da recusa com data e via; revogação; e-mail do salvamento; prazo de guarda em versão nova; página de confirmação em inglês; `deleteblacklisted = N`), E25 (procedimentos prontos), E26 (onze páginas; `Formulario`/`Respondente`; tokens e qids novos), E28 (metadados; UTC; nomes `Q<qid>` instáveis), E30 (validação do termo; reimplantação; lista de bloqueio; UTC) e E31 (base legal escolhida; termo de ensaio; limite da conferência que reproduz a premissa). A senha do banco local apareceu num erro no terminal; corrigido para não repetir; troca opcional. |
+| 05/10/2026 | E23 | E23 concluída: **recusa de contato em todos os ciclos**. A rotina de conformidade (3ª tarefa do agendador, sempre de verdade) registra cada recusa em `egressos_recusas` (tipo, via, momento com a fonte, versão do termo) e leva a da tela e de CT4 à base central **pela via da própria plataforma**; a de consentimento só se registra; contato inválido não é recusa. Conferido num ciclo seguinte de verdade: a plataforma não convidou quem recusou contato pelas três vias e convidou os demais. Trilha `AuditLog` ativada **por comando** (K7 preservado), com **correção de um defeito da plataforma** que quebrava gravação na base central por console com a trilha ativa. Página de recusa em português (7 traduções na imagem 7.2.0-1). Cifragem de EQ1–EQ3, AF4 e CT1–CT3 e termo `ensaio-2` (guarda por princípio), com a segunda reimplantação do 202615. Dado sensível sem consentimento apagado das parciais. Revogação pelo operador. Políticas de anonimização na extração e de retenção escritas (ADR-0010). Critério: `confere-conformidade.py --exercitar` 12 de 12 na primeira execução; regressão E22 11/11, E21 14/14, estrutura 9/9. | Nenhuma pendência nova sem dono. **Não verificado:** CT4 pela conclusão real (E26); eliminação por prazo, que não roda (E30); trilha inviolável, que não é. **Ampliadas:** E25 (procedimento pronto, inclusive o ciclo seguinte), E26 (CT4 real; revogação pedida de verdade; a rotina age a cada 30 min), E28 (política de anonimização; campos cifrados lidos pela exportação), E30 (`aplicar` na instalação; imagem 7.2.0-1; anos no termo e rotina de eliminação; cifragem de nome e e-mail; revisão humana; trilha com dado pessoal) e E31 (revogação pelo operador; trilha; defeito e tradução da plataforma). |

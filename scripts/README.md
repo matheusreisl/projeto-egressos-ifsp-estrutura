@@ -32,7 +32,8 @@ acesso ao Docker. Estão marcados na tabela.
 | `conferencia_participantes.py` | as conferências de unicidade e integridade da E19, usadas no hospedeiro e como guarda do disparo | — | E19, E21 |
 | `cadencia.py` | lógica pura da cadência: estado de cada participante e o que vence, sem falar com nada | — | E21 |
 | `disparar.py` | rotina de disparo: guarda, estado, convites e lembretes, registro próprio | contêiner | E21 |
-| `agendador.py` | processo principal do contêiner: disparo no horário fixo e devoluções a intervalos | contêiner | E21 |
+| `agendador.py` | processo principal do contêiner: disparo no horário fixo, devoluções e conformidade a intervalos | contêiner | E21, E23 |
+| `conformidade.py` | registra cada recusa, leva a de contato à base central pela via da plataforma, apaga dado sensível sem consentimento | contêiner | E23 |
 
 A importação está especificada em
 [`docs/especificacao/importacao-base.md`](../docs/especificacao/importacao-base.md),

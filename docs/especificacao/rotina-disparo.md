@@ -191,6 +191,9 @@ mutação, as duas mutações de fuso (18 de 18 reprovadas).
 - **Modo.** `ROTINA_DISPARO=simulado` é o padrão: roda no horário, confere a guarda,
   calcula e registra o plano, e não envia nem grava na plataforma. A leitura de
   devoluções, em simulado, lê sem consumir a caixa.
+- **Terceira tarefa, desde a E23:** a rotina de conformidade, a cada 30 minutos e
+  sempre de verdade — registra recusas, leva a de contato à base central e apaga dado
+  sensível sem consentimento ([`conformidade.md`](conformidade.md)).
 
 ## 6. A guarda
 

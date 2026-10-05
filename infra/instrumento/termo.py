@@ -10,8 +10,9 @@ docs/especificacao/consentimento.md.
 
 VERSAO DE ENSAIO. O texto segue os elementos do art. 9 da LGPD e diz o que o
 mecanismo faz, conforme as especificacoes do projeto. Os contatos do
-encarregado e o prazo de guarda sao marcadores: o primeiro e da instituicao; o
-segundo, da E23. Antes de qualquer uso com egressos reais, o termo precisa ser
+encarregado e os prazos em anos sao marcadores da instituicao; a guarda, por
+evento, e a da politica da E23 (docs/especificacao/conformidade.md). Antes de
+qualquer uso com egressos reais, o termo precisa ser
 validado pelo encarregado de dados do IFSP. A base legal adotada para as
 respostas — consentimento — e decisao do projeto, e nao conclusao da lei
 (fichamento da LGPD, limitacoes).
@@ -39,14 +40,20 @@ import os
 AQUI = os.path.dirname(os.path.abspath(__file__))
 ARQUIVO = os.path.join(AQUI, "termos")
 
-VERSAO = "ensaio-1"
+# ensaio-1 (E22): o prazo de guarda era marcador, a cargo da E23.
+# ensaio-2 (E23): a guarda por principio — ate quando cada dado fica, por evento
+# — e a cifragem das respostas sensiveis. Os anos ficam com a instituicao, pela
+# tabela de temporalidade (decisao do orientando). O arquivo da ensaio-1 fica em
+# termos/, imutavel: e a prova do que as respostas daquela versao aceitaram.
+VERSAO = "ensaio-2"
 
-# Marcadores do que a instituicao, ou outra etapa, preenche. Ficam visiveis no
-# texto de proposito: um termo com lacuna disfarcada seria pior que um termo
-# com lacuna declarada.
+# Marcadores do que a instituicao preenche. Ficam visiveis no texto de
+# proposito: um termo com lacuna disfarcada seria pior que um termo com lacuna
+# declarada.
 ENCARREGADO = "[nome e contato do encarregado de dados do IFSP — a preencher " \
               "pela instituição]"
-PRAZO_DE_GUARDA = "[prazo definido na política de retenção do programa — E23]"
+PRAZOS = "[prazos da tabela de temporalidade de documentos do IFSP — a " \
+         "preencher pela instituição]"
 
 # --- Pagina 1: o termo (enunciado de CON1) ------------------------------------
 
@@ -75,9 +82,16 @@ TEXTO_TERMO = "\n".join([
 
     "<p><strong>Como e por quanto tempo.</strong> Os dados ficam numa instalação "
     "própria do IFSP, com acesso restrito à equipe do programa, e não são "
-    "compartilhados com terceiros. Os resultados são divulgados apenas de forma "
-    f"agregada, sem identificar quem respondeu. Prazo de guarda: "
-    f"{PRAZO_DE_GUARDA}.</p>",
+    "compartilhados com terceiros. As respostas sobre gênero, raça/cor e "
+    "deficiência, as sugestões em texto livre e os contatos atualizados ficam "
+    "cifrados. Os resultados são divulgados apenas de forma agregada, sem "
+    "identificar quem respondeu.</p>",
+    "<p>Os seus dados acadêmicos e de contato ficam guardados enquanto você fizer "
+    "parte do acompanhamento de egressos. As suas respostas ficam identificadas "
+    "só até serem usadas no cálculo dos indicadores do ano; depois disso, o que "
+    "fica não identifica você. O registro da sua manifestação sobre este termo — "
+    "inclusive uma recusa — fica guardado enquanto for preciso comprovar que ela "
+    f"foi respeitada. Prazos em anos: {PRAZOS}.</p>",
 
     "<p><strong>Quem responde pelo tratamento.</strong> O IFSP é o controlador "
     f"dos dados. Encarregado: {ENCARREGADO}.</p>",

@@ -295,7 +295,9 @@ def monta_lss(sid):
                 "qid": qid, "parent_qid": 0, "sid": sid, "gid": gid,
                 "type": tipo, "title": c["codigo"], "preg": preg,
                 "other": "N", "mandatory": "Y" if c.get("obrigatorio") else "N",
-                "encrypted": "N", "question_order": ordem_q, "scale_id": 0,
+                # Cifrado em repouso (E23): ver estrutura.py.
+                "encrypted": "Y" if c.get("cifrado") else "N",
+                "question_order": ordem_q, "scale_id": 0,
                 "same_default": 0, "relevance": c.get("relevancia", "1"),
                 "question_theme_name": tema, "modulename": "",
                 "same_script": 0})

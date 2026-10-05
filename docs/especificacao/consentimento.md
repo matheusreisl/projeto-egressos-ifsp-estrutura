@@ -157,6 +157,10 @@ dentro deste questionário, e o termo e o encerramento prometem "neste nem nos
 próximos anos". Cumprir a promessa nos ciclos seguintes é o critério da **E23**, e
 precisa estar feito antes de qualquer uso real.
 
+*Feito na E23* ([`conformidade.md`](conformidade.md), seção 2): a rotina de
+conformidade leva a recusa da tela e a de CT4 à base central pela via da plataforma,
+e o ciclo seguinte não convida — conferido com um questionário novo.
+
 ### 6.2 Pela mensagem
 
 O convite e o lembrete levam `{GLOBALOPTOUTURL}` (E20). Exercitado nesta etapa:
@@ -181,12 +185,13 @@ cada um significa para o mecanismo:
 | `blockaddingtosurveys` | Y | manter: impede incluir bloqueado em questionário novo pela base central. A importação da E17 já não o inclui |
 | `blacklistallsurveys` | N | dispensável: o filtro do envio já lê a base central |
 | `blacklistnewsurveys` | N | dispensável, pelo mesmo motivo |
-| `allowunblacklist` | N | é a **revogação pelo próprio egresso**: decisão da E23 |
+| `allowunblacklist` | N | é a **revogação pelo próprio egresso**: decisão da E23 — mantido N, e a revogação é pelo operador ([`conformidade.md`](conformidade.md), seção 2.4) |
 
 **Achado:** a frase da página de confirmação aparece **em inglês** ("Please confirm
 that you want to be removed from the central participant list for this site.") — a
 tradução pt-BR da plataforma não a tem, embora o botão esteja traduzido. É a página
-que o egresso vê ao recusar. Fica para a E23 e a E30.
+que o egresso vê ao recusar. Fica para a E23 e a E30. *Corrigido na E23:* sete
+traduções acrescentadas na imagem ([`conformidade.md`](conformidade.md), seção 5).
 
 ## 7. A reimplantação do 202615
 

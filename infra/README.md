@@ -27,6 +27,9 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `instrumento/` | a estrutura do questionário: exportação versionada, gerador e configuração (E15) — ver o [README](instrumento/README.md) |
 | `confere-instrumento.py` | confere o instrumento implantado contra a especificação das E13 e E14 |
 | `confere-participantes.py` | confere a unicidade dos tokens e identificadores e o elo com a base central (E19) |
+| `limesurvey/traducoes/` | traduções pt-BR que faltavam nas páginas de recusa e revogação, acrescentadas na construção da imagem (E23) |
+| `conformidade.py` | operação de conformidade: `aplicar` ativa a trilha e confere a lista de bloqueio; `revogar` desfaz uma recusa de contato a pedido do egresso (E23) |
+| `confere-conformidade.py` | confere a recusa em todos os ciclos, o registro, a trilha, a cifragem e a revogação (E23) |
 | `confere-consentimento.py` | confere o termo e a versão na instância e, com `--exercitar`, aceite, recusas e recusa pela mensagem (E22) |
 | `consulta-consentimento.py` | recupera, por identificador, cada manifestação sobre o termo, com data e versão, e confere o texto arquivado (E22) |
 | `rotinas/configuracao/agenda.json` | a agenda da rotina de disparo: cadência, horário, feriados, calendário (E21) |
@@ -384,12 +387,13 @@ docker compose exec rotinas python3 ler_devolucoes.py \
 ## Rotina agendada
 
 Desde a E21, o processo principal do contêiner `rotinas` é o **agendador**
-(`scripts/agendador.py`). Ele cuida de duas tarefas, independentes uma da outra:
+(`scripts/agendador.py`). Ele cuida de três tarefas, independentes umas das outras:
 
 | Tarefa | Quando | O que roda |
 |---|---|---|
 | disparo | **10:00, segunda a sexta**, menos os feriados da agenda | `disparar.py`: guarda, estado de cada participante, convites e lembretes que venceram |
 | devoluções | a cada 30 minutos, todo dia | `ler_devolucoes.py`, da E09 |
+| conformidade | a cada 30 minutos, todo dia, **sempre de verdade** | `conformidade.py`, da E23: registra recusas, leva a de contato à base central, apaga dado sensível sem consentimento |
 
 São separadas porque a devolução temporária chega depois do disparo que a
 originou (E09). A especificação está em
@@ -511,6 +515,40 @@ O mesmo vale para as imagens base: estão fixadas por digest, e não por rótulo
 móvel. Sem isso, "subir do zero a partir do que está versionado" não produziria o
 mesmo ambiente duas vezes.
 
+## Conformidade (E23)
+
+Depois de implantar e ativar o instrumento, **numa instalação do zero**:
+
+```bash
+python3 conformidade.py aplicar
+```
+
+Ativa a trilha de auditoria da plataforma (`AuditLog`) por comando de console — sem
+tela —, confere a lista de bloqueio nos padrões que o mecanismo exige
+(`deleteblacklisted = N`, `allowunblacklist = N`, `blockaddingtosurveys = Y`) e
+confere que a imagem tem a correção do `AuditLog` (seção 4.2 do
+`limesurvey/Dockerfile`), sem a qual gravar na base central por console quebra com a
+trilha ativa. Idempotente.
+
+A revogação de uma recusa de contato, a pedido do egresso por resposta a uma
+mensagem:
+
+```bash
+python3 conformidade.py revogar --identificador SIN-000123 \
+    --registro "pedido por resposta de 05/10/2026 na caixa acompanhamento"
+```
+
+E a conferência:
+
+```bash
+python3 confere-conformidade.py               # só leitura
+python3 confere-conformidade.py --exercitar   # as três vias, o ciclo seguinte, a revogação, e desfaz
+```
+
+Especificação em
+[`docs/especificacao/conformidade.md`](../docs/especificacao/conformidade.md), e a
+decisão na [ADR-0010](../docs/decisoes/0010-conformidade-no-mecanismo.md).
+
 ## O que ainda não está aqui
 
 - **A operação de reparo de contato** — trocar o endereço inválido pelo
@@ -520,6 +558,9 @@ mesmo ambiente duas vezes.
   A operação em si é da E26, onde o cenário a exige.
 - **A virada de ciclo** — o questionário do ano seguinte. A rotina opera sobre o
   questionário configurado; o procedimento de abrir um ciclo novo é da E30.
+- **A eliminação por prazo** — a política de retenção está escrita
+  (`conformidade.md`, seção 8), com os anos a cargo da instituição; a rotina que
+  elimina é da E30.
 
 ## Regras que valem para tudo o que entrar aqui
 

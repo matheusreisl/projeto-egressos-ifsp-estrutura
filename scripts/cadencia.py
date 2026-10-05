@@ -102,6 +102,7 @@ class Agenda:
     calendario_excecoes: dict
     tolerancia_minutos: int
     devolucoes_intervalo_minutos: int
+    conformidade_intervalo_minutos: int
     reconvites_por_ciclo: int
     meses_entre_convites: int
     lote: int
@@ -153,6 +154,7 @@ def le_agenda(dados):
                     for k, v in (cal.get("excecoes") or {}).items()}
         tolerancia = int(dados["tolerancia_minutos"])
         devolucoes = int(dados["devolucoes_intervalo_minutos"])
+        conformidade = int(dados["conformidade_intervalo_minutos"])
         reconvites = int(dados["reconvites_por_ciclo"])
         meses = int(dados["meses_entre_convites"])
         lote = int(dados["lote"])
@@ -178,6 +180,8 @@ def le_agenda(dados):
         erros.append("tolerancia_minutos entre 0 e 120")
     if not 5 <= devolucoes <= 1440:
         erros.append("devolucoes_intervalo_minutos entre 5 e 1440")
+    if not 5 <= conformidade <= 1440:
+        erros.append("conformidade_intervalo_minutos entre 5 e 1440")
     if reconvites not in (0, 1):
         erros.append("reconvites_por_ciclo e 0 ou 1: uma rodada de reparo, no "
                      "maximo (secao 6.1)")
@@ -210,6 +214,7 @@ def le_agenda(dados):
                   calendario_padrao=padrao, calendario_excecoes=excecoes,
                   tolerancia_minutos=tolerancia,
                   devolucoes_intervalo_minutos=devolucoes,
+                  conformidade_intervalo_minutos=conformidade,
                   reconvites_por_ciclo=reconvites, meses_entre_convites=meses,
                   lote=lote, avisos=avisos)
 

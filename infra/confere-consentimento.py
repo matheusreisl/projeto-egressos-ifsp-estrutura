@@ -61,6 +61,7 @@ AQUI = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(os.path.dirname(AQUI), "scripts"))
 sys.path.insert(0, os.path.join(AQUI, "instrumento"))
 
+import cadencia  # noqa: E402
 import instrumento  # noqa: E402
 import termo  # noqa: E402
 from limesurvey_api import ErroAPI  # noqa: E402
@@ -305,8 +306,23 @@ def momento_ok(condh, antes, depois, falhas, quem):
         falhas.append(f"{quem}: momento {condh} fora da janela do envio")
 
 
+def fora_da_virada(minutos=10):
+    """A rotina de conformidade (E23) roda a cada 30 minutos e age sobre as
+    recusas plantadas aqui. Espera a virada passar, para que ela nao caia no
+    meio do teste. A limpeza desfaz o efeito de qualquer modo."""
+    passo = cadencia.carrega_agenda(os.path.join(
+        AQUI, "rotinas", "configuracao", "agenda.json")
+    ).conformidade_intervalo_minutos * 60
+    falta = passo - time.time() % passo
+    if falta < minutos * 60:
+        print(f"  aguardando {falta + 60:.0f} s: a rotina de conformidade "
+              "agendada cai durante o teste", flush=True)
+        time.sleep(falta + 60)
+
+
 def confere_exercicio(sessao):
     print(f"\ncaminho real (questionario {SID}, seis participantes sinteticos)")
+    fora_da_virada()
     escolhidos = cm.sql(
         f"SELECT {CAMPOS} FROM lime_tokens_{SID} t WHERE email LIKE "
         f"'%@{DOMINIO}' AND sent='N' AND completed='N' AND emailstatus='OK' "
@@ -553,11 +569,17 @@ def limpa(sessao, por, antes, bloqueados_antes, copia):
                 "attribute_7": antes[v["tid"]]["attribute_7"] or ""}])
             for v in por.values()]),
         # A plataforma nao tem via de API para tirar alguem da lista de
-        # bloqueio, e a revogacao pelo egresso (allowunblacklist) e da E23.
-        # Desfazer o teste, so ele, e por gravacao direta.
+        # bloqueio. Desfazer o teste, so ele, e por gravacao direta — de todos
+        # os plantados, e nao so de F: a rotina de conformidade (E23) pode ter
+        # levado a recusa de contato de E a base central no meio do teste.
         ("base central", lambda: cm.sql(
             "UPDATE lime_participants SET blacklisted='N' WHERE "
-            f"participant_id='{pid_f}'")),
+            "participant_id IN (" + ",".join(
+                f"'{v['participant_id']}'" for v in por.values()) + ")")),
+        ("registro de recusas", lambda: cm.sql(
+            f"DELETE FROM egressos_recusas WHERE questionario={SID} AND tid IN ("
+            + ",".join(v["tid"] for v in por.values()) + ")")
+            if cm.sql("SHOW TABLES LIKE 'egressos_recusas'") else None),
         ("caixa", lambda: [cm.apaga(cm.CAIXA_ENTREGUES,
                                     ["HEADER", "X-tokenid", t]) for t in tokens]),
     ]

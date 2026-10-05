@@ -123,8 +123,17 @@ def consulta(sessao, sid, identificador):
             "arquivo": arquivo, "texto_confere": confere,
         })
 
+    pid = alvo.get("participant_id") or ""
     base = sql("SELECT blacklisted FROM lime_participants WHERE "
-               f"participant_id='{alvo.get('participant_id') or ''}'")
+               f"participant_id='{pid}'")
+    # O registro das recusas (E23): o que a pessoa recusou, por que via,
+    # quando, sob que versao, quando chegou a base central, e a revogacao.
+    recusas = sql(
+        "SELECT questionario, ciclo, tipo, via, manifestada_em, "
+        "fonte_do_momento, versao_termo, base_central_em, revogada_em, "
+        "revogacao FROM egressos_recusas WHERE participant_id="
+        f"'{pid}' ORDER BY id") \
+        if sql("SHOW TABLES LIKE 'egressos_recusas'") else []
     return {
         "identificador": identificador, "questionario": sid,
         "tid": int(alvo["tid"]), "manifestacoes": manifestacoes,
@@ -133,6 +142,7 @@ def consulta(sessao, sid, identificador):
             "participante": str(alvo.get("emailstatus", "")).startswith("OptOut"),
             "base_central": bool(base) and base[0]["blacklisted"] == "Y",
         },
+        "recusas_registradas": recusas,
     }
 
 
@@ -155,10 +165,24 @@ def imprime(reg):
         print(f"  aberturas do endereco sem manifestacao: "
               f"{reg['aberturas_sem_manifestacao']}")
     rm = reg["recusa_pela_mensagem"]
-    print("  recusa de contato pelo endereco da mensagem: "
-          + ("sim" if rm["participante"] or rm["base_central"] else "nao")
-          + f" (participante: {'OptOut' if rm['participante'] else 'nao'}; "
-          f"base central: {'bloqueado' if rm['base_central'] else 'sem bloqueio'})")
+    print("  bloqueio agora: "
+          + f"participante {'OptOut' if rm['participante'] else 'sem recusa'}; "
+          f"base central {'bloqueada' if rm['base_central'] else 'sem bloqueio'}")
+    recusas = reg.get("recusas_registradas") or []
+    if not recusas:
+        print("  recusas registradas: nenhuma")
+    for i, r in enumerate(recusas, 1):
+        print(f"  recusa {i}: {r['tipo']} pela {r['via']} (questionario "
+              f"{r['questionario']}, ciclo {r['ciclo']}) em "
+              f"{r['manifestada_em']} [{r['fonte_do_momento']}] · termo "
+              f"{(r['versao_termo'] or '-').split(' ')[0]}")
+        estado = (f"revogada em {r['revogada_em']} — {r['revogacao']}"
+                  if r["revogada_em"] else
+                  f"na base central desde {r['base_central_em']}"
+                  if r["base_central_em"] else
+                  "vale so neste ciclo" if r["tipo"] == "consentimento"
+                  else "ainda nao levada a base central")
+        print(f"    {estado}")
 
 
 def main():

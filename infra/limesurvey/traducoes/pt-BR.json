@@ -1,0 +1,9 @@
+{
+  "Please confirm that you want to be removed from the central participant list for this site.": "Confirme que você deseja ser retirado(a) da lista central de participantes deste site: você não receberá mais convites nem lembretes de nenhum questionário dele.",
+  "You have been removed from the central participant list for this site.": "Você foi retirado(a) da lista central de participantes deste site e não receberá mais convites nem lembretes de nenhum questionário dele.",
+  "You have already been removed from the central participant list for this site.": "Você já tinha sido retirado(a) da lista central de participantes deste site.",
+  "Please confirm that you want to be added back to the central participant list for this site.": "Confirme que você deseja voltar à lista central de participantes deste site e receber de novo os convites dos questionários dele.",
+  "You are already part of the central participant list for this site.": "Você já está na lista central de participantes deste site.",
+  "You have been added back to the central participant list for this site.": "Você voltou à lista central de participantes deste site.",
+  "Invalid request method.": "Método de requisição inválido."
+}

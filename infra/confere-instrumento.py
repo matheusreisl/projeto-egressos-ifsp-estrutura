@@ -23,7 +23,9 @@ O que confere:
      atributo do participante que tem o seu nome, e o derivado nao tem padrao;
   8. os metadados do consentimento (E22), lidos da tabela "Metadado" da secao
      12.3: equacoes ocultas do grupo do consentimento, sempre relevantes e nao
-     obrigatorias — para que a recusa, que descarta o resto, as mantenha.
+     obrigatorias — para que a recusa, que descarta o resto, as mantenha;
+  9. a cifragem em repouso (E23), lida da tabela "Cifrado" da secao 12.3:
+     cifrados na instancia exatamente os campos listados, nem mais nem menos.
 
 Na avaliacao, reproduz a regra do Expression Manager conferida em
 em_core_helper.php: expressao de exibicao que cita questao OCULTA, sem o sufixo
@@ -113,6 +115,16 @@ def le_metadados_especificados():
     texto = open(ESPEC_BLOCOS, encoding="utf-8").read()
     s = secao(texto, "### 12.3 Campos por bloco", "### 12.4")
     tabela = re.search(r"\| Metadado \|.*?(?:\n\n|\Z)", s, re.S)
+    if not tabela:
+        return []
+    return [c[0] for c in linhas_de_tabela(tabela.group(0))]
+
+
+def le_cifrados_especificados():
+    """Secao 12.3, tabela "Cifrado" (E23): os campos gravados cifrados."""
+    texto = open(ESPEC_BLOCOS, encoding="utf-8").read()
+    s = secao(texto, "### 12.3 Campos por bloco", "### 12.4")
+    tabela = re.search(r"\| Cifrado \|.*?(?:\n\n|\Z)", s, re.S)
     if not tabela:
         return []
     return [c[0] for c in linhas_de_tabela(tabela.group(0))]
@@ -246,6 +258,7 @@ def le_instancia(sessao, sid):
             "tipo": q["type"], "grupo": nome_grupo[int(q["gid"])],
             "gid": int(q["gid"]), "ordem": int(q["question_order"]),
             "obrigatorio": q["mandatory"], "relevancia": q["relevance"] or "1",
+            "cifrado": p.get("encrypted") or q.get("encrypted") or "N",
             "preg": q["preg"] or "", "opcoes": opcoes, "subq": subq,
             "atributos": p.get("attributes") or {},
             "padrao": p.get("defaultvalue") or ""}
@@ -614,6 +627,7 @@ def main():
 
     especificados = le_campos_especificados()
     metadados = le_metadados_especificados()
+    cifrados = le_cifrados_especificados()
     ordem_esperada = le_ordem_dos_grupos()
 
     with API(url=f"http://127.0.0.1:{porta}", usuario=env["ADMIN_USUARIO"],
@@ -683,6 +697,14 @@ def main():
     registra(8, f"metadados do consentimento ({', '.join(metadados) or 'nenhum'})"
              " — equacoes ocultas, sempre relevantes (E22)",
              bool(metadados) and not erradas, "; ".join(erradas))
+
+    na_instancia = sorted(cod for cod, q in questoes.items()
+                          if q["cifrado"] == "Y")
+    registra(9, f"cifragem em repouso dos campos da tabela Cifrado (E23): "
+             f"{', '.join(sorted(cifrados)) or 'nenhum'}",
+             bool(cifrados) and na_instancia == sorted(cifrados),
+             "" if na_instancia == sorted(cifrados) else
+             f"cifrados na instancia: {na_instancia}")
 
     print(f"\n{sum(resultados)} de {len(resultados)} conferencias passaram.")
     return 0 if all(resultados) else 1

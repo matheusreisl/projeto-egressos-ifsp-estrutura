@@ -24,4 +24,7 @@ Artefatos técnicos que antecedem a implementação.
 - `consentimento.md` — termo versionado, metadados de data e versão na resposta,
   recuperação, recusas na tela e pela mensagem, e a reimplantação do instrumento
   (E22)
+- `conformidade.md` — recusa em todos os ciclos, registro e revogação, trilha de
+  auditoria, cifragem em repouso, página de recusa em português, e as políticas de
+  anonimização na extração e de retenção (E23)
 - `matriz-verificacao.md` — critério de aceite do mecanismo (E25)

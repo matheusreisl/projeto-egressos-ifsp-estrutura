@@ -863,6 +863,20 @@ atualizar, o que evita exibir dado pessoal sem necessidade. No modo de ensaio,
 valem as restrições da seção 7 do leiaute — endereço sob `.test` e código de área
 terminado em 0 —, e a E15 as aplica também no questionário.
 
+**Campos cifrados em repouso** (*E23*, [`conformidade.md`](conformidade.md)): a
+resposta é gravada cifrada, com a chave da plataforma, e a exportação pela API a
+devolve decifrada.
+
+| Cifrado | Por quê |
+|---|---|
+| EQ1 | gênero — recorte de equidade |
+| EQ2 | raça/cor — dado sensível (LGPD, art. 5º, II) |
+| EQ3 | deficiência — dado sensível, referente à saúde |
+| AF4 | texto livre, que pode conter dado pessoal não previsto, inclusive de terceiros |
+| CT1 | e-mail principal atualizado |
+| CT2 | e-mail alternativo atualizado |
+| CT3 | telefone atualizado |
+
 ### 12.4 Como os campos compõem os indicadores
 
 A verificação de suficiência desce aqui ao nível do campo. Os denominadores são os

@@ -80,9 +80,12 @@ RUN set -eux; \
 # ---------------------------------------------------------------------------
 #
 # Os limites abaixo atendem a importacao da base de participantes e a exportacao
-# de resultados. O fuso horario e fixado para que os registros de data e hora da
-# trilha de auditoria (E23) e a cadencia de disparo (E21) sejam interpretaveis
-# sem ambiguidade.
+# de resultados.
+#
+# Sobre o fuso: o valor abaixo vale para o PHP fora do LimeSurvey — `php -r`, um
+# script solto. O LimeSurvey fixa o fuso em UTC na propria configuracao
+# (application/config/internal.php), e toda data que a plataforma grava esta em
+# UTC. Achado da E22, que corrigiu a E21; ver docs/especificacao/consentimento.md.
 
 RUN { \
         echo 'memory_limit = 512M'; \
@@ -135,6 +138,40 @@ RUN set -eux; \
     rm -rf /tmp/limesurvey.zip /tmp/extraido; \
     test -f /var/www/html/index.php; \
     test -d /var/www/html/application
+
+# ---------------------------------------------------------------------------
+# 4.1 Traducoes que faltam (E23)
+# ---------------------------------------------------------------------------
+#
+# A traducao pt-BR do LimeSurvey 7.2 nao tem as mensagens das paginas de recusa e
+# de revogacao globais, e o egresso que confirmava a recusa de contato lia a
+# frase principal em ingles. O script acrescenta as que faltam e nunca substitui
+# traducao existente; confere o resultado e, se nao conferir, a construcao para.
+
+COPY traducoes/ /tmp/traducoes/
+RUN set -eux; \
+    php /tmp/traducoes/acrescenta-traducoes.php \
+        /var/www/html/locale/pt-BR/pt-BR.mo /tmp/traducoes/pt-BR.json; \
+    rm -rf /tmp/traducoes
+
+# ---------------------------------------------------------------------------
+# 4.2 Correcao no plugin AuditLog (E23)
+# ---------------------------------------------------------------------------
+#
+# A trilha de auditoria da plataforma (AuditLog) e ativada pela E23. Oito dos
+# seus registros leem `$oCurrentUser->uid` sem conferir se ha usuario — e nao ha,
+# quando quem age e o proprio egresso (a recusa pelo endereco da mensagem) ou um
+# comando de console. Na web isso e aviso, e o registro sai sem usuario. No
+# console e ERRO FATAL: com a trilha ativa, qualquer gravacao na base central
+# por comando — a importacao da E17, a revogacao da E23 — quebrava. Observado na
+# E23. Outros tres registros do mesmo plugin ja fazem a conferencia; aqui se
+# aplica a mesma aos oito, e a construcao para se o padrao sobrar.
+
+RUN set -eux; \
+    f=/var/www/html/application/core/plugins/AuditLog/AuditLog.php; \
+    sed -i 's/= \$oCurrentUser->uid;/= $oCurrentUser ? $oCurrentUser->uid : null;/' "$f"; \
+    test "$(grep -c '= \$oCurrentUser->uid;' "$f")" = 0; \
+    php -l "$f"
 
 # ---------------------------------------------------------------------------
 # 5. Permissoes

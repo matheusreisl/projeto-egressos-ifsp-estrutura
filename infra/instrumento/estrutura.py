@@ -91,6 +91,12 @@ SIM_NAO = [("S", "Sim"), ("N", "Não")]
 #
 # Em `opcoes`, a string "config:<nome>" indica dominio de configuracao
 # versionada (secao 12.2, regra 6), lido de configuracao/.
+#
+# `cifrado` (E23): a resposta e gravada cifrada em repouso, com a chave da
+# plataforma — a mesma que ja cifra nome e e-mail na base central. Vai nos
+# campos de maior risco: o dado sensivel dos recortes de equidade (LGPD, art.
+# 5, II), o texto livre, que pode conter dado pessoal nao previsto (E13), e os
+# contatos atualizados. A exportacao pela API devolve decifrado.
 
 GRUPOS = [
     {
@@ -171,6 +177,7 @@ GRUPOS = [
              "dado": "contribuição do curso para a situação de trabalho atual",
              "tipo": "lista", "opcoes": escala()},
             {"codigo": "AF4", "dado": "sugestões para a melhoria do curso",
+             "cifrado": True,
              "tipo": "texto_longo", "max_caracteres": 1000},
         ],
     },
@@ -300,7 +307,7 @@ GRUPOS = [
         "nome": "Recortes de equidade",
         "relevancia": f"{CONSENTIU} and CON2 == 'CONC'",
         "campos": [
-            {"codigo": "EQ1", "dado": "gênero", "tipo": "lista",
+            {"codigo": "EQ1", "dado": "gênero", "tipo": "lista", "cifrado": True,
              "opcoes": [
                  ("MUL", "Mulher"),
                  ("HOM", "Homem"),
@@ -308,7 +315,7 @@ GRUPOS = [
                  ("OUT", "Outra identidade"),
                  ("PND", "Prefiro não declarar"),
              ]},
-            {"codigo": "EQ2", "dado": "raça/cor", "tipo": "lista",
+            {"codigo": "EQ2", "dado": "raça/cor", "tipo": "lista", "cifrado": True,
              "opcoes": [
                  ("PRE", "Preta"),
                  ("PAR", "Parda"),
@@ -318,6 +325,7 @@ GRUPOS = [
                  ("PND", "Prefiro não declarar"),
              ]},
             {"codigo": "EQ3", "dado": "pessoa com deficiência", "tipo": "lista",
+             "cifrado": True,
              "opcoes": [("S", "Sim"), ("N", "Não"),
                         ("PND", "Prefiro não declarar")]},
             {"codigo": "EQ4",
@@ -332,16 +340,16 @@ GRUPOS = [
         "relevancia": CONSENTIU,
         "campos": [
             {"codigo": "CT1", "dado": "e-mail principal atualizado",
-             "tipo": "texto_curto", "validacao": "email"},
+             "tipo": "texto_curto", "validacao": "email", "cifrado": True},
             {"codigo": "CT2", "dado": "e-mail alternativo atualizado",
-             "tipo": "texto_curto", "validacao": "email",
+             "tipo": "texto_curto", "validacao": "email", "cifrado": True,
              # Diferente do principal, sem distincao de caixa (leiaute, 4.6).
              "validacao_em": ("is_empty(CT2) or is_empty(CT1) or "
                               "strtolower(CT2) != strtolower(CT1)"),
              "validacao_em_dica": "O e-mail alternativo precisa ser diferente "
                                   "do principal."},
             {"codigo": "CT3", "dado": "telefone atualizado",
-             "tipo": "texto_curto", "validacao": "telefone"},
+             "tipo": "texto_curto", "validacao": "telefone", "cifrado": True},
             # Caixa de marcacao: escolha multipla com uma so opcao. O campo
             # gravado e CT4_RECT, marcado 'Y'.
             {"codigo": "CT4",

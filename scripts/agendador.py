@@ -3,13 +3,16 @@
 Agendador das rotinas do projeto (E21). E o processo principal do conteiner
 rotinas: a composicao o sobe, e a politica de reinicio o mantem de pe.
 
-Duas tarefas, independentes uma da outra:
+Tres tarefas, independentes umas das outras:
 
-  disparo      uma vez por dia util, no horario fixo da agenda (secao 5.3 do
-               P3): convites e lembretes, por disparar.py
-  devolucoes   a cada N minutos, em qualquer dia: le a caixa de devolucoes, por
-               ler_devolucoes.py. Separada do disparo porque a devolucao
-               temporaria chega depois do disparo que a originou (E09)
+  disparo       uma vez por dia util, no horario fixo da agenda (secao 5.3 do
+                P3): convites e lembretes, por disparar.py
+  devolucoes    a cada N minutos, em qualquer dia: le a caixa de devolucoes, por
+                ler_devolucoes.py. Separada do disparo porque a devolucao
+                temporaria chega depois do disparo que a originou (E09)
+  conformidade  a cada N minutos, em qualquer dia, e sempre de verdade (E23):
+                registra recusas, leva a de contato a base central e apaga dado
+                sensivel sem consentimento, por conformidade.py
 
 Por que um laco proprio, e nao o cron (ADR-0008): o cron do Debian nao passa as
 variaveis de ambiente do conteiner aos trabalhos — e e por elas que chegam as
@@ -45,6 +48,7 @@ Ambiente:
 """
 
 import dataclasses
+import json
 import os
 import subprocess
 import sys
@@ -106,11 +110,11 @@ def registrada(conexao, tarefa, previsto):
         return cur.fetchone() is not None
 
 
-def reserva(conexao, tarefa, previsto, situacao="reservada"):
+def reserva(conexao, tarefa, previsto, situacao="reservada", modo=None):
     """Reserva o horario. None se ja estava reservado — por este agendador
     antes de um reinicio, ou por outro."""
     try:
-        return disparar.abre_execucao(conexao, tarefa, MODO, "agendada",
+        return disparar.abre_execucao(conexao, tarefa, modo or MODO, "agendada",
                                       previsto=previsto, situacao=situacao)
     except pymysql.err.IntegrityError:
         return None
@@ -198,6 +202,34 @@ def roda_devolucoes(conexao, agenda, execucao):
     return conexao
 
 
+def roda_conformidade(conexao, agenda, execucao):
+    """A rotina de conformidade (E23). Sempre de verdade, qualquer que seja o
+    modo do disparo: nao contata ninguem, so registra recusas, leva a de
+    contato a base central e apaga dado sensivel sem consentimento."""
+    inicio = datetime.now(agenda.fuso)
+    comando = [sys.executable, os.path.join(AQUI, "conformidade.py")]
+    try:
+        r = subprocess.run(comando, capture_output=True, text=True,
+                           timeout=LIMITE_DEVOLUCOES)
+        saida = (r.stdout + r.stderr).strip().splitlines()
+        situacao = "concluida" if r.returncode == 0 else "falha"
+    except subprocess.TimeoutExpired:
+        saida, situacao = ["tempo esgotado"], "falha"
+    conexao = viva(agenda, conexao)
+    linha = next((l for l in saida if l.startswith("RESUMO ")), None)
+    resumo = json.loads(linha[7:]) if linha else {"saida": saida[-3:]}
+    disparar.fecha_execucao(conexao, execucao, situacao, resumo,
+                            iniciado=inicio,
+                            terminado=datetime.now(agenda.fuso))
+    feito = any(resumo.get(k) for k in ("recusas_registradas",
+                                        "levadas_a_base_central",
+                                        "respostas_higienizadas", "falhas"))
+    if situacao != "concluida" or feito:
+        log(agenda, f"conformidade: {situacao} · "
+                    + json.dumps(resumo, ensure_ascii=False))
+    return conexao
+
+
 def main():
     if MODO not in ("real", "simulado"):
         print(f"ROTINA_DISPARO={MODO!r}: use 'real' ou 'simulado'",
@@ -220,7 +252,8 @@ def main():
                 f"{agenda.tolerancia_minutos} min · lembretes D+"
                 + ", D+".join(map(str, agenda.lembretes_dias))
                 + f" · janela {agenda.janela_dias} dias · devolucoes a cada "
-                f"{agenda.devolucoes_intervalo_minutos} min")
+                f"{agenda.devolucoes_intervalo_minutos} min · conformidade a "
+                f"cada {agenda.conformidade_intervalo_minutos} min")
     if HORARIO:
         log(agenda, f"ATENCAO: horario sobrescrito por ROTINA_HORARIO={HORARIO}"
                     " — uso de verificacao, nao de operacao")
@@ -231,6 +264,7 @@ def main():
     ultima_busca_perdidas = None
     tolerancia = timedelta(minutes=agenda.tolerancia_minutos)
     passo_devolucoes = agenda.devolucoes_intervalo_minutos * 60
+    passo_conformidade = agenda.conformidade_intervalo_minutos * 60
 
     while True:
         with open(BATIMENTO, "w") as fh:
@@ -258,6 +292,15 @@ def main():
                 execucao = reserva(conexao, "devolucoes", marco)
                 if execucao:
                     conexao = roda_devolucoes(conexao, agenda, execucao)
+
+            marco = datetime.fromtimestamp(
+                (int(agora.timestamp()) // passo_conformidade)
+                * passo_conformidade, agenda.fuso)
+            if not registrada(conexao, "conformidade", marco):
+                execucao = reserva(conexao, "conformidade", marco,
+                                   modo="real")
+                if execucao:
+                    conexao = roda_conformidade(conexao, agenda, execucao)
         except pymysql.Error as e:
             log(agenda, f"banco: {e}; segue no proximo passo")
         time.sleep(PASSO)

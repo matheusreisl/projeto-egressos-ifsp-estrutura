@@ -822,6 +822,17 @@ def limpa(api, por, antes):
                    f"ciclo='{CICLO_TESTE}'"),
             cm.sql("DELETE FROM egressos_devolucoes WHERE "
                    f"ciclo='{CICLO_TESTE}'"))),
+        # A rotina de conformidade (E23) pode ter registrado as recusas
+        # plantadas (I e J) e levado a de contato a base central.
+        ("recusas", lambda: (
+            cm.sql("DELETE FROM egressos_recusas WHERE questionario="
+                   f"{SID} AND tid IN ("
+                   + ",".join(v["tid"] for v in por.values()) + ")")
+            if cm.sql("SHOW TABLES LIKE 'egressos_recusas'") else None,
+            cm.sql("UPDATE lime_participants SET blacklisted='N' WHERE "
+                   "participant_id IN (" + ",".join(
+                       f"'{v['participant_id']}'" for v in por.values())
+                   + ")"))),
     ]
     for rotulo, passo in passos:
         try:

@@ -75,7 +75,10 @@ services:
     build:
       context: ./limesurvey
       dockerfile: Dockerfile
-    image: egressos/limesurvey:7.2.0
+    # 7.2.0-1: a mesma versao do LimeSurvey, com as traducoes pt-BR que faltavam
+    # nas paginas de recusa e revogacao globais e a correcao do AuditLog sem
+    # usuario (E23). Ver limesurvey/Dockerfile, secoes 4.1 e 4.2.
+    image: egressos/limesurvey:7.2.0-1
     container_name: egressos-limesurvey
     restart: unless-stopped
     depends_on:

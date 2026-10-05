@@ -35,6 +35,8 @@ validação do encarregado de dados do IFSP — decisão confirmada com o orient
 | `comandos/ImportarbasecentralCommand.php` | grava a importação na base central, decifrando para aplicar a precedência (E17) |
 | `comandos/RegistrarimportacaoCommand.php` | registra cada importação na trilha `egressos_importacoes` (E17) |
 | `comandos/CompletaratributosCommand.php` | acrescenta coluna de atributo do participante a instrumento já ativo e esvazia o cache de esquema (E20) |
+| `comandos/AtivarauditoriaCommand.php` | ativa o plugin `AuditLog` como o painel faz, sem tela (E23) |
+| `comandos/RevogarrecusaCommand.php` | revoga a recusa de contato de uma pessoa pelos modelos da plataforma, com trilha (E23) |
 | `configuracao/cursos.csv` | lista de cursos, com o nível de cada um |
 | `configuracao/unidades.csv` | lista de unidades, com as antecessoras |
 | `configuracao/faixas-rendimento.csv` | as cinco faixas do Anexo I |
@@ -183,6 +185,18 @@ python3 consulta-consentimento.py --identificador SIN-000001
 Especificação em
 [`docs/especificacao/consentimento.md`](../../docs/especificacao/consentimento.md).
 
+O termo em vigor é o `ensaio-2` (E23), com a guarda por princípio e a cifragem; o
+arquivo do `ensaio-1` continua em `termos/`, intacto.
+
+### Cifragem em repouso (E23)
+
+AF4, EQ1 a EQ3 e CT1 a CT3 têm `cifrado` em `estrutura.py` e vão com `encrypted =
+Y`: a plataforma grava a resposta cifrada, com a mesma chave que já cifra a base
+central, e a exportação pela API a devolve decifrada. As colunas desses campos passam
+a ser `text`. A lista está na tabela "Cifrado" da seção 12.3 de
+`blocos-instrumento.md`, e a conferência 9 a compara com a instância. Mudar a
+cifragem é mudar estrutura: exige reimplantar, como na E22.
+
 ## Da especificação para a plataforma
 
 | Tipo da especificação | Tipo da plataforma | Onde |
@@ -326,7 +340,7 @@ Todas falham sem erro aparente.
 `confere-instrumento.py` lê a especificação **direto dos documentos** — a seção 12.3
 de `blocos-instrumento.md` e as seções 2 e 5 de `navegacao-condicional.md` — e não de
 `estrutura.py`, para que um erro de transcrição no gerador apareça como divergência
-em vez de se confirmar a si mesmo. Oito conferências:
+em vez de se confirmar a si mesmo. Nove conferências:
 
 1. os onze grupos, na ordem da E14;
 2. os 35 campos: código, grupo, tipo, obrigatoriedade e domínio, opção por opção
@@ -339,9 +353,12 @@ em vez de se confirmar a si mesmo. Oito conferências:
 7. o pré-preenchimento (E18): cada campo da identificação aponta para o atributo
    do participante que tem o seu nome, derivado do texto da especificação;
 8. os metadados do consentimento (E22), lidos da tabela "Metadado" da seção 12.3:
-   equações ocultas do grupo do consentimento, sempre relevantes e não obrigatórias.
+   equações ocultas do grupo do consentimento, sempre relevantes e não obrigatórias;
+9. a cifragem em repouso (E23), lida da tabela "Cifrado" da seção 12.3: cifrados
+   na instância exatamente os campos listados.
 
-**Resultado: 6 de 6 na E15; 7 de 7 desde a E18; 8 de 8 desde a E22** — a sétima
+**Resultado: 6 de 6 na E15; 7 de 7 desde a E18; 8 de 8 desde a E22; 9 de 9 desde a
+E23** — a nona também falhou antes da reimplantação e passou depois. A sétima
 falhou antes da reimplantação com os padrões, apontando os quatro que faltavam, e
 passou depois; a oitava, do mesmo modo, falhou antes da reimplantação da E22
 ("CONV: ausente; CONDH: ausente") e passou depois. A
