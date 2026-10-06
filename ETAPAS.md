@@ -1474,7 +1474,7 @@ Metas 6 e 7 · out–nov/26
 - **Não verificado:** CT4 pela conclusão real das onze páginas (E26); eliminação por
   prazo, que não roda (E30); a trilha não é inviolável contra quem administra o banco.
 
-### [ ] E24 — Documentar recomendações que dependem de terceiros
+### [x] E24 — Documentar recomendações que dependem de terceiros
 - **Objetivo:** registrar o que não será executado mas deve constar.
 - **Entregável:** seção no guia de replicação sobre divulgação em colação de grau,
   grupos de turma e ações dirigidas a turmas antigas.
@@ -1482,6 +1482,50 @@ Metas 6 e 7 · out–nov/26
 - **Vindo da E12:** a adesão voluntária, que o documento do projeto punha no bloco
   de contato e que exige termo próprio (Regulamento, art. 40), e os objetivos de
   ação institucional do art. 3º do Regulamento (itens 9, 10, 11, 13 e 14).
+- **Concluída em:** 06/10/2026 · `entregas/guia-replicacao.md`, Parte VI, seção 10 ·
+  fichas `ifal-2024.md` e `edwards-2023.md`.
+- **Oito recomendações**, cada uma com o que fazer, quem executa (pelo Regulamento,
+  que é posterior à PAEg e muda a governança), evidência com estado, norma e regra de
+  compatibilidade: R1 colação de grau (aviso do convite e contato acertado no
+  sistema acadêmico, que chega pela regra de precedência); R2 grupos de turma; R3
+  canal alternativo por pessoa — responde à ADR-0003 e à P9, "por quem"; R4 turmas
+  antigas (a lista fechada torna a não resposta por turma visível, sem elevá-la);
+  R5 divulgação e Portal do Egresso sem link aberto; R6 contrapartidas fora do
+  questionário e devolução dos resultados; R7 colaboração voluntária com termo
+  próprio; R8 portal de relacionamento. **Regra comum:** canal coletivo leva aviso,
+  nunca endereço comum nem lista de endereços individuais — quem tem o endereço
+  responde e **recusa** como o egresso.
+- **Decisão do orientando:** buscar fontes fora do conjunto, lê-las e incluí-las se
+  válidas. Entraram duas, lidas e fichadas: **Ifal (2024)**, segundo caso da Rede
+  Federal e primeiro com denominador (19% de 5.472), que recomenda acertar o
+  cadastro na conclusão do curso; e **Edwards et al. (2023)**, revisão Cochrane de
+  ensaios randomizados — a única fonte com efeito de estratégia isolado, fora dos
+  egressos, com rótulo próprio **"medido em outra população"**. A pré-notificação
+  eletrônica é **inconclusiva** (3 ensaios; IC toca 1), e assim foi citada. Ficaram
+  de fora Lambert e Miller (2014), só resumo acessível, e Cook et al. (2000), sem
+  cópia aberta.
+- **Achado normativo, da releitura integral do Regulamento:** além do link por
+  egresso (art. 16), a norma manda o questionário aberto no Portal, a qualquer
+  tempo (arts. 19, §1º, 21 e 29, item 4), sem conciliar os dois — e contra a janela
+  de 60 dias da P5. A R5 dá três saídas e recomenda o Portal como porta de pedido do
+  endereço individual. **Correções autorizadas pelo orientando:** linha de base
+  (seções 3, 6.1, 9 e 10, inclusive a enumeração "seis" que listava cinco); quadro de
+  engajamento (Ifal e Edwards, seção 1.3 nova; e a seção 6, que passou de **sete
+  para dez** estratégias com dispositivo, a E9 exigindo decisão normativa); P5
+  (origem "contra a letra da norma", com a razão de manter a janela: sem fim de
+  janela o ciclo não fecha).
+- **RN 13/2022 reconferida** por novo OCR a 300 dpi: todos os dispositivos citados
+  conferem; a referência passou à data da epígrafe, 1º de novembro de 2022. A
+  pendência da E31 foi **encerrada**, com autorização.
+- **Onde devolver os resultados (R6):** a norma já indica o Portal do Egresso, pelo
+  Relatório de Perfil (art. 31, §2º, item 6); o painel da E29, se houver, pode ser o
+  lugar, só com agregados. A frase no convite entra quando o lugar existir — não no
+  ensaio.
+- **Critério verificado:** 8 de 8 recomendações ligadas a fonte, na tabela da seção
+  10.12 do guia. Nenhuma alcança *medido* entre egressos — o estado do campo —, e o
+  texto o diz. Links relativos conferidos em todos os arquivos tocados.
+- **Não verificado:** nada foi executado — é recomendação; a página de egressos do
+  IFSP ainda aponta o questionário aberto (consultada em 06/10/2026).
 
 ---
 
@@ -1675,6 +1719,12 @@ Metas 9 e 10 · out–dez/26
 - **Vindo da E12:** exibir separados os indicadores do Anexo I e os propostos pelo
   projeto, com o rótulo de origem — os segundos não são indicadores
   institucionais.
+- **Vindo da E24:** o painel é candidato a lugar da **devolução dos resultados** ao
+  egresso (guia, Parte VI, R6), com camada pública só de agregados. Sem painel, a
+  norma já indica o Portal do Egresso, onde se publica o Relatório de Perfil feito
+  com os dados da pesquisa (Regulamento, art. 31, §2º, item 6). A frase do convite
+  que diz onde os resultados ficam só entra quando esse lugar existir — não no
+  ensaio, cujos números não são resultado sobre egressos.
 
 ### [ ] E30 — Consolidar o guia de replicação
 - **Objetivo:** entregar o artefato replicável por outras instituições.
@@ -1752,6 +1802,10 @@ Metas 9 e 10 · out–dez/26
   - **Revisão humana do e-mail compartilhado:** procedimento da seção 9.
   - **Trilha:** guarda dado pessoal na criação de participantes, é MyISAM e não é
     inviolável.
+- **Vindo da E24:** a Parte VI recebeu numeração **provisória** — seções 9
+  (conformidade, pendente) e 10 (recomendações) —, continuando a Parte III. Ao
+  escrever as Partes IV e V, renumerar a VI. As recomendações usam rótulos R1 a R8,
+  que não mudam com a renumeração.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1766,8 +1820,13 @@ Metas 9 e 10 · out–dez/26
     Paranaense. Conferir.
   - **PRAGA DE SOUZA et al. (2025)** — divergência de autoria entre o PDF (dois
     autores) e a página do periódico (três). Adotou-se a citação da página.
-  - **IFSP — RN nº 13/2022** — a numeração de artigos veio corrompida do OCR
-    ("Art. IP", "Art. Y"). Conferir no PDF original todo dispositivo citado.
+  - ~~**IFSP — RN nº 13/2022** — a numeração de artigos veio corrompida do OCR
+    ("Art. IP", "Art. Y"). Conferir no PDF original todo dispositivo citado.~~
+    **Encerrada na E24** (06/10/2026), com autorização do orientando: novo OCR a
+    300 dpi; todos os dispositivos citados conferem. A data da referência passou a
+    ser a da epígrafe, **1º de novembro de 2022**, e a ementa, "Dispõe sobre" — usar
+    a da ficha no relatório e na próxima versão do documento do projeto, que a cita
+    sem dia e como "Institui".
 - **Mello et al. (2023)** — avaliação do SAVE pela perspectiva do egresso, ausente
   das 17 referências. É a única fonte que traria o lado do respondente a um conjunto
   hoje formado só por gestores e coordenadores. Localizar e incorporar ao quadro de
@@ -1816,6 +1875,17 @@ Metas 9 e 10 · out–dez/26
   quê; que a trilha registra também dado pessoal e não é inviolável; e que o
   mecanismo corrigiu um defeito da plataforma (`AuditLog` sem usuário) e completou a
   tradução pt-BR — achados com valor para outras instalações do LimeSurvey.
+- **Vinda da E24:**
+  - **Referências:** incluir **IFAL (2024)** e **Edwards et al. (2023)**, fichadas e
+    já incorporadas ao quadro de engajamento (seção 1.3 e linhas E3, E4, E5 e E8).
+    Estão fora das 17 do documento do projeto, levantadas com autorização do
+    orientando.
+  - **Tensão normativa:** declarar que o Regulamento pede link por egresso (art. 16)
+    e, ao mesmo tempo, questionário aberto no Portal, a qualquer tempo (arts. 19,
+    §1º, 21 e 29, item 4), sem conciliá-los; e que a janela de 60 dias da P5 não
+    atende à letra do art. 21. Linha de base e quadro corrigidos na E24.
+  - **Quadro corrigido:** dez das onze estratégias têm dispositivo na norma do
+    IFSP, e não sete; a E9 é a única que exige decisão normativa.
 
 ---
 
@@ -1846,3 +1916,4 @@ Uma linha por sessão, mais recente ao final.
 | 05/10/2026 | E21 | E21 concluída: **rotina agendada ativa** no contêiner `rotinas`, com disparo às 10:00 em dia útil e devoluções a cada 30 min, separadas, em **modo simulado** até a E26 (decisão do orientando). O ponto 13.1 foi respondido no código: a rotina nativa é intervalo mais máximo, sem agendador, e por isso a cadência D+*n* por participante ficou fora dela, sem alterar o P3 (ADR-0008). Também no código: datas de envio em UTC, lote de 50, lote que para na primeira falha e `date_invited` não gravado. `lastpage = 0` é `convidado`, medido pelo caminho real. Guarda E19 1–7 mais E20; execução perdida registrada. A distribuição do WSL foi achada parada depois de reinício, e a tarefa de logon que só a liga foi criada com autorização e conferida. Critério: execução real das 10:00 às 10:00:08; `--agendada` 14 de 14, com o disparo às 10:06:11 atingindo só os 4 não respondentes vencidos, com o ramo certo; regras 7 de 7, com 16 de 16 mutações reprovadas; `--perdida` 8 de 8. A primeira execução falhou na limpeza porque o relógio do WSL voltou 7,3 s; foi desfeita à mão e a conferência foi endurecida. | Nenhuma pendência nova sem dono. **Não verificado:** reinício real do Windows; cadência em dias de calendário; doze meses entre ciclos (um questionário só). **Ampliadas:** E22 (recusa já lida pela rotina), E23 (registro como trilha; anonimizar respostas quebra o estado; datas em UTC), E25 (procedimentos prontos e 16 mutações), E26 (ligar o modo real, 255 convites na primeira execução; **operação de reparo nos dois lugares**; dias de calendário), E28 (datas UTC; envios por participante), E30 (Parte V; tarefa de logon como opção de hospedeiro; feriados e calendário; relógio; **virada de ciclo**) e E31 (execução perdida registrada, não evitada). |
 | 05/10/2026 | E22 | E22 concluída: tela de consentimento com o termo como **modelo de ensaio** (elementos do art. 9º; encarregado e prazo de guarda como marcadores; validação do encarregado do IFSP pendente), CON2 específico e encerramento em três ramos. Data e versão gravadas **na própria resposta** por duas equações ocultas (`CONV` com o SHA-256 do documento da página 1, `CONDH` com o momento), e cada versão arquivada, imutável, em `termos/` (ADR-0009). O 202615 foi **reimplantado** (autorizado; a plataforma recusa mudar estrutura de ativo), com 500 reencontrados na base central e tokens novos. Recusa pela mensagem exercitada: bloqueia convite e lembrete neste e em outro questionário, só com os padrões. Critério: `confere-consentimento.py --exercitar` 11 de 11, recuperação por identificador pela exportação da plataforma; anteriores intactas (8/8, 8/8, 4/4, 7/7, 14/14). **Achado que corrigiu a E21:** o LimeSurvey roda em UTC, e `validuntil` era gravado em hora local (janela 3 h mais curta), corrigido e reverificado, com mutação 18 de 18. | Nenhuma pendência nova sem dono. **Não verificado:** conclusão das onze páginas (E26); aplicar termo novo a instrumento ativo pela API. **Ampliadas:** E23 (RCONT e CT4 na base central; registro da recusa com data e via; revogação; e-mail do salvamento; prazo de guarda em versão nova; página de confirmação em inglês; `deleteblacklisted = N`), E25 (procedimentos prontos), E26 (onze páginas; `Formulario`/`Respondente`; tokens e qids novos), E28 (metadados; UTC; nomes `Q<qid>` instáveis), E30 (validação do termo; reimplantação; lista de bloqueio; UTC) e E31 (base legal escolhida; termo de ensaio; limite da conferência que reproduz a premissa). A senha do banco local apareceu num erro no terminal; corrigido para não repetir; troca opcional. |
 | 05/10/2026 | E23 | E23 concluída: **recusa de contato em todos os ciclos**. A rotina de conformidade (3ª tarefa do agendador, sempre de verdade) registra cada recusa em `egressos_recusas` (tipo, via, momento com a fonte, versão do termo) e leva a da tela e de CT4 à base central **pela via da própria plataforma**; a de consentimento só se registra; contato inválido não é recusa. Conferido num ciclo seguinte de verdade: a plataforma não convidou quem recusou contato pelas três vias e convidou os demais. Trilha `AuditLog` ativada **por comando** (K7 preservado), com **correção de um defeito da plataforma** que quebrava gravação na base central por console com a trilha ativa. Página de recusa em português (7 traduções na imagem 7.2.0-1). Cifragem de EQ1–EQ3, AF4 e CT1–CT3 e termo `ensaio-2` (guarda por princípio), com a segunda reimplantação do 202615. Dado sensível sem consentimento apagado das parciais. Revogação pelo operador. Políticas de anonimização na extração e de retenção escritas (ADR-0010). Critério: `confere-conformidade.py --exercitar` 12 de 12 na primeira execução; regressão E22 11/11, E21 14/14, estrutura 9/9. | Nenhuma pendência nova sem dono. **Não verificado:** CT4 pela conclusão real (E26); eliminação por prazo, que não roda (E30); trilha inviolável, que não é. **Ampliadas:** E25 (procedimento pronto, inclusive o ciclo seguinte), E26 (CT4 real; revogação pedida de verdade; a rotina age a cada 30 min), E28 (política de anonimização; campos cifrados lidos pela exportação), E30 (`aplicar` na instalação; imagem 7.2.0-1; anos no termo e rotina de eliminação; cifragem de nome e e-mail; revisão humana; trilha com dado pessoal) e E31 (revogação pelo operador; trilha; defeito e tradução da plataforma). |
+| 06/10/2026 | E24 | E24 concluída: **oito recomendações dependentes de terceiros** no guia de replicação (Parte VI, seção 10, numeração provisória), cada uma com quem executa, evidência e estado, norma e regra de compatibilidade — colação de grau, grupos de turma, canal alternativo por pessoa, turmas antigas, divulgação e Portal sem link aberto, contrapartidas e devolução dos resultados, colaboração voluntária, portal de relacionamento. Regra comum: canal coletivo avisa, não leva endereço. Com autorização, duas fontes novas lidas e fichadas — Ifal (2024) e Edwards et al. (2023, Cochrane), esta com o rótulo "medido em outra população". **Achado normativo:** o Regulamento pede link por egresso e, ao mesmo tempo, questionário aberto no Portal a qualquer tempo (arts. 19, §1º, 21 e 29, item 4); corrigidos, com autorização, a linha de base, o quadro de engajamento (Ifal e Edwards; seção 6 de sete para dez estratégias com dispositivo) e a P5. RN 13/2022 reconferida por novo OCR; pendência da E31 encerrada e data da referência corrigida. Critério: 8 de 8 recomendações ligadas a fonte. | Nenhuma pendência nova sem dono. **Não verificado:** nada executado (recomendação). **Ampliadas:** E29 (painel como lugar da devolução dos resultados, só agregados), E30 (renumerar a Parte VI ao escrever IV e V) e E31 (referências Ifal e Edwards; tensão normativa e P5; quadro corrigido; referência da RN 13 pela epígrafe). |

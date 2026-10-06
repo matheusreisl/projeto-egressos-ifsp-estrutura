@@ -4,7 +4,8 @@ Caracterização das limitações do questionário institucional em operação, 
 ponto de partida deste projeto. Cada limitação é associada, ao final, à dificuldade
 correspondente na literatura fichada em [`fichamentos/`](fichamentos/).
 
-Produto da etapa E03.
+Produto da etapa E03. As correções posteriores — da E12 e da E24 — estão marcadas
+no texto.
 
 ## 1. Objeto e método
 
@@ -97,6 +98,25 @@ Portaria Normativa nº 128/2025, determina no art. 16 que o questionário seja
 em operação é o oposto: um único link, igual para todos, publicado em página
 aberta. A divergência entre o que a norma determina e o que a instância entrega é
 o achado central desta linha de base, e reaparece nas seções 6 e 8.
+
+**A norma também pede o contrário.** *Corrigido na E24.* Esta seção leu o modo de
+acesso só pelo art. 16. O mesmo Regulamento manda que a coleta ocorra "de forma
+contínua", por questionário disponível no Portal do Egresso (art. 19, §1º); que os
+questionários permaneçam no Portal, acessíveis em qualquer momento depois da
+conclusão (art. 21); e põe entre as finalidades do Portal disponibilizar o
+formulário de pesquisa (art. 29, item 4). Lidos ao pé da letra, os três descrevem
+exatamente o que está em operação — um formulário aberto no Portal. A divergência,
+portanto, não é só entre a norma e a instância: é **interna à norma**, que pede link
+por egresso e acesso contínuo pelo Portal sem dizer como conciliá-los.
+
+O achado central se mantém, com a formulação corrigida: a instância vigente
+**contraria o art. 16** — não há link por egresso, e é ele que dá denominador e
+cobrança — e **atende à letra dos arts. 19, §1º, 21 e 29, item 4**. A tensão
+alcança também o mecanismo deste projeto, cuja janela de 60 dias
+([`parametros-contato.md`](../especificacao/parametros-contato.md), P5) não é acesso
+"em qualquer momento". As saídas possíveis — Portal como porta de pedido do endereço
+individual, dois instrumentos separados ou revisão da norma — estão no
+[guia de replicação](../../entregas/guia-replicacao.md), recomendação R5.
 
 **Consequências.**
 
@@ -201,11 +221,13 @@ mecanismo de cobrança completo:
 | Art. 16, §2º | aplicação **automatizada**, com disparos **repetidos** por sistema de mala direta |
 | Art. 19 | acompanhamento por turma ao término do semestre de conclusão, e **anualmente** depois |
 | Art. 22 | divulgação aos pré-egressos **no momento da colação de grau** e nova campanha **dois anos após a formatura, com envio de mensagens de lembrete** |
+| Art. 19, §1º; art. 21; art. 29, item 4 | coleta **contínua**, por questionário disponível no Portal do Egresso e acessível **em qualquer momento** depois da conclusão — *acrescentado na E24; ver seção 3* |
 
 Ou seja: convite individual, canal alternativo para contato inválido, disparo
 automatizado e repetido, lembretes e periodicidade definida. Praticamente o
 conjunto de requisitos que este projeto se propõe a implementar já está
-normatizado.
+normatizado — ao lado de um modo de acesso contínuo pelo Portal que a norma não
+concilia com o link por egresso (seção 3).
 
 ### 6.2 O que está em operação
 
@@ -315,7 +337,12 @@ evidência que o conceito 3 descreve.
   Egressos, não foi examinado, por estar fora do recorte desta etapa. *Corrigido
   na E12:* esta linha dava também como perdidas as expressões matemáticas dos
   indicadores, "publicadas como imagem". Não estão: são texto no PDF, a E12 as
-  extraiu, e várias divergem das descrições (ver o Anexo A).
+  extraiu, e várias divergem das descrições (ver o Anexo A). *Corrigido na E24:*
+  o Regulamento foi relido na íntegra, por extração de texto, Apêndice I incluído.
+  A releitura achou os arts. 19, §1º, 21 e 29, item 4, que esta análise não havia
+  registrado (seção 3). O Apêndice I prevê campanha de e-mail aos formados de 2024
+  pedindo o preenchimento da pesquisa no LimeSurvey ou no Google Forms — envio
+  planejado, sem link por egresso, coerente com a seção 6.2.
 - **A estrutura foi reconstruída por fonte secundária.** Os relatórios são
   documentos oficiais da própria DAEST e publicam enunciados e domínios, mas não
   substituem a inspeção da configuração do questionário. Aspectos como
@@ -331,7 +358,7 @@ evidência que o conceito 3 descreve.
 
 | # | Limitação observada | Efeito | Correspondência na literatura |
 |---|---|---|---|
-| 1 | Acesso por link aberto, sem token — **contra o art. 16 do próprio Regulamento**, que exige link por egresso | admite resposta múltipla e de não egressos; respondente autosselecionado | [IFES (2025)](fichamentos/ifes-2025.md) — mesma limitação com Google Forms, e o relatório afirma representatividade sem poder calculá-la |
+| 1 | Acesso por link aberto, sem token — **contra o art. 16 do próprio Regulamento**, que exige link por egresso, e conforme à letra dos arts. 19, §1º, 21 e 29, item 4 (*corrigido na E24*; seção 3) | admite resposta múltipla e de não egressos; respondente autosselecionado | [IFES (2025)](fichamentos/ifes-2025.md) — mesma limitação com Google Forms, e o relatório afirma representatividade sem poder calculá-la |
 | 2 | Sem identificação do participante | não há denominador, logo não há taxa de resposta nem perfil de não resposta | [COELHO e SILVA (2017)](fichamentos/coelho-2017.md) — única fonte do conjunto com taxa real (35,4%), justamente por partir de lista fechada de 79 egressos extraída do sistema acadêmico |
 | 3 | Nome do curso em texto livre | impede agregação por curso sem tratamento manual, em instituição com 39 campi | [PRAGA DE SOUZA et al. (2025)](fichamentos/praga-de-souza-2025.md) — gestores relatam que perguntas redundantes e dados já existentes em base devem ser evitados |
 | 4 | Dados institucionais perguntados ao egresso | alonga o instrumento e introduz erro onde a instituição já tem o dado | [RANTHUM e SANTOS JUNIOR (2023)](fichamentos/ranthum-2023.md) — a ferramenta extrai dos sistemas acadêmicos o que já se sabe e pergunta só o resto |
@@ -341,10 +368,13 @@ evidência que o conceito 3 descreve.
 | 8 | Conformidade declarada em cláusula genérica, sem base legal, retenção ou anonimização definidas | o egresso não sabe sob que fundamento fornece o dado nem por quanto tempo será guardado | [IFTO (2023)](fichamentos/ifto-ppdp-2023.md) — como uma política de IF desce ao operacional: finalidade expressa (art. 10, §3º, III), registro das operações (art. 8º, §4º), não identificação por padrão (art. 8º, §16) |
 
 **Padrão das oito limitações — e o que ele determina sobre o artefato.** Nenhuma
-das oito decorre de omissão da norma. Em seis delas (1, 5, 6, 7, 8) há
+das oito decorre de omissão da norma. Em seis delas (1, 2, 5, 6, 7, 8) há
 dispositivo expresso no Regulamento determinando o contrário do que está em
 operação; nas outras duas (3, 4) o recurso já existe na plataforma e não foi
-acionado.
+acionado. *Corrigido na E24:* a enumeração listava cinco números para "seis"; a
+sexta é a 2, porque o link por egresso do art. 16 é identificação do participante.
+E a 1 tem ressalva: o mesmo Regulamento também pede acesso contínuo pelo Portal
+(seção 3).
 
 A conclusão é mais forte do que a de um diagnóstico de lacunas: **o IFSP já
 normatizou, em 2025, quase tudo o que este projeto se propõe a construir.** O que

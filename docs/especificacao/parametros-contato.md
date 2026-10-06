@@ -82,7 +82,7 @@ medido no conjunto de fontes.
 | **P2** | Número de lembretes | Até três, dirigidos a quem não concluiu o preenchimento | norma (existência) + projeto (quantidade) | Regulamento, art. 16, §2º e art. 22; quantidade sem fonte |
 | **P3** | Cadência | D+4, D+7 e D+14 do envio efetivo do convite, configuráveis dentro de faixa declarada | projeto | Documento do projeto; contraste da linha E9 do quadro |
 | **P4** | Limite de tentativas | Quatro mensagens por participante por ciclo, incluído o convite | projeto | Decorrência de P1 e P2 |
-| **P5** | Janela do ciclo e calendário | 60 dias corridos de validade do acesso; ciclos anuais ancorados na turma | norma (periodicidade) + projeto (janela) | Regulamento, arts. 14, 19 e 22; janela sem fonte |
+| **P5** | Janela do ciclo e calendário | 60 dias corridos de validade do acesso; ciclos anuais ancorados na turma | norma (periodicidade) + projeto (janela) | Regulamento, arts. 14, 19 e 22; janela sem fonte, e contra a letra dos arts. 19, §1º, e 21 (seção 7.1, corrigida na E24) |
 | **P6** | Tratamento da recusa | Recusa de contato: permanente até revogação. Recusa de consentimento: encerra o ciclo corrente | quadro + projeto | Quadro, linha E2; a distinção entre as duas recusas é decisão nova |
 | **P7** | Remetente e assunto | Endereço institucional identificável, com caixa de retorno monitorada; assunto padronizado e estável | projeto | Decorrência de P8; risco de leitura como fraude |
 | **P8** | Verificação de entrega | Registro de retorno de erro, marcação do contato como inválido e fila de correção; sem rastreamento de abertura | quadro + projeto | Quadro, linha E1 (busca ativa reparadora); LGPD, art. 6º, III |
@@ -273,9 +273,20 @@ sem término.
 contados do envio do convite àquele participante. Encerrada a janela, o acesso
 expira e o participante passa ao estado `expirado` (seção 12).
 
-**Origem.** Projeto. Nem a norma nem o quadro fixam duração de janela. A E04
-registra expressamente que a E05 precisa fixar "a janela do ciclo e a cadência
-dentro dela", e só a segunda tinha valor proposto.
+**Origem.** Projeto, **contra a letra da norma**. O quadro não fixa duração de
+janela; a E04 registra expressamente que a E05 precisa fixar "a janela do ciclo e a
+cadência dentro dela", e só a segunda tinha valor proposto.
+
+*Corrigido na E24.* Este parágrafo dizia também que a norma não fixa janela. Lido na
+íntegra, o Regulamento fixa o oposto de uma janela: manda a coleta contínua, com o
+questionário disponível no Portal do Egresso em qualquer momento depois da
+conclusão (arts. 19, §1º, e 21). Não é duração, é ausência de prazo, e os 60 dias não
+a atendem. O valor fica, pelas razões abaixo e por uma anterior a elas: **sem fim de
+janela o ciclo não fecha**, e a regra de não sobreposição (7.2) impediria o ciclo
+seguinte. A tensão é da própria norma, que pede também o link por egresso (art. 16);
+está registrada na [linha de base](../pesquisa/linha-de-base.md), seção 3, e as
+saídas para a instituição, no
+[guia de replicação](../../entregas/guia-replicacao.md), recomendação R5.
 
 **Justificativa.** Três medidas, nesta ordem:
 

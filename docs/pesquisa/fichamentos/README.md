@@ -33,14 +33,25 @@ levam o nome da autoria conferida na fonte.
 | UnB (2019) — egressos RAIS, Educação Física | estudo de egressos | [`unb-2019.md`](unb-2019.md) |
 | USP — Programa Alumni USP | programa de referência | [`usp-alumni.md`](usp-alumni.md) |
 
-### Fonte adicional, fora das 17
+### Fontes adicionais, fora das 17
 
-| CARVALHO (2025) — frontend do sistema de egressos da UFU | [`carvalho-2025.md`](carvalho-2025.md) |
-|---|---|
+| Fonte (autoria conferida) | Grupo | Arquivo |
+|---|---|---|
+| CARVALHO (2025) — frontend do sistema de egressos da UFU | experiência | [`carvalho-2025.md`](carvalho-2025.md) |
+| EDWARDS et al. (2023) — métodos para aumentar a resposta a questionários, Cochrane | revisão sistemática | [`edwards-2023.md`](edwards-2023.md) |
+| IFAL (2024) — pesquisa de acompanhamento de egressos 2022-2023 | experiência | [`ifal-2024.md`](ifal-2024.md) |
 
-Localizada porque o endereço da referência de Cabral apontava para ela. Não consta
-das referências do projeto; fica fichada por já ter sido lida e por servir de termo
-de comparação do custo da via de desenvolvimento próprio.
+**Carvalho** foi localizada porque o endereço da referência de Cabral apontava para
+ela; fica fichada por já ter sido lida e por servir de termo de comparação do custo
+da via de desenvolvimento próprio.
+
+**Edwards et al.** e **IFAL** foram levantadas na E24, com autorização do
+orientando para buscar fontes fora do conjunto, porque as recomendações daquela
+etapa só tinham, no conjunto original, evidência *relatada* ou *não avaliada*. A
+primeira é a única do conjunto com efeito de estratégia isolado por randomização —
+mas fora da população de egressos. A segunda é o segundo caso da Rede Federal, depois
+do Ifes, e o primeiro com denominador declarado. Nenhuma das duas consta das
+referências do documento do projeto; a inclusão no relatório final é da E31.
 
 ## Pendências levantadas
 
@@ -75,8 +86,10 @@ mudou.
   Paranaense.
 - **PRAGA DE SOUZA et al. (2025)** — divergência de autoria entre o PDF (dois
   autores) e a página do periódico (três). Adotou-se a citação da página.
-- **IFSP — RN nº 13/2022** — numeração de artigos corrompida pelo OCR. Conferir no
-  PDF original todo dispositivo citado.
+- ~~**IFSP — RN nº 13/2022** — numeração de artigos corrompida pelo OCR.~~
+  **Encerrada na E24** (06/10/2026): novo OCR a 300 dpi; todos os dispositivos
+  citados conferem, e a data da referência foi corrigida para a da epígrafe, 1º de
+  novembro de 2022. Ver o "Histórico de leitura" da ficha.
 
 **Material relevante ausente das 17 referências**
 
@@ -103,6 +116,8 @@ mudou.
 - **estudo de egressos** — levantamentos sobre a população, insumo da E04 e da E05.
 - **modelo teórico** — referencial de análise.
 - **programa de referência** — iniciativa de relacionamento com egressos em operação.
+- **revisão sistemática** — síntese de ensaios sobre estratégias de resposta, fora
+  da população de egressos.
 
 ## Critério
 

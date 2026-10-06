@@ -5,9 +5,10 @@ LimeSurvey, com rastreabilidade de participantes, automação de contato e
 controles de conformidade.
 
 **Estado deste guia.** As Partes I a III estão completas e foram verificadas por
-execução. As Partes IV a VI serão escritas quando as etapas correspondentes
-existirem — cada uma indica a sua. Esta versão permite **reproduzir o ambiente**;
-ela ainda não descreve o instrumento nem a automação.
+execução. Da Parte VI, estão escritas as recomendações que dependem de ação
+institucional. O restante será escrito quando as etapas correspondentes existirem —
+cada parte indica a sua. Esta versão permite **reproduzir o ambiente**; ela ainda
+não descreve o instrumento nem a automação.
 
 | Parte | Assunto | Estado |
 |---|---|---|
@@ -16,7 +17,7 @@ ela ainda não descreve o instrumento nem a automação.
 | III | Segurança do ambiente | completa |
 | IV | Estrutura do instrumento | pendente (E15) |
 | V | Automação de contato | pendente (E21) |
-| VI | Conformidade e recomendações | pendente (E22 a E24) |
+| VI | Conformidade e recomendações | recomendações completas (E24); conformidade pendente (E22 e E23) |
 
 ---
 
@@ -384,12 +385,376 @@ cadência de disparo, rotina agendada e leitura de devoluções em operação.
 
 # Parte VI — Conformidade e recomendações
 
-*Pendente. Será escrita na E30, a partir das etapas E22 a E24.*
+## 9. Conformidade
+
+*Pendente. Será escrita na E30, a partir das etapas E22 e E23.*
 
 Cobrirá: consentimento eletrônico com as duas manifestações de recusa,
-anonimização, trilha de auditoria, e as recomendações que dependem de ação
-institucional — divulgação em colação de grau, mobilização por turmas e ações
-dirigidas a turmas antigas.
+anonimização e trilha de auditoria.
+
+## 10. Recomendações que dependem de ação institucional
+
+O mecanismo deste guia entrega o que se configura: lista fechada de participantes,
+endereço individual, convite, lembrete só a quem não respondeu, registro da recusa.
+Parte do que a literatura e a norma associam à participação dos egressos não se
+configura em plataforma alguma. Depende de quem coordena o curso, de quem administra
+um grupo de turma, de quem organiza a colação de grau ou um encontro de ex-alunos.
+Esta seção reúne essas ações como **recomendação de implantação**. Nenhuma foi
+executada no ensaio, que não contatou ninguém.
+
+As referências normativas são as do IFSP: o Regulamento do Programa de
+Acompanhamento de Egressos (Portaria Normativa nº 128/2025), citado só pelo artigo,
+e a Política de Acompanhamento de Egressos (Resolução Normativa nº 13/2022), citada
+como PAEg. Outra instituição troca-as pelas suas; as recomendações não dependem
+delas.
+
+### 10.1 Como ler
+
+Cada recomendação traz a evidência que a sustenta, com o estado na escala do
+[quadro de engajamento](../docs/pesquisa/quadro-engajamento.md), acrescida de um
+rótulo:
+
+| Estado | Significado |
+|---|---|
+| **medido** | número de resposta com denominador declarado, atribuível à estratégia, entre egressos |
+| **medido em outra população** | efeito estimado por ensaio randomizado, com participantes que não são egressos — rótulo da revisão de [Edwards et al. (2023)](../docs/pesquisa/fichamentos/edwards-2023.md), acrescentado ao quadro na seção 1.3 |
+| **relatado** | a fonte afirma ou sugere o efeito, sem medir, ou sem separar de outras ações |
+| **não avaliado** | a fonte descreve a prática e não trata do efeito |
+
+Duas advertências valem para todas. **Nenhuma recomendação tem efeito medido entre
+egressos**, e nenhuma fonte as compara: a ordem abaixo não é ranking. E **nenhuma
+permite projetar taxa de resposta.** O que oferecem é condição — contato correto,
+convite esperado e reconhecível, egresso que sabe para que responde — que a
+literatura associa à participação. É o mesmo limite do mecanismo, que entrega
+capacidade instalada de cobrança sistemática, e não taxa.
+
+### 10.2 A regra que vale para todas: canal coletivo avisa, não leva endereço
+
+Quase toda ação desta seção passa por canal coletivo — cerimônia, grupo, rede
+social, portal, cartaz. Há duas formas de, por ele, desfazer o mecanismo sem
+perceber.
+
+**Publicar um endereço comum de resposta** — no grupo, na postagem, no código QR do
+cartaz, no telão da colação, na página de egressos. Quem responde por ele fica fora
+da lista fechada: não entra no denominador, não tem unicidade nem elegibilidade
+conferidas, e continua recebendo lembrete, porque para o mecanismo não respondeu. Os
+dois relatórios da Rede Federal no conjunto mostram o resultado: o
+[Ifes](../docs/pesquisa/fichamentos/ifes-2025.md) difundiu o link em grupos de
+WhatsApp e chegou a 1.840 respostas sem denominador; o
+[IFAL](../docs/pesquisa/fichamentos/ifal-2024.md) difundiu o seu no Instagram e em
+grupos, e teve de descartar respostas de formados fora do recorte.
+
+**Publicar endereços individuais em lista** — a mensagem de grupo com o link de cada
+um. O endereço individual é transportável por desenho
+([ADR-0003](../docs/decisoes/0003-canal-alternativo-nao-automatizado.md)), e quem o
+tem responde como o egresso: vê os dados acadêmicos pré-preenchidos dele e pode, na
+tela inicial, registrar em nome dele a recusa de contato, que o mecanismo trata como
+permanente até revogação.
+
+O que o canal coletivo leva é **aviso**: o convite individual foi enviado em tal
+data, pelo remetente tal, com o assunto tal; procure também no lixo eletrônico; se
+não recebeu, escreva para o endereço de retorno. O endereço de resposta só vai em
+mensagem a uma pessoa — o convite por e-mail, ou a entrega da R3.
+
+### 10.3 Quadro-resumo
+
+| | Recomendação | Quem executa, no IFSP | Evidência | Estado mais forte |
+|---|---|---|---|---|
+| R1 | Colação de grau: avisar do convite e acertar o contato | coordenador de curso e setor indicado pelo campus (arts. 10 e 22) | IFAL (2024); Coelho e Silva (2017); Edwards et al. (2023) | medido em outra população, inconclusivo no eletrônico |
+| R2 | Grupos de turma: o grupo avisa, não distribui | coordenadores, colegiados e CEICs; quem administra o grupo (arts. 9º, 19 e 26) | Ifes (2025); IFAL (2024); Edwards et al. (2023) | medido em outra população |
+| R3 | Canal alternativo: uma pessoa entrega o endereço individual | setor indicado pelo campus (arts. 10 e 16, §1º) | Coelho e Silva (2017); Ifes (2025) | relatado |
+| R4 | Turmas antigas: ver a não resposta por turma e reparar o contato | setor indicado pelo campus; Diretoria-Geral, nos Jubileus (art. 10; PAEg, art. 19) | Ifes (2025); IFAL (2024); Coelho e Silva (2017); Alvares et al. (2020) | relatado |
+| R5 | Divulgação institucional e Portal do Egresso sem link aberto | comunicação dos campi; COPAEG (arts. 22, 26 e 29) | Ifes (2025); IFAL (2024); linha de base; Edwards et al. (2023) | medido em outra população |
+| R6 | Contrapartidas oferecidas por fora, e resultados devolvidos | setor indicado pelo campus; COPAEG (art. 3º; arts. 23, 24, 26 e 27) | Edwards et al. (2023); IFAL (2024); Alumni USP; Cabral et al. (2016) | medido em outra população, só para a devolução dos resultados |
+| R7 | Colaboração voluntária com termo próprio, fora do questionário | servidor efetivo do campus (art. 40; PAEg, art. 18) | Alumni USP; Cabral et al. (2016) | relatado, por ligação indireta |
+| R8 | Portal de relacionamento, quando couber | COPAEG (arts. 8º, item 4, 28 e 29) | Cabral et al. (2016); Alumni USP | relatado |
+
+### 10.4 R1 — Colação de grau: avisar do convite e acertar o contato
+
+**O que fazer.** Na colação de grau, ou na mensagem que o coordenador envia aos
+concluintes:
+
+1. **anunciar o convite** — ao término do semestre de conclusão chegará, por e-mail,
+   um convite individual, deste remetente e com este assunto (os da P7, em
+   [`parametros-contato.md`](../docs/especificacao/parametros-contato.md));
+2. **pedir que o concluinte confira o contato no sistema acadêmico** — e-mail,
+   segundo e-mail e telefone — e o corrija lá, com um endereço que continue em uso
+   depois da conclusão;
+3. **não exibir endereço nem código QR do questionário.**
+
+O contato corrigido no sistema acadêmico chega ao mecanismo pela extração seguinte,
+porque valor novo na origem prevalece sobre o anterior
+([`importacao-base.md`](../docs/especificacao/importacao-base.md), seção 5). Coletar
+contato por formulário paralelo criaria uma segunda origem, sem regra. O segundo
+e-mail é o `email_alternativo` do leiaute de entrada: a única via de reparo que o
+mecanismo prevê sem ação humana.
+
+**Quando.** A colação fica perto da âncora do primeiro ciclo — o término do
+semestre de conclusão (P5) —, antes ou depois do convite, conforme o calendário do
+campus. Se vier depois, o aviso diz que o convite **já** foi enviado.
+
+**Evidência.**
+
+- [IFAL (2024)](../docs/pesquisa/fichamentos/ifal-2024.md) — *relatado*. Dos 5.472
+  diplomados, nem todos tinham e-mail ativo no sistema acadêmico. O relatório
+  atribui a perda ao e-mail da matrícula que ninguém revisa, ao e-mail de familiar e
+  ao endereço inválido, e recomenda atualizar o cadastro **no momento da conclusão**.
+  É observação da operação; o efeito da atualização não foi medido.
+- [Coelho e Silva (2017)](../docs/pesquisa/fichamentos/coelho-2017.md) — *relatado*.
+  Caixas postais inativas obrigaram à busca ativa por telefone e redes sociais para
+  refazer os e-mails: o custo da correção tardia, viável para 79 egressos e não para
+  milhares.
+- [Edwards et al. (2023)](../docs/pesquisa/fichamentos/edwards-2023.md) — *medido em
+  outra população*. O contato prévio ao envio aumentou a resposta a questionários
+  postais (59 ensaios; OR 1,36; IC 95% 1,23–1,51). No questionário eletrônico, a
+  estimativa vai no mesmo sentido, mas é **inconclusiva** (3 ensaios; OR 1,85; IC 95%
+  0,99–3,45). Nenhum ensaio testou aviso feito em cerimônia.
+
+**Norma.** O Regulamento já manda divulgar aos pré-egressos, pelo coordenador, no
+momento da colação (art. 22), e pede ao egresso que mantenha o contato atualizado
+(art. 13, item 1). A recomendação diz **o que** a divulgação leva.
+
+### 10.5 R2 — Grupos de turma: o grupo avisa, não distribui
+
+**O que fazer.** Quem integra ou administra o grupo — coordenador, docente,
+representante de turma — publica o aviso da regra comum, nas datas do convite e dos
+lembretes. A quem pedir o endereço no grupo, a resposta vai em mensagem privada, pela
+via da R3. O próprio convite diz ao egresso que o endereço é individual e não deve
+ser repassado ([`modelos-mensagem.md`](../docs/especificacao/modelos-mensagem.md)).
+
+**Evidência.**
+
+- [Ifes (2025)](../docs/pesquisa/fichamentos/ifes-2025.md) — *relatado*. Link
+  difundido em grupos de WhatsApp de ex-alunos, junto com outras três ações, sem
+  medição separada. Cerca de 80% dos respondentes tinham de 18 a 35 anos, e a maioria
+  concluíra nos últimos dez anos: o grupo alcança quem continua nele.
+- [IFAL (2024)](../docs/pesquisa/fichamentos/ifal-2024.md) — *relatado*. Link público
+  em grupos e no Instagram; 20,9% dos respondentes citaram grupos de WhatsApp como
+  fonte de notícias do instituto — medido entre quem respondeu, e por isso circular.
+- [Edwards et al. (2023)](../docs/pesquisa/fichamentos/edwards-2023.md) — *medido em
+  outra população*. Saudação e carta personalizadas aumentaram a resposta a
+  questionários eletrônicos (12 ensaios; OR 1,24; IC 95% 1,17–1,32). É o argumento
+  para que a mensagem coletiva **aponte** para o convite pessoal, e não o substitua.
+
+**Norma.** O acompanhamento é por turma (art. 19), e o Regulamento já nomeia como
+canais a comunicação interpessoal, a coordenação de curso e o WhatsApp dos campi
+(art. 26, parágrafo único). A recomendação trata do que passa por eles.
+
+### 10.6 R3 — Canal alternativo: uma pessoa entrega o endereço individual
+
+**O que fazer.** Para o participante em `contato inválido` sem via alternativa que
+funcione (P8), uma pessoa designada copia o endereço individual dele da base de
+participantes e o envia por mensagem instantânea **privada** ao telefone registrado:
+uma mensagem por pessoa, com o texto do convite, uma vez por ciclo, como o reconvite
+(P4). Se o egresso responder com e-mail novo, a correção segue o reparo de contato do
+mecanismo, e não edição avulsa na plataforma — o contato precisa mudar na base central
+e no questionário ([`importacao-base.md`](../docs/especificacao/importacao-base.md),
+seção 11).
+
+**Quem.** O setor indicado pelo campus, que executa o programa (art. 10). A
+[ADR-0003](../docs/decisoes/0003-canal-alternativo-nao-automatizado.md) deixou o canal
+sem automação e pediu responsável definido; este é o responsável natural, porque já
+trata os dados do programa. Convém que a mensagem saia de conta institucional, e não
+de telefone pessoal, para que nome e número não fiquem em aparelho particular —
+recomendação de projeto, pelo princípio da necessidade da LGPD, sem fonte que a
+avalie.
+
+**Evidência.**
+
+- [Coelho e Silva (2017)](../docs/pesquisa/fichamentos/coelho-2017.md) — *relatado*.
+  Busca ativa por telefone e redes sociais, parte dos 35,4% sem separação.
+- [Ifes (2025)](../docs/pesquisa/fichamentos/ifes-2025.md) — *relatado*. Contato
+  telefônico quando havia telefone, uma das quatro ações sem medição separada.
+
+**Norma.** O art. 16, §1º, manda usar mensagens instantâneas quando o e-mail não for
+possível. A conformidade do mecanismo a ele é parcial e declarada: entrega a
+condição — o endereço transportável —, e não o envio.
+
+### 10.7 R4 — Turmas antigas: ver a não resposta por turma e reparar o contato
+
+**O problema.** O [Ifes](../docs/pesquisa/fichamentos/ifes-2025.md) teve respondentes
+concentrados nas turmas da última década e atribuiu isso à proximidade dos canais —
+descrição do viés, e não controle. O [IFAL](../docs/pesquisa/fichamentos/ifal-2024.md)
+tomou o caminho oposto: restringiu a análise ao biênio e descartou os formados antes.
+
+**O que o mecanismo muda, e o que não muda.** Com lista fechada, a não resposta por
+turma fica **visível**: `ano_conclusao` e `semestre_conclusao` acompanham cada
+participante, e convites, devoluções e respostas podem ser contados por turma. O Ifes
+não podia, sem denominador; o IFAL, só para o biênio. Isso mostra onde a cobertura
+cai, e não a eleva.
+
+**O que fazer.**
+
+1. **Não recortar em silêncio.** A população-alvo do Regulamento não tem limite de
+   tempo (art. 18). Se a instituição recortar turmas, o recorte é decisão declarada,
+   e não efeito do contato que envelheceu.
+2. **Reparar antes de insistir.** Onde a contagem mostrar devoluções concentradas, a
+   ação é busca ativa reparadora — por quem conhece a turma, como ex-coordenadores e
+   docentes —, e não mais lembretes. É operação manual: priorizar as turmas com mais
+   devoluções.
+3. **Usar as ocasiões que a norma já cria** para atualizar o contato, pelo sistema
+   acadêmico, e não para colher respostas: encontros de egressos (art. 10, item 5),
+   premiações (art. 10, item 6) e os Jubileus de Prata e de Ouro, aos 25 e aos 50 anos
+   de formado (PAEg, art. 19).
+
+**Evidência.**
+
+- [Ifes (2025)](../docs/pesquisa/fichamentos/ifes-2025.md) e
+  [IFAL (2024)](../docs/pesquisa/fichamentos/ifal-2024.md) — *relatado*: o viés e as
+  duas reações a ele.
+- [Coelho e Silva (2017)](../docs/pesquisa/fichamentos/coelho-2017.md) — *relatado*:
+  a busca ativa reparadora.
+- [Alvares et al. (2020)](../docs/pesquisa/fichamentos/alvares-2020.md) — *não
+  avaliado*: o distanciamento entre instituição e formado diminui com encontros
+  regulares, contato por rede social e e-mails personalizados. Observação de passagem,
+  vinda de quem optou por não contatar egressos.
+
+**O que não se pode afirmar.** Que as turmas antigas respondem menos: nenhuma fonte
+do conjunto mediu taxa por turma. O que há é a composição dos respondentes do Ifes.
+
+### 10.8 R5 — Divulgação institucional e Portal do Egresso sem link aberto
+
+**O que fazer.** A campanha institucional — sítio, redes, cartaz, a campanha dos dois
+anos após a formatura (art. 22) — anuncia o ciclo, diz que o convite é individual e
+por e-mail, diz para que servem as respostas e oferece a via do "não recebi": o
+endereço de retorno ou o setor do campus. Assim a campanha alimenta o reparo de
+contato, em vez de abrir uma segunda porta de resposta.
+
+Ao adotar o mecanismo, **a página de egressos deixa de oferecer o questionário
+aberto.** A do IFSP oferece hoje o instrumento vigente por link público (conferido
+em 06/10/2026; ver a [linha de base](../docs/pesquisa/linha-de-base.md)). Com os dois
+convivendo, a mesma pessoa responde duas vezes, as respostas abertas ficam sem
+denominador, e quem respondeu pela porta aberta segue recebendo lembretes.
+
+**Uma tensão na norma.** O Regulamento manda o link individual (art. 16), mas também
+manda o questionário disponível **de forma contínua** no Portal do Egresso (art. 19,
+§1º), acessível **a qualquer momento** depois da conclusão (art. 21), e põe entre as
+finalidades do Portal disponibilizar o formulário (art. 29, item 4). Lidos ao pé da
+letra, os três pedem uma porta aberta, e conflitam também com a janela de 60 dias da
+P5. A linha de base confrontou o link aberto com o art. 16 e não registrou estes três
+dispositivos. Três saídas, para a instituição decidir:
+
+| Saída | Como fica | Custo |
+|---|---|---|
+| **Portal como porta de pedido** (recomendada) | o Portal explica o ciclo e recebe pedidos do endereço individual; quem opera confere a base e reenvia | fora da janela, o pedido espera o ciclo seguinte: reabrir a janela é exceção que o mecanismo hoje não prevê |
+| Dois instrumentos separados | um questionário aberto no Portal, nunca somado aos indicadores do rastreável | duas bases, dois consentimentos, a mesma pessoa nas duas, e um número sem denominador ao lado do outro |
+| Revisão da norma | a COPAEG ajusta os arts. 19, §1º, 21 e 29, item 4, ao art. 16, na revisão bienal (art. 39), com aprovação do Conselho de Extensão (PAEg, art. 13, §2º) | depende de deliberação |
+
+A primeira resolve agora; a terceira resolve de vez.
+
+**Evidência.**
+
+- [Ifes (2025)](../docs/pesquisa/fichamentos/ifes-2025.md) — *relatado*: canais
+  oficiais e cartaz, sem medição separada, e a perda de denominador do link público.
+- [IFAL (2024)](../docs/pesquisa/fichamentos/ifal-2024.md) — *relatado*: o Instagram
+  como canal de 87,9% dos respondentes — medido entre quem a campanha alcançou — e as
+  respostas fora do recorte trazidas pelo link público.
+- [Linha de base](../docs/pesquisa/linha-de-base.md) — a "Campanha de Egressos" do
+  IFSP em 2018, sem avaliação registrada, e os 2.519 registros desde 2015 sem
+  denominador.
+- [Edwards et al. (2023)](../docs/pesquisa/fichamentos/edwards-2023.md) — *medido em
+  outra população*: dizer o benefício da resposta para a sociedade aumentou a
+  resposta a questionário eletrônico (OR 1,38; IC 95% 1,07–1,78). Sustenta o "para
+  que servem as respostas" da campanha.
+
+### 10.9 R6 — Contrapartidas oferecidas por fora, e resultados devolvidos
+
+**O que fazer.**
+
+1. **Devolver os resultados.** Publicar o resultado agregado e dizer ao egresso, no
+   convite, onde ele estará. O Regulamento já manda divulgar os dados (arts. 15,
+   item 4, 20, §3º, e 23) e produzir relatório bienal (art. 24); falta prometê-lo ao
+   egresso e cumprir.
+
+   **Onde.** No IFSP, a norma já indica um lugar: o Relatório de Perfil dos Egressos,
+   feito com os dados da pesquisa, é publicado pelos meios do Portal do Egresso
+   (art. 31, §1º, item 2, e §2º, item 6). Se a instituição mantiver um painel de
+   indicadores, a camada pública dele — só com agregados, sem recorte que permita
+   reconhecer alguém — pode ser o lugar, ou apontar para ele. Outra instituição
+   escolhe o seu. A frase do convite entra em
+   [`mensagens.py`](../infra/instrumento/mensagens.py) **só quando o lugar existir.**
+   No ensaio ela não entra: os números da simulação não são resultado sobre egressos.
+2. **Oferecer as ações de relacionamento que a norma lista, sem condicioná-las à
+   resposta**: formação continuada, vagas de emprego, empreendedorismo, eventos e
+   redes de relacionamento (art. 3º, itens 9, 10, 11, 13 e 14; arts. 26 e 27). O
+   convite já nomeia as três contrapartidas que o IFSP anuncia.
+3. **Não embutir o cadastro desses serviços no questionário.** O IFAL ofereceu
+   cadastro de vagas no próprio formulário e passou a dirigir as vagas a quem
+   respondeu. Isso mistura duas finalidades — o termo do questionário declara que as
+   respostas não servem a nenhuma outra
+   ([`consentimento.md`](../docs/especificacao/consentimento.md)) — e transforma o
+   serviço em prêmio pela resposta.
+
+**Evidência.**
+
+- [Edwards et al. (2023)](../docs/pesquisa/fichamentos/edwards-2023.md) — *medido em
+  outra população*: oferecer os resultados aumentou a resposta a questionário
+  eletrônico (2 ensaios; OR 1,36; IC 95% 1,16–1,59). É a contrapartida com evidência
+  mais direta, e a mais barata.
+- [IFAL (2024)](../docs/pesquisa/fichamentos/ifal-2024.md) — *relatado*: os autores
+  creem que o cadastro de vagas aumentou o engajamento, sem medir; e 84,6% dos
+  respondentes não conheciam o serviço de vagas que já existia.
+- [Alumni USP](../docs/pesquisa/fichamentos/usp-alumni.md) — *relatado*: mais de 150
+  mil inscritos por contrapartida, sem denominador e com autosseleção pelo benefício.
+- [Cabral et al. (2016)](../docs/pesquisa/fichamentos/cabral-2016.md) — *não
+  avaliado*: nenhum dos portais analisados oferecia canal de oportunidades.
+
+### 10.10 R7 — Colaboração voluntária: termo próprio, fora do questionário
+
+**O que fazer.** A colaboração voluntária do egresso em ensino, pesquisa e extensão
+exige termo de adesão com objeto e condições (art. 40, item 4), plano de trabalho com
+identificação e contato (Anexo II), acompanhamento por servidor efetivo do campus
+(art. 40, item 5) e observância da Lei nº 9.608/1998 (art. 40, item 1; PAEg,
+art. 18). É relacionamento, e não medida: o
+[bloco de contato](../docs/especificacao/blocos-instrumento.md) a deixou de fora por
+isso. O questionário não inscreve voluntários nem empresta seu consentimento a essa
+adesão; o convite nomeia a possibilidade, e o setor do campus a conduz.
+
+**Evidência.** Nenhuma fonte do conjunto avalia a colaboração voluntária de egressos.
+A ligação com a literatura é pela distinção entre camada de relacionamento e camada
+de coleta: o [Alumni USP](../docs/pesquisa/fichamentos/usp-alumni.md) opera adesão
+voluntária com cadastro próprio (*relatado*), e
+[Cabral et al. (2016)](../docs/pesquisa/fichamentos/cabral-2016.md) tratam o portal de
+relacionamento como canal à parte (*não avaliado*).
+
+### 10.11 R8 — Portal de relacionamento, quando couber
+
+**O que fazer.** O ambiente virtual de relacionamento com e entre os egressos é
+competência da COPAEG (art. 8º, item 4; PAEg, art. 11, II), e o Portal do Egresso tem
+finalidades de relacionamento — formação continuada, eventos, vagas, encontros
+(art. 29). Ele é o lugar natural da publicação dos resultados (R6) e da porta de
+pedido (R5). **Não é o mecanismo**, e não hospeda o questionário rastreável por
+endereço comum. Um formulário de atualização de contato no Portal atende ao art. 13,
+item 1, mas é nova origem de contato: entra pela importação e pela regra de
+precedência, e não por edição na plataforma.
+
+**Evidência.**
+
+- [Cabral et al. (2016)](../docs/pesquisa/fichamentos/cabral-2016.md) — *não
+  avaliado*: portal centralizado em 4 das 10 universidades analisadas — número que mede
+  visibilidade em buscador — e portais dispersos por unidade nas demais. Para uma
+  instituição multicampi, o argumento é de centralização, e o Regulamento já a prevê,
+  com páginas locais dentro da principal (art. 29, §§ 1º e 2º).
+- [Alumni USP](../docs/pesquisa/fichamentos/usp-alumni.md) — *relatado*: o arranjo em
+  operação e em escala, com escritório próprio — contexto que não se transfere por
+  configuração.
+
+### 10.12 Cada recomendação e a sua fonte
+
+| | Fontes | Estado mais forte | Observação |
+|---|---|---|---|
+| R1 | IFAL; Coelho e Silva; Edwards et al. | medido em outra população | a pré-notificação eletrônica é inconclusiva; a recomendação de acertar o contato na conclusão é da própria fonte (IFAL) |
+| R2 | Ifes; IFAL; Edwards et al. | medido em outra população | o efeito medido é o da personalização, que o aviso preserva |
+| R3 | Coelho e Silva; Ifes | relatado | a conta institucional é decisão de projeto, sem fonte |
+| R4 | Ifes; IFAL; Coelho e Silva; Alvares et al. | relatado | nenhuma fonte mede taxa por turma |
+| R5 | Ifes; IFAL; linha de base; Edwards et al. | medido em outra população | a tensão normativa é leitura deste projeto; a decisão é da instituição |
+| R6 | Edwards et al.; IFAL; Alumni USP; Cabral et al. | medido em outra população | só a devolução dos resultados tem efeito medido |
+| R7 | Alumni USP; Cabral et al. | relatado | ligação indireta, pela distinção entre camadas |
+| R8 | Cabral et al.; Alumni USP | relatado | — |
+
+Nenhuma alcança *medido*. É o estado do campo que o quadro de engajamento já
+registrara, e a revisão de Edwards et al. só o desloca para fora da população de
+egressos.
 
 ---
 
@@ -489,6 +854,7 @@ usado pela documentação e pelos tutoriais antigos.
 | [ADR-0002](../docs/decisoes/0002-ambiente-execucao.md) | por que conteinerização local, e não nuvem ou máquina virtual |
 | [ADR-0003](../docs/decisoes/0003-canal-alternativo-nao-automatizado.md) | por que o convite por mensagem instantânea não é automatizado |
 | [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md) | por que imagem própria, e por que a leitura de devoluções é rotina do projeto |
+| [quadro-engajamento.md](../docs/pesquisa/quadro-engajamento.md) | estratégias de engajamento de egressos e o estado da evidência de cada uma |
 | [parametros-contato.md](../docs/especificacao/parametros-contato.md) | cadência, tratamento da recusa, verificação de entrega |
 | [capacidades-plataforma.md](../docs/especificacao/capacidades-plataforma.md) | o que a plataforma suporta, conferido contra a instância |
 | [leitura-devolucoes.md](../docs/especificacao/leitura-devolucoes.md) | desenho do correio de ensaio e classificação do retorno |

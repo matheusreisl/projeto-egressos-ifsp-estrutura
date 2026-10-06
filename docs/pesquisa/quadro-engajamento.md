@@ -8,6 +8,13 @@ Produto da etapa E04. É insumo direto da E05 (parâmetros de contato), da E18
 (pré-preenchimento), da E20 e da E21 (convites, mensagens e rotina de lembretes) e
 da E24 (recomendações que dependem de ação institucional).
 
+**Atualizado na E24** com duas fontes de fora do conjunto original — o relatório
+do [Ifal (2024)](fichamentos/ifal-2024.md), segundo caso da Rede Federal, e a
+revisão de [Edwards et al. (2023)](fichamentos/edwards-2023.md), de ensaios
+randomizados fora da população de egressos (seção 1.3) — e com a correção da
+seção 6, depois da releitura integral do Regulamento. Os acréscimos estão marcados
+no texto.
+
 ## 1. Objeto e método
 
 **Objeto.** As estratégias de engajamento de respondentes identificadas nas fontes
@@ -42,8 +49,10 @@ internacional indexada, não o campo.
 
 ### 1.1 A advertência que condiciona a leitura de todo o quadro
 
-**Nenhuma das fontes isola o efeito de uma estratégia sobre a participação.** Esta
-não é uma ressalva de rodapé; é o achado que organiza o documento.
+**Nenhuma das fontes sobre egressos isola o efeito de uma estratégia sobre a
+participação.** Esta não é uma ressalva de rodapé; é o achado que organiza o
+documento. (A revisão de Edwards et al., acrescentada na E24, isola — por
+randomização, e fora dessa população; ver 1.3.)
 
 - O [Ifes (2025)](fichamentos/ifes-2025.md) executou quatro estratégias em paralelo
   e mais uma campanha gráfica, sem medição separada, e reporta um numerador —
@@ -57,6 +66,10 @@ não é uma ressalva de rodapé; é o achado que organiza o documento.
 - [RAEG](fichamentos/praga-de-souza-2025.md), [SAVE](fichamentos/silva-2024.md) e a
   ferramenta de [Ranthum e Santos Junior (2023)](fichamentos/ranthum-2023.md) não
   relatam aplicação em coleta real.
+- O [Ifal (2024)](fichamentos/ifal-2024.md) tem denominador, tirado do sistema
+  acadêmico — 1.066 respostas sobre 5.472 diplomados, 19% —, mas o numerador soma
+  quem veio pelo convite por e-mail e quem veio pela difusão aberta, sem separação.
+  *Acrescentado na E24.*
 
 Em consequência, o quadro **não é uma comparação de desempenho** e não pode ser
 lido como tal. É um repertório de práticas, com o estado da evidência declarado em
@@ -74,7 +87,35 @@ demonstrada.
 
 Das onze linhas do quadro, **uma** é medida, cinco são relatadas e cinco não foram
 avaliadas. Essa distribuição é, por si, um resultado da etapa: o campo documenta
-muito mais prática do que efeito.
+muito mais prática do que efeito. A entrada do Ifal, na E24, não a altera: o que ele
+acrescenta é *relatado*.
+
+### 1.3 Evidência de fora da população de egressos
+
+*Acrescentado na E24.* A revisão Cochrane de
+[Edwards et al. (2023)](fichamentos/edwards-2023.md) reúne 758 ensaios randomizados —
+88 com questionário eletrônico — sobre estratégias para aumentar a resposta. Mede o
+efeito de cada estratégia contra controle, o que nenhuma fonte sobre egressos faz,
+mas com participantes de pesquisa em saúde, sobretudo. Recebe por isso rótulo
+próprio, **medido em outra população**, que não se confunde com o *medido* da
+escala acima e não altera os estados das linhas do quadro.
+
+| Linha do quadro | O que a revisão mediu | Modo | Ensaios | OR (IC 95%) |
+|---|---|---|---|---|
+| E1 busca ativa | lembrete por telefone (lembrete, não reparo de cadastro) | postal | 4 | 1,96 (1,03–3,74) |
+| E3 mala direta; E6 convite individual | saudação e carta personalizadas | eletrônico | 12 | 1,24 (1,17–1,32) |
+| E5 contrapartidas | oferta dos resultados da pesquisa | eletrônico | 2 | 1,36 (1,16–1,59) |
+| E5 contrapartidas | incentivo não monetário | eletrônico | não lido | 1,60 (1,25–2,05) |
+| E7 redução do esforço | questionário mais curto | eletrônico | 5 | 1,51 (1,06–2,16) |
+| E8 divulgação | contato prévio ao envio (pré-notificação) | eletrônico | 3 | 1,85 (0,99–3,45) — inconclusivo |
+| E8 divulgação | contato prévio ao envio (pré-notificação) | postal | 59 | 1,36 (1,23–1,51) |
+| E8 divulgação | ênfase no benefício da resposta para a sociedade | eletrônico | não lido | 1,38 (1,07–1,78) |
+
+Três cuidados de leitura. A população é outra, e a transposição a egressos é
+hipótese. Em metade das estratégias a heterogeneidade é considerável, e os próprios
+autores advertem que a estimativa combinada pode não ter significado. E razão de
+chances não é acréscimo fixo de taxa, nem efeitos medidos isoladamente se somam.
+Nenhuma linha desta tabela muda o que a seção 7 diz não ser possível afirmar.
 
 ## 2. O quadro comparativo
 
@@ -82,12 +123,12 @@ muito mais prática do que efeito.
 |---|---|---|---|---|---|
 | **E1** | **Busca ativa** — contato por telefone e redes sociais diante de endereço inválido | EMESCAM ([Coelho e Silva, 2017](fichamentos/coelho-2017.md)); Ifes ([2025](fichamentos/ifes-2025.md)) | *relatado* — compõe os 35,4% da EMESCAM e o conjunto de 1.840 do Ifes, sem separação | Operação manual, viável em 79 egressos e não em milhares; efeito não isolado | Exige mais de uma via de contato no leiaute de entrada (E11) e um estado de participante "contato inválido" que interrompa o disparo e alimente fila de correção (E05, E21, E23) |
 | **E2** | **Aceite eletrônico** — TCLE substituído por "concordo / não concordo", com direcionamento condicional | EMESCAM ([Coelho e Silva, 2017](fichamentos/coelho-2017.md)) | *não avaliado* — o ganho declarado é de desburocratização, não de participação | Nenhuma medição de abandono na tela de consentimento; contexto de pesquisa com aprovação em CEP, que não é o deste projeto | Precedente direto da E22: tela inicial com registro de aceite e desvio para encerramento na recusa (E14); a recusa registrada é o que permite interromper disparos (E23) |
-| **E3** | **Mala direta** — envio aos e-mails cadastrados nas bases institucionais, sem rastreio individual | Ifes ([2025](fichamentos/ifes-2025.md)) | *relatado* — uma das quatro ações que produziram os 1.840, sem separação | Sem token, não se sabe quem foi alcançado, quem abriu e quem respondeu; a cobrança subsequente realcança quem já respondeu | Confirma o envio dirigido como prática corrente e mostra o teto do envio **não rastreável**; é o desenho que a tabela de participantes e o acesso por token (E17, E18) substituem |
-| **E4** | **Mobilização por turmas** — link difundido em grupos informais de ex-alunos | Ifes ([2025](fichamentos/ifes-2025.md)) | *relatado* — idem, sem separação | Alcança quem permaneceu no grupo; cerca de 80% dos respondentes tinham de 18 a 35 anos e a maioria concluíra nos últimos dez anos — o viés que a própria estratégia produz | Depende de terceiros e não se configura na plataforma (E24); tecnicamente, difundir link único **anula a rastreabilidade**, o que torna a prática incompatível com o mecanismo salvo se cada turma receber convites individuais |
-| **E5** | **Contrapartidas ao egresso** — vantagens, vagas, cursos e eventos em troca do cadastro voluntário | USP ([Alumni USP](fichamentos/usp-alumni.md)) | *relatado* — mais de 150 mil inscritos, sem denominador | Cadastro em programa de relacionamento não é resposta a instrumento; conjunto autosselecionado por interesse no benefício; depende de escritório dedicado e captação de parceiros | Nada disso se implementa por configuração de plataforma: é recomendação da E24. O que cabe ao mecanismo é **nomear a contrapartida existente na mensagem de convite** (E20) |
+| **E3** | **Mala direta** — envio aos e-mails cadastrados nas bases institucionais, sem rastreio individual | Ifes ([2025](fichamentos/ifes-2025.md)); Ifal ([2024](fichamentos/ifal-2024.md)) | *relatado* — uma das quatro ações que produziram os 1.840, sem separação; no Ifal, mais de 4.000 e-mails do sistema acadêmico, dentro dos 19% sem separação | Sem token, não se sabe quem foi alcançado, quem abriu e quem respondeu; a cobrança subsequente realcança quem já respondeu | Confirma o envio dirigido como prática corrente e mostra o teto do envio **não rastreável**; é o desenho que a tabela de participantes e o acesso por token (E17, E18) substituem |
+| **E4** | **Mobilização por turmas** — link difundido em grupos informais de ex-alunos | Ifes ([2025](fichamentos/ifes-2025.md)); Ifal ([2024](fichamentos/ifal-2024.md)) | *relatado* — idem, sem separação; no Ifal, o link público em grupos e no Instagram trouxe respostas de formados fora do recorte, descartadas | Alcança quem permaneceu no grupo; cerca de 80% dos respondentes tinham de 18 a 35 anos e a maioria concluíra nos últimos dez anos — o viés que a própria estratégia produz | Depende de terceiros e não se configura na plataforma (E24); tecnicamente, difundir link único **anula a rastreabilidade**, o que torna a prática incompatível com o mecanismo salvo se cada turma receber convites individuais |
+| **E5** | **Contrapartidas ao egresso** — vantagens, vagas, cursos e eventos em troca do cadastro voluntário | USP ([Alumni USP](fichamentos/usp-alumni.md)); Ifal ([2024](fichamentos/ifal-2024.md)) | *relatado* — mais de 150 mil inscritos, sem denominador; no Ifal, cadastro de vagas oferecido no próprio formulário, com efeito suposto pelos autores e não medido | Cadastro em programa de relacionamento não é resposta a instrumento; conjunto autosselecionado por interesse no benefício; depende de escritório dedicado e captação de parceiros | Nada disso se implementa por configuração de plataforma: é recomendação da E24. O que cabe ao mecanismo é **nomear a contrapartida existente na mensagem de convite** (E20) |
 | **E6** | **Convite individual sobre lista fechada** extraída do sistema acadêmico | EMESCAM ([Coelho e Silva, 2017](fichamentos/coelho-2017.md)) | **medido** — 28 de 79 egressos, **35,4%** | Um único programa de mestrado, população pequena e recente; o número inclui o efeito da busca ativa (E1) e não o separa | É a linha que sustenta o projeto: a lista fechada é o que **cria o denominador**. Sem ela não há taxa de resposta nem perfil de não resposta. Corresponde às metas 4 e 5 (E16 a E19) |
 | **E7** | **Redução do esforço de resposta** — não perguntar o que a instituição já tem; exibir o já respondido para atualização | CEFET-MG ([RAEG](fichamentos/praga-de-souza-2025.md)); Unipampa ([SAVE](fichamentos/silva-2024.md)); [Ranthum e Santos Junior (2023)](fichamentos/ranthum-2023.md) | *não avaliado* — requisito levantado com gestores e intenção declarada de uso; nenhuma medição de participação | RAEG e SAVE não foram aplicados em coleta real; o SAVE é protótipo em Figma avaliado por sete coordenadores | É a E18: atributos pré-carregados na tabela de participantes. Recurso já existente no LimeSurvey — o que o SAVE trata como lacuna a suprir por sistema novo resolve-se por configuração |
-| **E8** | **Divulgação por canais oficiais e campanha gráfica** | Ifes ([2025](fichamentos/ifes-2025.md)); IFSP (Campanha de Egressos, out/2018 — ver [linha de base](linha-de-base.md)) | *relatado* — uma das quatro ações do Ifes; no IFSP, ação pontual sem avaliação registrada | Difusão aberta: atinge quem estiver exposto ao canal e realcança quem já respondeu; nenhum controle de elegibilidade | Não é função da plataforma (E24). Tecnicamente, **o endereço divulgado em canal aberto não pode ser o endereço rastreável** — divulgação e convite individual são caminhos distintos e não devem compartilhar a mesma URL |
+| **E8** | **Divulgação por canais oficiais e campanha gráfica** | Ifes ([2025](fichamentos/ifes-2025.md)); Ifal ([2024](fichamentos/ifal-2024.md)); IFSP (Campanha de Egressos, out/2018 — ver [linha de base](linha-de-base.md)) | *relatado* — uma das quatro ações do Ifes; no Ifal, postagens semanais no Instagram, sem separação; no IFSP, ação pontual sem avaliação registrada | Difusão aberta: atinge quem estiver exposto ao canal e realcança quem já respondeu; nenhum controle de elegibilidade | Não é função da plataforma (E24). Tecnicamente, **o endereço divulgado em canal aberto não pode ser o endereço rastreável** — divulgação e convite individual são caminhos distintos e não devem compartilhar a mesma URL |
 | **E9** | **Janela longa de coleta** como substituto da cobrança dirigida — 17/07 a 31/12/2024, cinco meses e meio | Ifes ([2025](fichamentos/ifes-2025.md)) | *não avaliado* — o relatório não trata do efeito da duração | Manter o formulário aberto é o recurso de quem não tem lista de não respondentes; alonga a coleta sem aumentar a cobertura de forma verificável | Contraste direto para a E05: com cobrança dirigida, o parâmetro relevante passa a ser **cadência e limite de tentativas**, e não duração da janela |
 | **E10** | **Periodicidade definida** como manutenção de vínculo — acompanhamento anual | EMESCAM ([Coelho e Silva, 2017](fichamentos/coelho-2017.md)); IFSP (Regulamento, arts. 14 e 19) | *não avaliado* — defendida pelas autoras como forma de manter o vínculo, sem medição | Único parâmetro de frequência encontrado em fonte com aplicação real, e ainda assim sem série que demonstre efeito acumulado | Fixa a periodicidade da rotina agendada da E21. No IFSP não é escolha: é norma (art. 14) |
 | **E11** | **Portal centralizado de relacionamento** | Dez IES públicas do RUF 2015 ([Cabral et al., 2016](fichamentos/cabral-2016.md)); USP ([Alumni](fichamentos/usp-alumni.md)) | *não avaliado* — 4 de 10 IES com portal centralizado, nenhuma com canal de oportunidades; o estudo mede presença de elementos, não uso | O método de busca — Google, só a primeira página, sem consultar os sítios institucionais — mede visibilidade em buscador, não existência de portal; amostra de 2015, sem nenhum instituto federal | Camada de relacionamento, distinta da camada de coleta que este projeto entrega. Registrar a distinção evita que o mecanismo seja lido como portal reduzido (E31); a recomendação de portal é da E24 |
@@ -174,6 +215,14 @@ lista de não respondentes que torna a cobrança da E21 possível. Note-se que o
 Regulamento do IFSP já prevê "sistema de mala direta" com disparos repetidos e
 automatizados (art. 16, §2º) — o que falta é o suporte técnico, não a norma.
 
+**O caso do Ifal, acrescentado na E24, separa duas coisas que a mala direta do Ifes
+deixava juntas.** O [Ifal (2024)](fichamentos/ifal-2024.md) enviou o convite a mais
+de 4.000 e-mails do sistema acadêmico e conhecia a população: 5.472 diplomados. Tinha,
+portanto, **denominador**, e calculou taxa — 19%. Mas o link era público, e por isso
+não tinha **lista de não respondentes**: sabia quantos responderam, não quem. Taxa
+sem lista não permite cobrança dirigida. O denominador é condição necessária da
+rastreabilidade, e não suficiente.
+
 ### 3.4 Mobilização por turmas (E4)
 
 **O que foi feito.** O Ifes compartilhou o link em grupos de WhatsApp de ex-alunos.
@@ -204,6 +253,14 @@ convém registrar agora.
    endereço comum. Isso precisa constar do guia de replicação (E30), porque é o tipo
    de detalhe que uma instituição desfaz sem perceber.
 
+*Acrescentado na E24.* O [Ifal (2024)](fichamentos/ifal-2024.md) é o segundo caso:
+link público em grupos de WhatsApp e no Instagram, que alcançou formados fora do
+biênio pesquisado; as respostas deles tiveram de ser descartadas. É a perda de
+controle de elegibilidade do item 2, documentada por quem a sofreu. A E24
+acrescentou uma precisão ao item 2: o endereço individual também não pode circular
+**em lista** no grupo, porque quem o tem responde — e recusa — como o egresso. A
+regra ficou no guia de replicação, Parte VI.
+
 ### 3.5 Contrapartidas ao egresso (E5)
 
 **O que foi feito.** O Alumni USP inverte a relação: em vez de extrair o dado,
@@ -230,6 +287,15 @@ marca. Por contraste, [Cabral et al. (2016)](fichamentos/cabral-2016.md) não
 encontraram canal de oportunidades profissionais em nenhum dos portais analisados,
 o que sugere que a contrapartida é a parte menos difundida da prática institucional.
 
+*Acrescentado na E24.* O [Ifal (2024)](fichamentos/ifal-2024.md) mostra o desenho
+oposto ao do Alumni USP: o cadastro de vagas foi oferecido **dentro** do formulário
+da pesquisa, e as vagas passaram a ser dirigidas a quem respondeu. O efeito é crença
+dos autores, sem medição. E 84,6% dos respondentes não conheciam o serviço de vagas
+que já existia — a contrapartida que ninguém conhece não engaja ninguém. A revisão de
+[Edwards et al. (2023)](fichamentos/edwards-2023.md) traz a única contrapartida com
+efeito medido, ainda que fora dos egressos: oferecer os resultados da pesquisa
+(seção 1.3).
+
 **Implicação técnica.** Nenhuma contrapartida se implementa por configuração de
 plataforma: é o melhor exemplo do conjunto de recomendação dependente de terceiros,
 e vai para a E24. O que cabe ao mecanismo é modesto e verificável: **a mensagem de
@@ -253,6 +319,12 @@ projeto e já está registrado na [linha de base](linha-de-base.md): os dois ins
 não podem calcular taxa alguma porque difundem link aberto e não têm denominador.
 **A rastreabilidade não é refinamento técnico — é a condição para que exista
 indicador de cobertura.**
+
+*Acrescentado na E24.* O [Ifal (2024)](fichamentos/ifal-2024.md) é o segundo caso
+com denominador — 19% sobre 5.472 diplomados, também tirados do sistema acadêmico —,
+e o primeiro da Rede Federal. Confirma o argumento por outro lado: a lista fechada
+deu-lhe a taxa; a falta de link por participante negou-lhe a lista de não
+respondentes (seção 3.3).
 
 Ressalva obrigatória ao citar os 35,4%: o número inclui o efeito da busca ativa e
 provém de um único programa de mestrado, com população pequena, recente e com
@@ -308,6 +380,10 @@ comum.
 A janela do Ifes foi de 17/07/2024 a 31/12/2024 — cinco meses e meio. É a
 consequência natural de não ter lista de não respondentes: sem cobrança dirigida, o
 recurso disponível é manter o formulário aberto por mais tempo.
+
+*Acrescentado na E24.* No IFSP, a janela ilimitada não é só prática: é norma. O
+Regulamento manda a coleta contínua e o questionário disponível no Portal em
+qualquer momento depois da conclusão (arts. 19, §1º, e 21) — ver a seção 6.
 
 **Implicação técnica.** Serve de contraste para a E05. Com cobrança dirigida, o
 parâmetro relevante deixa de ser a duração da janela e passa a ser a cadência —
@@ -408,8 +484,14 @@ instituto multicampi com cursos técnicos e de tecnologia.
 ## 6. Correspondência com a norma vigente no IFSP
 
 Cruzamento que nenhuma das fontes faz e que a E03 tornou possível. Das onze
-estratégias, **sete já têm dispositivo expresso na norma institucional do IFSP** — e
-nenhuma delas está implementada.
+estratégias, **dez já têm dispositivo expresso na norma institucional do IFSP**.
+Sete delas não estão implementadas; das três acrescentadas na E24, uma está em
+operação e é, justamente, a que colide com o mecanismo (E9).
+
+*Corrigido na E24.* A versão original contava sete, porque cruzou só os arts. 14,
+16, 19, 22 e 25 do Regulamento e o art. 8º da PAEg. A releitura integral do
+Regulamento achou dispositivo também para a divulgação (E8), a janela (E9) e o
+portal (E11) — as três últimas linhas da tabela.
 
 | # | Estratégia | Dispositivo no IFSP | Situação |
 |---|---|---|---|
@@ -420,32 +502,43 @@ nenhuma delas está implementada.
 | E5 | Contrapartidas | PAEg, art. 8º, e caps. VI e VII — educação continuada, vagas, eventos, colaboração voluntária, Jubileus | anunciadas em portal; operação não verificada |
 | E6 | Convite individual sobre lista fechada | Regulamento, art. 16, caput — link disponibilizado **para cada egresso**; PAEg, art. 8º, XV — banco de dados de egressos | não implementado; o instrumento é um link único público |
 | E10 | Periodicidade | Regulamento, arts. 14 e 19 — pesquisas anuais | não implementado |
+| E8 | Divulgação institucional | Regulamento, art. 22 — campanha dois anos após a formatura, com divulgação nas plataformas digitais; art. 26, parágrafo único — sítio, e-mail pessoal, coordenação de curso, WhatsApp dos campi e redes sociais | praticada de forma pontual (Campanha de Egressos de 2018, sem avaliação) |
+| E9 | Janela longa de coleta | Regulamento, art. 19, §1º, e art. 21 — coleta contínua, questionário disponível no Portal em qualquer momento depois da conclusão | **em operação** — é o link aberto do Portal, e colide com o art. 16 e com a janela de 60 dias da P5 ([linha de base](linha-de-base.md), seção 3) |
+| E11 | Portal centralizado | Regulamento, arts. 28 e 29 — Portal do Egresso centralizado, com páginas dos campi; art. 8º, item 4, e PAEg, art. 11, II — ambiente virtual de relacionamento | a página de egressos existe; o ambiente de relacionamento não foi verificado |
 
 **O que isso consolida.** A [linha de base](linha-de-base.md) já concluíra que a
 lacuna do IFSP é de suporte técnico e não de norma. O quadro de engajamento reforça o
 mesmo achado por outro ângulo: **as estratégias que a literatura documenta são, em sua
 maioria, as que a norma do IFSP já determina** — e seguem inexequíveis pela mesma razão
-única, a ausência de lista de participantes identificados. Não há, neste conjunto,
-nenhuma estratégia relevante que exija do IFSP decisão normativa nova. Exigem-se
-configuração e base de participantes.
+única, a ausência de lista de participantes identificados. Exigem-se configuração e
+base de participantes.
 
-As quatro estratégias sem correspondência normativa direta (E7 redução do esforço, E8
-divulgação, E9 janela, E11 portal) tampouco exigem norma: três são configuração ou
-prática de comunicação, e a quarta é decisão institucional de outra ordem.
+*Corrigido na E24.* Este parágrafo dizia que nenhuma estratégia exigia do IFSP
+decisão normativa nova. Uma exige: a E9. O Regulamento pede, ao mesmo tempo, link
+por egresso (art. 16) e questionário aberto no Portal, a qualquer tempo (arts. 19,
+§1º, 21 e 29, item 4), sem conciliar os dois. A conciliação é decisão da instituição;
+as saídas estão no guia de replicação, recomendação R5.
+
+Só a E7, redução do esforço de resposta, fica sem correspondência normativa direta,
+e tampouco a exige: é configuração.
 
 ## 7. O que a evidência não permite afirmar
 
 Registro explícito, para que nenhuma das etapas seguintes extrapole o quadro.
 
-1. **Não se pode ranquear as estratégias.** Nenhuma fonte compara duas estratégias
-   sob condições controladas. Qualquer afirmação do tipo "a mala direta rende mais que
-   a mobilização por turmas" seria invenção.
+1. **Não se pode ranquear as estratégias.** Nenhuma fonte sobre egressos compara
+   duas estratégias sob condições controladas. Qualquer afirmação do tipo "a mala
+   direta rende mais que a mobilização por turmas" seria invenção. Os ensaios
+   reunidos por Edwards et al. (seção 1.3) medem cada estratégia contra controle, em
+   outra população, e não umas contra as outras.
 2. **Não se pode atribuir os 1.840 respondentes do Ifes a nenhuma ação específica**,
    nem convertê-los em taxa: falta o denominador.
 3. **Não se pode projetar taxa de resposta para o mecanismo deste projeto.** Os 35,4%
    da EMESCAM vêm de população pequena, recente, de pós-graduação stricto sensu, com
-   busca ativa individual — nada disso se transfere. E este trabalho não fará aplicação
-   real, de modo que não produzirá taxa alguma.
+   busca ativa individual — nada disso se transfere. Os 19% do Ifal somam convite e
+   difusão aberta e não medem nenhuma ação. As razões de chances de Edwards et al. não
+   se convertem em taxa. E este trabalho não fará aplicação real, de modo que não
+   produzirá taxa alguma.
 4. **Não se pode prometer elevação de taxa de resposta como resultado do projeto.** A
    formulação sustentável é outra, e é a que vale para o relatório final: o mecanismo
    entrega **capacidade instalada de cobrança sistemática** — lista de não
@@ -480,7 +573,8 @@ Registro explícito, para que nenhuma das etapas seguintes extrapole o quadro.
 - **E24 (recomendações dependentes de terceiros)** — recebem E4 (mobilização por
   turmas e colação de grau), E5 (contrapartidas), E8 (divulgação institucional) e,
   quando couber, E11 (portal). Cada uma com a evidência declarada, que na maioria dos
-  casos é "relatado" ou "não avaliado".
+  casos é "relatado" ou "não avaliado". *Atendido na E24:* oito recomendações no guia
+  de replicação, Parte VI.
 - **E30 (guia de replicação)** — precisa advertir sobre a incompatibilidade registrada
   em 3.4 e 4.3: divulgar um endereço único em canal aberto ou em grupo de turma anula
   a rastreabilidade e desfaz, sem alarde, o que o mecanismo constrói.
