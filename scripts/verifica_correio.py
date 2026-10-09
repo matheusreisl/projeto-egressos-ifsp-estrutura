@@ -162,6 +162,11 @@ def assunto_de(bruta):
 def main():
     if not SENHA:
         raise SystemExit("CORREIO_SENHA nao definida no ambiente")
+    # Esvazia as caixas, logo abaixo. Com a rotina em modo real, elas sao a
+    # evidencia da simulacao (E26): convites entregues e devolucoes por ler.
+    if os.environ.get("ROTINA_DISPARO") == "real":
+        raise SystemExit("recusado: a rotina esta em modo real, e esvaziar as "
+                         "caixas apagaria a evidencia da simulacao")
 
     print("Verificacao do correio nas duas direcoes — etapa E09\n")
     print(f"  entrega      : {DOMINIO}")

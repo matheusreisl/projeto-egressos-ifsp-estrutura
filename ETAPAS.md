@@ -1634,7 +1634,7 @@ Meta 8 · nov–dez/26
 - **Não verificado:** nenhum item foi executado como verificação — a seção 17 está
   vazia de propósito.
 
-### [ ] E26 — Executar os cenários de simulação
+### [~] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
 - **Entregável:** execução dos cenários de preenchimento parcial com retomada,
   ausência de resposta, contato inválido e recusa.
@@ -1712,6 +1712,33 @@ Meta 8 · nov–dez/26
     retomada (R05), ausência de resposta (R07.5), contato inválido (R10.3 a R10.5),
     recusa (R09.3 a R09.6) —, e R12 roda numa cópia de ensaio, em emulação.
   - **Registrar** cada item executado na seção 17 da matriz.
+- **Em andamento desde 09/10/2026** · `docs/especificacao/simulacao.md` ·
+  `infra/cenarios.py` · `infra/reparo-contato.py` e o comando `repararcontato`.
+- **Decisões do orientando:** reimplantar o 202615 para a carga (R01.1); cadência em
+  **dias de calendário**, sem compressão; corrigir a conferência 8 de
+  `confere-rotina.py --agendada` (aceitar `perdida`); registrar em `simulacao.md` e
+  na seção 17 da matriz.
+- **Abertura (momento A), 09/10:** VC1 atende; R01.5 31/31; R01.6; R01.1 (trilha
+  nº 14) e R01.2 (nº 15); unicidade 8/8 e os 15 defeitos U; atributos 500/500;
+  estrutura 9/9; mensagens 4/4 e 9/9; regras 7/7; `--agendada` 14/14; `--perdida`
+  8/8; consentimento 11/11; conformidade 12/12; correio 7/7 e 7/7; acesso (R02.3).
+  **R07.3: 17 de 18** — M01 passou, furo da conferência (E27).
+- **Incidente: `confere-envio.py` apagou o 202615.** Começava apagando todos os
+  questionários da instância (resto da E09); foi rodado sem ler esse trecho. Nada de
+  resposta ou envio perdido; base central intacta. Recriado pelo caminho de R01.1
+  (trilha nº 16) e bateria refeita sobre ele, toda verde. Corrigido: só remove o que
+  cria; ele e `verifica_correio.py` recusam rodar em modo real (esvaziam as caixas).
+  A trilha da plataforma **não registra** criação nem remoção de questionário.
+- **Correções em conferência, na execução:** conferência 8 de `--agendada`
+  (autorizada); `--perdida`, que só esperava o registro do dia (mesma natureza,
+  comunicada).
+- **Navegador, na cópia de ensaio, em emulação de celular:** R12.1, R12.2 e R12.4
+  atendem com ressalva; R04.3 e R05.1 atendem; **R12.3 não atende** — três frases em
+  inglês fora do questionário (correção na imagem, E27). O botão do menu recolhido
+  não tem nome acessível.
+- **Achado de ambiente:** pela porta publicada, a instância vê todo acesso vindo de
+  **um IP só** (172.20.0.1); três códigos inválidos bloqueiam **todos** por 10
+  minutos (`maxLoginAttemptParticipants`). Proxy que passe o IP real → E30.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
@@ -2002,3 +2029,4 @@ Uma linha por sessão, mais recente ao final.
 | 05/10/2026 | E23 | E23 concluída: **recusa de contato em todos os ciclos**. A rotina de conformidade (3ª tarefa do agendador, sempre de verdade) registra cada recusa em `egressos_recusas` (tipo, via, momento com a fonte, versão do termo) e leva a da tela e de CT4 à base central **pela via da própria plataforma**; a de consentimento só se registra; contato inválido não é recusa. Conferido num ciclo seguinte de verdade: a plataforma não convidou quem recusou contato pelas três vias e convidou os demais. Trilha `AuditLog` ativada **por comando** (K7 preservado), com **correção de um defeito da plataforma** que quebrava gravação na base central por console com a trilha ativa. Página de recusa em português (7 traduções na imagem 7.2.0-1). Cifragem de EQ1–EQ3, AF4 e CT1–CT3 e termo `ensaio-2` (guarda por princípio), com a segunda reimplantação do 202615. Dado sensível sem consentimento apagado das parciais. Revogação pelo operador. Políticas de anonimização na extração e de retenção escritas (ADR-0010). Critério: `confere-conformidade.py --exercitar` 12 de 12 na primeira execução; regressão E22 11/11, E21 14/14, estrutura 9/9. | Nenhuma pendência nova sem dono. **Não verificado:** CT4 pela conclusão real (E26); eliminação por prazo, que não roda (E30); trilha inviolável, que não é. **Ampliadas:** E25 (procedimento pronto, inclusive o ciclo seguinte), E26 (CT4 real; revogação pedida de verdade; a rotina age a cada 30 min), E28 (política de anonimização; campos cifrados lidos pela exportação), E30 (`aplicar` na instalação; imagem 7.2.0-1; anos no termo e rotina de eliminação; cifragem de nome e e-mail; revisão humana; trilha com dado pessoal) e E31 (revogação pelo operador; trilha; defeito e tradução da plataforma). |
 | 06/10/2026 | E24 | E24 concluída: **oito recomendações dependentes de terceiros** no guia de replicação (Parte VI, seção 10, numeração provisória), cada uma com quem executa, evidência e estado, norma e regra de compatibilidade — colação de grau, grupos de turma, canal alternativo por pessoa, turmas antigas, divulgação e Portal sem link aberto, contrapartidas e devolução dos resultados, colaboração voluntária, portal de relacionamento. Regra comum: canal coletivo avisa, não leva endereço. Com autorização, duas fontes novas lidas e fichadas — Ifal (2024) e Edwards et al. (2023, Cochrane), esta com o rótulo "medido em outra população". **Achado normativo:** o Regulamento pede link por egresso e, ao mesmo tempo, questionário aberto no Portal a qualquer tempo (arts. 19, §1º, 21 e 29, item 4); corrigidos, com autorização, a linha de base, o quadro de engajamento (Ifal e Edwards; seção 6 de sete para dez estratégias com dispositivo) e a P5. RN 13/2022 reconferida por novo OCR; pendência da E31 encerrada e data da referência corrigida. Critério: 8 de 8 recomendações ligadas a fonte. | Nenhuma pendência nova sem dono. **Não verificado:** nada executado (recomendação). **Ampliadas:** E29 (painel como lugar da devolução dos resultados, só agregados), E30 (renumerar a Parte VI ao escrever IV e V) e E31 (referências Ifal e Edwards; tensão normativa e P5; quadro corrigido; referência da RN 13 pela epígrafe). |
 | 09/10/2026 | E25 | **Fase 6 iniciada.** E25 concluída: `docs/especificacao/matriz-verificacao.md` com os **doze requisitos** do projeto desdobrados em **65 itens** — procedimento, resultado esperado, momento (A abertura da E26, C cenários, F fechamento, X E28) e tabela do resultado obtido —, mais quatro verificações complementares (contenção, trilha, cifragem, anonimização). Decisões do orientando: R11 pela exportação nativa na E27; R12 por emulação de celular, com critérios da WCAG 2.2; casos negativos descritos (31 arquivos, 15 de unicidade, 18 da cadência). Critério: 12 de 12, com cada "Vindo da E*nn*" ligado a item; comandos, consultas e sondas conferidos só em leitura, sem preencher resultado. | Nenhuma pendência nova sem dono. **Achados:** a bateria das conferências que exercitam roda **antes** do modo real (limpezas contra zero); risco em R10.4, a confirmar (duas devoluções temporárias por mensagem anteciparia o limiar); três disparos perdidos em 07 a 09/10 (hospedeiro parado); `verifica-ambiente.sh` não confere o correio. **Ampliadas:** E26 (ordem de abertura; reimplantação com autorização; números esperados; risco de R10.4; hospedeiro às 10:00), E27 (seção 17; limpezas; correção de R10.4 se confirmado), E28 (R11.5 e VC4), E30 (carga do zero no teste de replicação; sondas do correio) e E31 (matriz como critério de aceite e suas ressalvas). |
+| 09/10/2026 | E26 (abertura) | **E26 em andamento.** Abertura da matriz executada sobre o 202615 reimplantado (autorizado): VC1, R01.5 (31/31), R01.6, R01.1, R01.2, unicidade 8/8 e 15/15, estrutura 9/9, mensagens 9/9, regras 7/7, `--agendada` 14/14, `--perdida` 8/8, consentimento 11/11, conformidade 12/12, correio 7/7 e 7/7, acesso (R02.3), R04.8 4/4; no navegador, em emulação de celular, R04.3, R05.1, R12.1, R12.2 e R12.4. Implementados `infra/reparo-contato.py` (com o comando `repararcontato`) e `infra/cenarios.py`, testados no 202615 com limpeza. **Incidente:** `confere-envio.py` apagou todos os questionários, inclusive o 202615 — nada de resposta ou envio perdido; recriado (trilha nº 16), bateria refeita, script corrigido. 34 itens na seção 17 da matriz. | **Antes de ter 13/10, 10:00:** ler a devolução de expiração da fila (risco de R10.4), limpar das caixas os resíduos de teste e **ligar o modo real** (`ROTINA_DISPARO=real` no `.env`, `docker compose up -d rotinas`), conferindo o plano de 255 convites; hospedeiro ligado às 10:00 em 13, 19, 22 e 27/10. **Para a E27:** R07.3 17/18 (M01, furo da conferência); R12.3 não atende (três frases em inglês fora do questionário); botão do menu sem nome acessível. **Para a E30:** um IP só para todos os acessos (172.20.0.1) — três códigos inválidos bloqueiam todos por 10 min; reparo à mão, sem agendamento; a trilha não registra remoção de questionário. |

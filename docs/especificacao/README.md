@@ -30,3 +30,6 @@ Artefatos técnicos que antecedem a implementação.
 - `matriz-verificacao.md` — critério de aceite do mecanismo: os doze requisitos do
   projeto desdobrados em itens com procedimento, resultado esperado, casos negativos
   e momento de execução, e a tabela do resultado obtido (E25)
+- `simulacao.md` — a execução da matriz e dos cenários: a abertura, o incidente do
+  `confere-envio.py`, a operação de reparo, o respondente por HTTP, o navegador em
+  emulação de celular e o calendário da cadência real (E26, em andamento)

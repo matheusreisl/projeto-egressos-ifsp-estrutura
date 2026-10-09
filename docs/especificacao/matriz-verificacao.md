@@ -384,7 +384,7 @@ as da E21.
 | M03 | `lastpage = 0` lido como iniciado (abrir vira `em preenchimento`) |
 | M04 | contato inválido ignorado (`emailstatus` diferente de `OK` e `OptOut` não muda o estado) |
 | M05 | `validuntil` ignorado (a janela nunca expira) |
-| M06 | `pendente` recebe lembrete |
+| M06 | `expirado` recebe lembrete. *Mudado na E26:* "`pendente` recebe lembrete", como estava, não tem data de envio de onde contar o D+*n*, e só derrubaria a conferência com exceção, sem reprovação de regra |
 | M07 | `respondente` recebe lembrete |
 | M08 | D+*n* contado do lembrete anterior, e não do convite |
 | M09 | D+*n* contado de data única do ciclo, e não do envio efetivo |
@@ -461,7 +461,7 @@ feito nesta etapa:
 | Item | Verificação | Procedimento | Resultado esperado | Momento |
 |---|---|---|---|---|
 | R10.1 | **O correio, isolado** | `rotinas$ python3 verifica_correio.py` | **7 de 7**: entrega, devolução permanente e temporária, nas duas direções | A |
-| R10.2 | **A integração** | `infra$ python3 confere-envio.py` (questionário descartável) | **7 de 7**: a instância dispara, a devolução volta, a rotina classifica, o estado do participante muda e o contador de recusa fica em zero | A |
+| R10.2 | **A integração** | `infra$ python3 confere-envio.py` (questionário descartável). *Corrigido na E26:* até então, a conferência apagava **todos** os questionários da instância antes de começar, e apagou o 202615 (`simulacao.md`, seção 3.2). R10.1 e R10.2 esvaziam as caixas do correio e, desde a E26, recusam rodar com a rotina em modo real | **7 de 7**: a instância dispara, a devolução volta, a rotina classifica, o estado do participante muda e o contador de recusa fica em zero; **e o 202615 continua na instância** | A |
 | R10.3 | **Erro permanente na primeira ocorrência** | primeira execução real; C-09 depois da leitura de devoluções seguinte | os **23** com principal em `invalido.test`: devolução `permanente` com `marcou = 1`, `emailstatus = invalido` e plano `contato inválido`; nenhum lembrete a eles depois (C-06) | C |
 | R10.4 | **Erro temporário: o limiar de três** | os **12** de `indisponivel.test`, ao longo da cadência; C-09 depois de cada leitura de devoluções | marcados como inválidos depois da devolução da **3ª mensagem** do ciclo, que é o lembrete 2 — a intenção do P8: "exigir as três primeiras antes de declarar o contato perdido". Recebem convite, lembrete 1 e lembrete 2, e **não** o lembrete 3. Herdado da E09, que não pôde exercitá-lo. **Ver o risco abaixo** | C |
 | R10.5 | **Ciclo de reparo, com teto de uma rodada** | operação de reparo da E26: trocar para o `email_alternativo` no participante, pela API, e na base central, por console | os **12** reparáveis (6 + 6) voltam a `pendente`, são **reconvidados uma vez**, com nova contagem, e a mensagem é entregue; o que tem alternativo em `invalido.test` devolve de novo e **fica** em `contato inválido` — o plano registra "teto de reparo atingido"; os 22 sem alternativo ficam na fila de correção (canal alternativo não automatizado, ADR-0003) | C |
@@ -618,75 +618,75 @@ especificação da etapa que executou, com remissão.
 
 | Item | Momento | Executado em | Commit | Resultado obtido | Situação |
 |---|---|---|---|---|---|
-| R01.1 | A | | | | |
-| R01.2 | A | | | | |
+| R01.1 | A | 09/10/2026 | 05a9f64 + E26 | trilha nº 14: 500 participantes criados, 500 pessoas reencontradas, 0 criadas; arquivo eliminado; unicidade 8/8. Refeita na recuperação do incidente (trilha nº 16), com o mesmo resultado | atende |
+| R01.2 | A | 09/10/2026 | 05a9f64 + E26 | trilha nº 15: 0 criados, 500 atualizados; as duas digitais idênticas antes e depois | atende |
 | R01.3 | C | | | | |
 | R01.4 | C | | | | |
-| R01.5 | A | | | | |
-| R01.6 | A | | | | |
-| R02.1 | A | | | | |
-| R02.2 | A | | | | |
-| R02.3 | A | | | | |
-| R02.4 | A | | | | |
-| R03.1 | A | | | | |
+| R01.5 | A | 09/10/2026 | 05a9f64 + E26 | 31 de 31 com o desfecho esperado; nenhum relatório com dado pessoal | atende |
+| R01.6 | A | 09/10/2026 | 05a9f64 + E26 | trilha nº 13, `arquivo_rejeitado`, com o motivo; digitais iguais; arquivo eliminado | atende |
+| R02.1 | A | 09/10/2026 | 05a9f64 + E26 | 8 de 8; os três grupos esperados (também depois da recuperação) | atende |
+| R02.2 | A | 09/10/2026 | 05a9f64 + E26 | `confere-mensagens.py --enviar` 9 de 9 (conferência 6) | atende |
+| R02.3 | A | 09/10/2026 | 05a9f64 + E26 | sem token: pede o código; inexistente: "não é válido ou já foi usado"; concluído: "Esse convite já foi utilizado"; vencido: "Esse convite não é mais válido" | atende |
+| R02.4 | A | 09/10/2026 | 05a9f64 + E26 | 15 de 15, com as cascatas previstas (U07 e U09 também na 6; U10 e U11 na 7) | atende |
+| R03.1 | A | 09/10/2026 | 05a9f64 + E26 | conferência 7 de `confere-instrumento.py` | atende |
 | R03.2 | C | | | | |
-| R03.3 | A | | | | |
+| R03.3 | A | 09/10/2026 | 05a9f64 + E26 | 500 de 500 | atende |
 | R03.4 | C | | | | |
 | R03.5 | C | | | | |
-| R04.1 | A | | | | |
+| R04.1 | A | 09/10/2026 | 05a9f64 + E26 | 9 de 9; os dez caminhos sobre 2.802 combinações | atende |
 | R04.2 | C | | | | |
-| R04.3 | C | | | | |
+| R04.3 | C | 09/10/2026 | 05a9f64 + E26 | as cinco regras da seção 3.2, por toque, na cópia de ensaio (`simulacao.md`, seção 6) | atende |
 | R04.4 | C | | | | |
 | R04.5 | C | | | | |
 | R04.6 | C | | | | |
 | R04.7 | C | | | | |
-| R04.8 | C | | | | |
-| R05.1 | C | | | | |
+| R04.8 | C | 09/10/2026 | 05a9f64 + E26 | 4 de 4: e-mail fora de `.test` e telefone de DDD em uso barram a página no celular, com a mensagem junto ao campo; ano 2027 ("deve ser entre 1909 e 2026") e alternativo igual ao principal barram pelo servidor | atende |
+| R05.1 | C | 09/10/2026 | 05a9f64 + E26 | na cópia, no celular: salvo sem e-mail, senha em bcrypt, IP vazio; carregado em sessão nova com as respostas; conclusão na mesma resposta; registro apagado | atende |
 | R05.2 | C | | | | |
 | R05.3 | C | | | | |
 | R05.4 | C | | | | |
 | R05.5 | C | | | | |
-| R06.1 | A | | | | |
-| R06.2 | A | | | | |
+| R06.1 | A | 09/10/2026 | 05a9f64 + E26 | 14 de 14; disparo de teste 7 s depois do horário (10 s na primeira execução) | atende |
+| R06.2 | A | 09/10/2026 | 05a9f64 + E26 | 8 de 8, depois da correção da conferência (`simulacao.md`, 3.1) | atende |
 | R06.3 | C, F | | | | |
 | R06.4 | F | | | | |
-| R07.1 | A | | | | |
-| R07.2 | A | | | | |
-| R07.3 | A | | | | |
-| R07.4 | A | | | | |
+| R07.1 | A | 09/10/2026 | 05a9f64 + E26 | 7 de 7; regra 1 com 17 casos de estado | atende |
+| R07.2 | A | 09/10/2026 | 05a9f64 + E26 | 14 de 14 (conferências 11 a 13) | atende |
+| R07.3 | A | 09/10/2026 | 05a9f64 + E26 | 17 de 18: M01 (a recusa de contato deixa de vencer a resposta enviada) passou — nenhuma regra da conferência tem recusa na base central e resposta enviada ao mesmo tempo | não atende |
+| R07.4 | A | 09/10/2026 | 05a9f64 + E26 | `confere-mensagens.py --enviar`, conferência 7 | atende |
 | R07.5 | C, F | | | | |
-| R08.1 | A | | | | |
-| R08.2 | A | | | | |
+| R08.1 | A | 09/10/2026 | 05a9f64 + E26 | 2 de 2; termo `ensaio-2` | atende |
+| R08.2 | A | 09/10/2026 | 05a9f64 + E26 | 11 de 11 | atende |
 | R08.3 | C, F | | | | |
 | R08.4 | C | | | | |
 | R08.5 | C | | | | |
-| R09.1 | A | | | | |
-| R09.2 | A | | | | |
+| R09.1 | A | 09/10/2026 | 05a9f64 + E26 | 2 de 2 | atende |
+| R09.2 | A | 09/10/2026 | 05a9f64 + E26 | 12 de 12 | atende |
 | R09.3 | C | | | | |
 | R09.4 | C | | | | |
 | R09.5 | C | | | | |
 | R09.6 | C | | | | |
 | R09.7 | F | | | | |
-| R10.1 | A | | | | |
-| R10.2 | A | | | | |
+| R10.1 | A | 09/10/2026 | 05a9f64 + E26 | 7 de 7 | atende |
+| R10.2 | A | 09/10/2026 | 05a9f64 + E26 | 7 de 7; na primeira execução a conferência apagou o 202615 (`simulacao.md`, 3.2); depois da correção, 7 de 7 com o 202615 intacto | atende |
 | R10.3 | C | | | | |
 | R10.4 | C | | | | |
 | R10.5 | C | | | | |
 | R10.6 | C, A | | | | |
-| R10.7 | A | | | | |
+| R10.7 | A | 09/10/2026 | 05a9f64 + E26 | `confere-mensagens.py`, conferência 3 | atende |
 | R11.1 | F | | | | |
 | R11.2 | F | | | | |
 | R11.3 | F | | | | |
 | R11.4 | F | | | | |
 | R11.5 | X | | | | |
-| R12.1 | C | | | | |
-| R12.2 | C | | | | |
-| R12.3 | C | | | | |
-| R12.4 | C | | | | |
-| VC1.1–VC1.7 | A | | | | |
-| VC2.1 | A | | | | |
+| R12.1 | C | 09/10/2026 | 05a9f64 + E26 | as páginas e os três encerramentos a 375×812 e a 360×640; alvo de 20 px coberto pela exceção de espaçamento (50 px entre centros) | atende, com ressalva |
+| R12.2 | C | 09/10/2026 | 05a9f64 + E26 | salvar e carregar pelo menu recolhido, a 375×812 | atende, com ressalva |
+| R12.3 | C | 09/10/2026 | 05a9f64 + E26 | utilizáveis, mas com três frases em inglês na página do código de acesso e nos formulários de salvar e carregar | não atende |
+| R12.4 | C | 09/10/2026 | 05a9f64 + E26 | páginas 1, 2 e 7 a 812×375 | atende, com ressalva |
+| VC1.1–VC1.7 | A | 09/10/2026 | 05a9f64 + E26 | redes, sondas com controle positivo, entrega por `correio:25`, `relayhost` vazio, domínios `.test`, R01.6, `verifica-ambiente.sh` 21/21 | atende |
+| VC2.1 | A | 09/10/2026 | 05a9f64 + E26 | conferência 1 de `confere-conformidade.py` | atende |
 | VC2.2 | F | | | | |
-| VC3.1–VC3.2 | A | | | | |
+| VC3.1–VC3.2 | A | 09/10/2026 | 05a9f64 + E26 | conferência 9 da estrutura; conferência 3 da conformidade (no banco, cifrado; exportado, o valor) | atende |
 | VC3.3 | F | | | | |
 | VC4.1–VC4.5 | X | | | | |
 
@@ -919,11 +919,17 @@ SELECT r.tid, r.via, r.manifestada_em, d.tipo, d.numero, d.registrado_em
                                     '+00:00', '-03:00');
 ```
 
-**C-09 — devoluções e marcação** (R10.3, R10.4)
+**C-09 — devoluções e marcação** (R10.3, R10.4). Só as de participantes: a rotina
+registra também a devolução de endereço que não é participante — resíduo de
+conferência —, com `token` nulo e sem marcar (achado da E26).
 
 ```sql
 SELECT ciclo, questionario, tipo, marcou, COUNT(*) AS n
-  FROM egressos_devolucoes GROUP BY ciclo, questionario, tipo, marcou;
+  FROM egressos_devolucoes WHERE token IS NOT NULL
+ GROUP BY ciclo, questionario, tipo, marcou;
+SELECT destinatario, tipo, COUNT(*) AS devolucoes
+  FROM egressos_devolucoes WHERE token IS NOT NULL AND tipo = 'temporario'
+ GROUP BY destinatario ORDER BY devolucoes DESC;
 SELECT emailstatus, COUNT(*) AS n FROM lime_tokens_202615 GROUP BY emailstatus;
 ```
 

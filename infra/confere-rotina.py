@@ -512,8 +512,14 @@ def confere_agendada():
         if not linhas:
             falhas.append("nenhuma execucao agendada do ciclo corrente ainda")
         for l in linhas:
-            if l["situacao"] != "simulada" or l["modo"] != "simulado":
-                falhas.append(f"execucao {l}: esperada simulada")
+            # Perdida e o registro de um horario que passou com o hospedeiro
+            # parado (R06.2): nao executou, e e o comportamento certo. So
+            # reprova se tiver comecado, porque entao teria rodado fora da hora.
+            if l["situacao"] == "perdida" and l["modo"] == "simulado":
+                if l["iniciado_em"]:
+                    falhas.append(f"execucao {l}: perdida, mas comecou")
+            elif l["situacao"] != "simulada" or l["modo"] != "simulado":
+                falhas.append(f"execucao {l}: esperada simulada ou perdida")
             elif not ANTES_TOLERADO <= (datetime.strptime(l["iniciado_em"],
                                                           "%Y-%m-%d %H:%M:%S")
                                         - datetime.strptime(
@@ -527,11 +533,12 @@ def confere_agendada():
                )[0]["n"] != "0":
             falhas.append("ha participante convidado antes do teste")
         ultima = linhas[-1] if linhas else {}
+        perdidas = sum(l["situacao"] == "perdida" for l in linhas)
         registra("rotina ativa em modo simulado: rodou no horario e nada "
                  "enviou", falhas,
-                 f"{len(linhas)} execucao(oes) agendada(s); a ultima previu "
-                 f"{ultima.get('previsto_para')} e comecou "
-                 f"{ultima.get('iniciado_em')}")
+                 f"{len(linhas)} execucao(oes) agendada(s), {perdidas} "
+                 f"perdida(s); a ultima previu {ultima.get('previsto_para')} "
+                 f"e comecou {ultima.get('iniciado_em')}")
 
         # --- planta ---------------------------------------------------------
         escolhidos = sql(
@@ -900,15 +907,28 @@ def confere_perdida():
         log = compose("logs", "--no-log-prefix", "--since", "2m",
                       "rotinas").stdout
         falhas = []
-        if [(l["situacao"], l["previsto_para"]) for l in linhas] != [
-                ("perdida", f"{horario:%Y-%m-%d %H:%M:%S}")]:
-            falhas.append(f"registro {linhas}")
+        # O agendador acusa todo horario passado sem execucao desde o primeiro
+        # registro da rotina, e nao so o de hoje: com a rotina de pe ha dias,
+        # os dias uteis anteriores no horario de teste tambem saem perdidos.
+        # O que se exige: todos perdidos, nenhum iniciado, so em dia util, no
+        # horario de teste — e o de hoje entre eles.
+        hoje = f"{horario:%Y-%m-%d %H:%M:%S}"
+        for l in linhas:
+            dia = datetime.strptime(l["previsto_para"], "%Y-%m-%d %H:%M:%S")
+            if (l["situacao"] != "perdida" or l["iniciado_em"]
+                    or not l["previsto_para"].endswith(f"{horario:%H:%M:%S}")
+                    or not AGENDA.dia_util(dia.date())):
+                falhas.append(f"registro {l}")
+        if hoje not in [l["previsto_para"] for l in linhas]:
+            falhas.append(f"sem o registro de hoje ({hoje}): {linhas}")
         if "PERDIDO" not in log:
             falhas.append("o log nao acusou")
         registra("horario vencido sem execucao fica registrado como perdido, "
                  "e nao e executado fora da hora", falhas,
                  f"{horario:%H:%M} com tolerancia de "
-                 f"{AGENDA.tolerancia_minutos} min, acusado ao subir")
+                 f"{AGENDA.tolerancia_minutos} min, acusado ao subir; "
+                 f"{len(linhas)} dia(s) util(eis) perdido(s) desde o primeiro "
+                 "registro da rotina")
     finally:
         sobe_agendador()
         sql(f"DELETE FROM egressos_execucoes WHERE ciclo='{CICLO_TESTE}'")

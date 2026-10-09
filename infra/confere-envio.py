@@ -182,12 +182,19 @@ def main():
     if not isinstance(chave, str):
         raise Erro(f"sessao nao obtida: {chave}")
 
+    # Esta conferencia esvazia as caixas do correio de ensaio. Com a rotina em
+    # modo real, as caixas sao a evidencia da simulacao (E26): convites
+    # entregues, devolucoes ainda nao lidas, respostas ao remetente.
+    if ENV.get("ROTINA_DISPARO") == "real":
+        raise Erro("recusado: a rotina esta em modo real, e esvaziar as caixas "
+                   "apagaria a evidencia da simulacao — rode antes do modo real")
+
     questionario = None
     try:
-        for s in rpc_tolerante("list_surveys", [], chave):
-            if isinstance(s, dict) and s.get("sid"):
-                rpc("delete_survey", [int(s["sid"])], chave)
-
+        # Ate a E26, aqui se apagavam TODOS os questionarios da instancia, como
+        # limpeza de sobras — escrito na E09, quando nao havia instrumento. Na
+        # E26 isso apagou o 202615. A conferencia agora so remove o que ela
+        # mesma cria, no bloco finally.
         print("limpando as caixas")
         esvazia_caixas()
 

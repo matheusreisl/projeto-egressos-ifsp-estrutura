@@ -35,6 +35,8 @@ na [ADR-0004](../docs/decisoes/0004-imagem-propria-e-leitura-de-devolucoes.md).
 | `rotinas/configuracao/agenda.json` | a agenda da rotina de disparo: cadência, horário, feriados, calendário (E21) |
 | `confere-rotina.py` | confere a rotina agendada: regras da cadência e o disparo real no horário (E21) |
 | `hospedeiro/liga-wsl-ao-entrar.ps1` | só Windows: liga a distribuição do WSL ao entrar na sessão (E21) |
+| `reparo-contato.py` | operação de reparo de contato: troca o principal pelo alternativo na base central (comando `repararcontato`) e no participante, que volta a `pendente`; `--fila` lista a fila de correção (E26) |
+| `cenarios.py` | o respondente pelo caminho real, por HTTP: os dez caminhos e os cenários da simulação (E26) |
 
 Os quatro serviços da composição:
 
@@ -348,6 +350,12 @@ Exercita a **integração**: a instância dispara os convites, a devolução vol
 rotina classifica e o estado do participante muda. Chama a rotina de verdade, e
 não uma reimplementação dela.
 
+**As duas esvaziam as caixas do correio**, e por isso, desde a E26, **recusam rodar
+com `ROTINA_DISPARO=real`**: no período de simulação, as caixas são evidência. E
+`confere-envio.py` só remove o questionário que ele mesmo cria — até a E26, apagava
+todos os da instância, e apagou o instrumento
+([`simulacao.md`](../docs/especificacao/simulacao.md), seção 3.2).
+
 ### Três detalhes que custaram tempo, registrados para quem for replicar
 
 **`local_recipient_maps` vazio, de propósito.** Sem isso o Postfix recusa o
@@ -551,11 +559,10 @@ decisão na [ADR-0010](../docs/decisoes/0010-conformidade-no-mecanismo.md).
 
 ## O que ainda não está aqui
 
-- **A operação de reparo de contato** — trocar o endereço inválido pelo
-  alternativo, no participante do questionário e na base central, onde só se grava
-  por comando de console. A rotina já **respeita** o reparo: quem volta a
-  `pendente` depois de convidado é reconvidado uma vez no ciclo, com nova contagem.
-  A operação em si é da E26, onde o cenário a exige.
+- **O reparo automático.** A operação de reparo existe desde a E26
+  (`reparo-contato.py`), mas roda à mão, no hospedeiro, sobre a fila de correção: a
+  base central só se grava por console, que o contêiner `rotinas` não alcança.
+  Agendá-la é decisão de implantação (E30).
 - **A virada de ciclo** — o questionário do ano seguinte. A rotina opera sobre o
   questionário configurado; o procedimento de abrir um ciclo novo é da E30.
 - **A eliminação por prazo** — a política de retenção está escrita
