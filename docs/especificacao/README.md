@@ -27,4 +27,6 @@ Artefatos técnicos que antecedem a implementação.
 - `conformidade.md` — recusa em todos os ciclos, registro e revogação, trilha de
   auditoria, cifragem em repouso, página de recusa em português, e as políticas de
   anonimização na extração e de retenção (E23)
-- `matriz-verificacao.md` — critério de aceite do mecanismo (E25)
+- `matriz-verificacao.md` — critério de aceite do mecanismo: os doze requisitos do
+  projeto desdobrados em itens com procedimento, resultado esperado, casos negativos
+  e momento de execução, e a tabela do resultado obtido (E25)

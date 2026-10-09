@@ -1532,7 +1532,7 @@ Metas 6 e 7 · out–nov/26
 ## Fase 6 — Validação por simulação controlada
 Meta 8 · nov–dez/26
 
-### [ ] E25 — Montar a matriz de verificação executável
+### [x] E25 — Montar a matriz de verificação executável
 - **Objetivo:** transformar a matriz do projeto em roteiro aplicável.
 - **Entregável:** `docs/especificacao/matriz-verificacao.md` com requisito,
   procedimento, resultado esperado e campo para resultado obtido.
@@ -1584,6 +1584,55 @@ Meta 8 · nov–dez/26
   procedimento pronto — `confere-conformidade.py --exercitar`, doze conferências,
   inclusive o **ciclo seguinte** num questionário novo. A conferência estrutural tem
   nove verificações, a nona da cifragem.
+- **Concluída em:** 09/10/2026 · `docs/especificacao/matriz-verificacao.md`.
+  **Fase 6 iniciada.**
+- **A matriz.** Os doze requisitos do projeto, com a redação dele na primeira
+  linha, desdobrados em **65 itens** redigidos contra a especificação de cada etapa
+  (a seletividade contra `convidado` e `em preenchimento`, e não contra "não
+  respondente"). Cada item tem procedimento, resultado esperado, momento — **A**,
+  abertura da E26; **C**, cenários; **F**, fechamento na E27; **X**, E28 — e linha
+  na tabela do resultado obtido (seção 17), com quatro situações: atende, atende com
+  ressalva, não atende, desvio justificado. Quatro verificações **complementares**,
+  fora do critério de aceite: contenção (VC1, K6), trilha (VC2), cifragem (VC3) e
+  anonimização (VC4, da E28). Dez consultas SQL no Apêndice A.
+- **Decisões do orientando:**
+  - **R11** pela exportação **nativa** da API na E27, porque a rotina de extração é
+    da E28, que vem depois; a E28 reexecuta o item contra a rotina;
+  - **R12** por **emulação** de celular (375×812 e 360×640), com sete critérios
+    objetivos (sem rolagem horizontal, zoom permitido e alvo de toque de 24 px, da
+    WCAG 2.2, entre eles), e a diferença para o aparelho como ressalva — o aparelho
+    real exigiria expor a porta na rede local;
+  - **casos negativos descritos na matriz**, sem código novo: 31 arquivos
+    inválidos, um por regra do validador (N); os 15 de unicidade da E19 (U); e 18
+    defeitos da cadência (M), **enumerados aqui** porque o registro da E21 não os
+    listava.
+- **Achados:**
+  - **Ordem de execução:** as limpezas de `confere-rotina.py --agendada`,
+    `confere-consentimento.py --exercitar` e `confere-conformidade.py --exercitar`
+    conferem o estado final **contra zero** (nenhuma resposta, envio ou recusa).
+    Depois do modo real, acusariam falha falsa. A bateria roda na **abertura da
+    E26**, antes de `ROTINA_DISPARO=real`, junto com a carga (R01.1), que exige
+    reimplantar o 202615 enquanto sem resposta nem envio.
+  - **Risco em R10.4, por leitura do código, não observado:** a rotina conta
+    devoluções pelo `Message-ID` da própria devolução, e o correio de ensaio expira a
+    fila em 1 h. Cada mensagem a `indisponivel.test` pode produzir **duas**
+    devoluções temporárias (aviso de atraso e falha final, com código 4.x.x), e o
+    limiar de três chegaria no lembrete 1, e não no 2 — contra a intenção do P8.
+  - **Hospedeiro parado:** os disparos agendados de 07, 08 e 09/10 estão como
+    `perdida`; nenhuma tarefa rodou entre 05:00 e 11:27 nesses dias. A rotina fez o
+    que devia; com o modo real, cada dia perdido atrasa a cadência.
+  - **`verifica-ambiente.sh` não confere a contenção do correio**, só a do banco. A
+    VC1 confere, com controle positivo no LimeSurvey, que alcança a internet.
+- **Números esperados da primeira execução real** (base regenerada, SHA-256 igual ao
+  das importações nº 10 a 12): 255 convites, do 1º semestre; 220 entregáveis; 23 com
+  erro permanente (6 reparáveis); 12 com temporário (6 reparáveis, 1 cujo reparo
+  falha).
+- **Critério verificado:** **12 de 12** requisitos com itens, e cada encaminhamento
+  "Vindo da E*nn*" ligado a item (seção 18). Exequibilidade conferida só em leitura:
+  linhas de comando contra as opções dos scripts, as dez consultas no banco vivo, o
+  gerador contra a trilha e as sondas da VC1.
+- **Não verificado:** nenhum item foi executado como verificação — a seção 17 está
+  vazia de propósito.
 
 ### [ ] E26 — Executar os cenários de simulação
 - **Objetivo:** exercitar o mecanismo sob condições previstas em operação real.
@@ -1648,11 +1697,32 @@ Meta 8 · nov–dez/26
     aplicar.
   - **Reimplantado de novo:** o 202615 foi reimplantado outra vez (tokens e qids
     novos).
+- **Vindo da E25** (`matriz-verificacao.md`, seções 2.1 e 21):
+  - **Abrir pela ordem da matriz:** VC1; R01.5 e R01.6; R01.1 e R01.2 —
+    reimplantação do 202615, **com autorização**, como nas E22 e E23; e a bateria
+    dos itens **A**. **Só então** ligar o modo real. Depois dele, a bateria acusa
+    falha falsa.
+  - **Esperado na primeira execução real:** 255 convites; 23 permanentes; 12
+    temporários; 12 reparáveis; 1 reparo que falha (matriz, seção 13).
+  - **Observar o risco de R10.4:** quantas devoluções cada mensagem a
+    `indisponivel.test` produz, e com que código.
+  - **Hospedeiro ligado às 10:00 em dia útil** — três disparos perdidos em 07 a
+    09/10 —, e 12/10 é feriado na agenda.
+  - **Itens C:** cada cenário do entregável alimenta itens já previstos — parcial com
+    retomada (R05), ausência de resposta (R07.5), contato inválido (R10.3 a R10.5),
+    recusa (R09.3 a R09.6) —, e R12 roda numa cópia de ensaio, em emulação.
+  - **Registrar** cada item executado na seção 17 da matriz.
 
 ### [ ] E27 — Registrar resultados e corrigir desvios
 - **Objetivo:** fechar o ciclo de validação.
 - **Entregável:** matriz preenchida; correções aplicadas e reexecutadas.
 - **Conclusão quando:** todos os requisitos forem atendidos ou o desvio estiver justificado.
+- **Vindo da E25:** preencher a seção 17 de `matriz-verificacao.md` e a situação por
+  requisito, pela regra da seção 2.4; rodar os itens **F** (R11 pela exportação
+  nativa, C-06 a C-09); para reexecutar a bateria **A** depois da E26, ajustar as
+  limpezas das três conferências que exercitam para comparar com o estado anterior,
+  e não com zero; se o risco de R10.4 se confirmar, contar mensagens originais
+  distintas no limiar do erro temporário.
 
 ---
 
@@ -1709,6 +1779,9 @@ Metas 9 e 10 · out–dez/26
 
   EQ1–EQ3, AF4 e CT1–CT3 estão **cifrados** no banco; ler pela exportação da
   plataforma, que decifra.
+- **Vindo da E25:** R11.5 — as conferências de integridade e estrutura de R11.1 a
+  R11.4 sobre o arquivo da rotina — e a VC4, a anonimização, item por item
+  (`matriz-verificacao.md`, seções 14 e 16).
 
 ### [ ] E29 — Painel de visualização (CONDICIONAL)
 - **Objetivo:** apresentar os indicadores de forma agregada.
@@ -1806,6 +1879,12 @@ Metas 9 e 10 · out–dez/26
   (conformidade, pendente) e 10 (recomendações) —, continuando a Parte III. Ao
   escrever as Partes IV e V, renumerar a VI. As recomendações usam rótulos R1 a R8,
   que não mudam com a renumeração.
+- **Vindo da E25:** a **carga do zero** (`docker compose down -v`), variante de R01.1
+  que a E26 não faz, entra no teste de replicação; incorporar a
+  `verifica-ambiente.sh` as sondas de contenção do **correio** da VC1, com o controle
+  positivo — hoje o script só confere o banco; o guia remete à matriz como critério
+  de aceite. Os rótulos R1 a R8 da Parte VI e os R01 a R12 da matriz são séries
+  distintas: dizer isso no guia.
 
 ### [ ] E31 — Redigir o relatório final
 - **Objetivo:** fechar a produção científica.
@@ -1886,6 +1965,11 @@ Metas 9 e 10 · out–dez/26
     atende à letra do art. 21. Linha de base e quadro corrigidos na E24.
   - **Quadro corrigido:** dez das onze estratégias têm dispositivo na norma do
     IFSP, e não sete; a E9 é a única que exige decisão normativa.
+- **Vinda da E25:** apresentar a matriz como critério de aceite, com o contraste
+  metodológico com a avaliação por percepção (Davis 1989; Silva et al. 2024), e as
+  ressalvas da seção 20 de `matriz-verificacao.md` — emulação não é aparelho,
+  conferência que passa não é conferência certa, atender a matriz não é
+  conformidade legal nem homologação para uso real.
 
 ---
 
@@ -1917,3 +2001,4 @@ Uma linha por sessão, mais recente ao final.
 | 05/10/2026 | E22 | E22 concluída: tela de consentimento com o termo como **modelo de ensaio** (elementos do art. 9º; encarregado e prazo de guarda como marcadores; validação do encarregado do IFSP pendente), CON2 específico e encerramento em três ramos. Data e versão gravadas **na própria resposta** por duas equações ocultas (`CONV` com o SHA-256 do documento da página 1, `CONDH` com o momento), e cada versão arquivada, imutável, em `termos/` (ADR-0009). O 202615 foi **reimplantado** (autorizado; a plataforma recusa mudar estrutura de ativo), com 500 reencontrados na base central e tokens novos. Recusa pela mensagem exercitada: bloqueia convite e lembrete neste e em outro questionário, só com os padrões. Critério: `confere-consentimento.py --exercitar` 11 de 11, recuperação por identificador pela exportação da plataforma; anteriores intactas (8/8, 8/8, 4/4, 7/7, 14/14). **Achado que corrigiu a E21:** o LimeSurvey roda em UTC, e `validuntil` era gravado em hora local (janela 3 h mais curta), corrigido e reverificado, com mutação 18 de 18. | Nenhuma pendência nova sem dono. **Não verificado:** conclusão das onze páginas (E26); aplicar termo novo a instrumento ativo pela API. **Ampliadas:** E23 (RCONT e CT4 na base central; registro da recusa com data e via; revogação; e-mail do salvamento; prazo de guarda em versão nova; página de confirmação em inglês; `deleteblacklisted = N`), E25 (procedimentos prontos), E26 (onze páginas; `Formulario`/`Respondente`; tokens e qids novos), E28 (metadados; UTC; nomes `Q<qid>` instáveis), E30 (validação do termo; reimplantação; lista de bloqueio; UTC) e E31 (base legal escolhida; termo de ensaio; limite da conferência que reproduz a premissa). A senha do banco local apareceu num erro no terminal; corrigido para não repetir; troca opcional. |
 | 05/10/2026 | E23 | E23 concluída: **recusa de contato em todos os ciclos**. A rotina de conformidade (3ª tarefa do agendador, sempre de verdade) registra cada recusa em `egressos_recusas` (tipo, via, momento com a fonte, versão do termo) e leva a da tela e de CT4 à base central **pela via da própria plataforma**; a de consentimento só se registra; contato inválido não é recusa. Conferido num ciclo seguinte de verdade: a plataforma não convidou quem recusou contato pelas três vias e convidou os demais. Trilha `AuditLog` ativada **por comando** (K7 preservado), com **correção de um defeito da plataforma** que quebrava gravação na base central por console com a trilha ativa. Página de recusa em português (7 traduções na imagem 7.2.0-1). Cifragem de EQ1–EQ3, AF4 e CT1–CT3 e termo `ensaio-2` (guarda por princípio), com a segunda reimplantação do 202615. Dado sensível sem consentimento apagado das parciais. Revogação pelo operador. Políticas de anonimização na extração e de retenção escritas (ADR-0010). Critério: `confere-conformidade.py --exercitar` 12 de 12 na primeira execução; regressão E22 11/11, E21 14/14, estrutura 9/9. | Nenhuma pendência nova sem dono. **Não verificado:** CT4 pela conclusão real (E26); eliminação por prazo, que não roda (E30); trilha inviolável, que não é. **Ampliadas:** E25 (procedimento pronto, inclusive o ciclo seguinte), E26 (CT4 real; revogação pedida de verdade; a rotina age a cada 30 min), E28 (política de anonimização; campos cifrados lidos pela exportação), E30 (`aplicar` na instalação; imagem 7.2.0-1; anos no termo e rotina de eliminação; cifragem de nome e e-mail; revisão humana; trilha com dado pessoal) e E31 (revogação pelo operador; trilha; defeito e tradução da plataforma). |
 | 06/10/2026 | E24 | E24 concluída: **oito recomendações dependentes de terceiros** no guia de replicação (Parte VI, seção 10, numeração provisória), cada uma com quem executa, evidência e estado, norma e regra de compatibilidade — colação de grau, grupos de turma, canal alternativo por pessoa, turmas antigas, divulgação e Portal sem link aberto, contrapartidas e devolução dos resultados, colaboração voluntária, portal de relacionamento. Regra comum: canal coletivo avisa, não leva endereço. Com autorização, duas fontes novas lidas e fichadas — Ifal (2024) e Edwards et al. (2023, Cochrane), esta com o rótulo "medido em outra população". **Achado normativo:** o Regulamento pede link por egresso e, ao mesmo tempo, questionário aberto no Portal a qualquer tempo (arts. 19, §1º, 21 e 29, item 4); corrigidos, com autorização, a linha de base, o quadro de engajamento (Ifal e Edwards; seção 6 de sete para dez estratégias com dispositivo) e a P5. RN 13/2022 reconferida por novo OCR; pendência da E31 encerrada e data da referência corrigida. Critério: 8 de 8 recomendações ligadas a fonte. | Nenhuma pendência nova sem dono. **Não verificado:** nada executado (recomendação). **Ampliadas:** E29 (painel como lugar da devolução dos resultados, só agregados), E30 (renumerar a Parte VI ao escrever IV e V) e E31 (referências Ifal e Edwards; tensão normativa e P5; quadro corrigido; referência da RN 13 pela epígrafe). |
+| 09/10/2026 | E25 | **Fase 6 iniciada.** E25 concluída: `docs/especificacao/matriz-verificacao.md` com os **doze requisitos** do projeto desdobrados em **65 itens** — procedimento, resultado esperado, momento (A abertura da E26, C cenários, F fechamento, X E28) e tabela do resultado obtido —, mais quatro verificações complementares (contenção, trilha, cifragem, anonimização). Decisões do orientando: R11 pela exportação nativa na E27; R12 por emulação de celular, com critérios da WCAG 2.2; casos negativos descritos (31 arquivos, 15 de unicidade, 18 da cadência). Critério: 12 de 12, com cada "Vindo da E*nn*" ligado a item; comandos, consultas e sondas conferidos só em leitura, sem preencher resultado. | Nenhuma pendência nova sem dono. **Achados:** a bateria das conferências que exercitam roda **antes** do modo real (limpezas contra zero); risco em R10.4, a confirmar (duas devoluções temporárias por mensagem anteciparia o limiar); três disparos perdidos em 07 a 09/10 (hospedeiro parado); `verifica-ambiente.sh` não confere o correio. **Ampliadas:** E26 (ordem de abertura; reimplantação com autorização; números esperados; risco de R10.4; hospedeiro às 10:00), E27 (seção 17; limpezas; correção de R10.4 se confirmado), E28 (R11.5 e VC4), E30 (carga do zero no teste de replicação; sondas do correio) e E31 (matriz como critério de aceite e suas ressalvas). |
